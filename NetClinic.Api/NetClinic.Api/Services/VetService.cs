@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using NetClinic.Api.Data;
+using NetClinic.Api.Models;
 
 namespace NetClinic.Api.Services;
 

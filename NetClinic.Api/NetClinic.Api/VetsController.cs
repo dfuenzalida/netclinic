@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using NetClinic.Api.Models;
 using NetClinic.Api.Services;
 
 namespace NetClinic.Api;

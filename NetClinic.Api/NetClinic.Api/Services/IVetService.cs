@@ -1,3 +1,5 @@
+using NetClinic.Api.Models;
+
 namespace NetClinic.Api.Services;
 
 public interface IVetService

@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace NetClinic.Api.Services;
+namespace NetClinic.Api.Models;
 
 [Table("vets")]
 public class Veterinarian
