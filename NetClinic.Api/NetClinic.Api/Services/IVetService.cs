@@ -2,5 +2,6 @@ namespace NetClinic.Api.Services;
 
 public interface IVetService
 {
-    IEnumerable<Veterinarian> GetAllVeterinarians();
+    Task<IEnumerable<Veterinarian>> GetAllVeterinariansAsync();
+    Task<Veterinarian?> GetVeterinarianByIdAsync(int id);
 }

@@ -1,29 +1,60 @@
+using Microsoft.EntityFrameworkCore;
+using NetClinic.Api.Data;
+
 namespace NetClinic.Api.Services;
 
 public class VetService : IVetService
 {
-    private readonly List<Veterinarian> _veterinarians;
+    private readonly NetClinicDbContext _context;
     private readonly ILogger<VetService> _logger;
 
-    public VetService(ILogger<VetService> logger)
+    public VetService(NetClinicDbContext context, ILogger<VetService> logger)
     {
+        _context = context;
         _logger = logger;
-        _veterinarians = new List<Veterinarian>
-        {
-            new(1, "Sarah", "Johnson"),
-            new(2, "Michael", "Chen"),
-            new(3, "Emily", "Rodriguez"),
-            new(4, "David", "Thompson"),
-            new(5, "Lisa", "Anderson"),
-            new(6, "Robert", "Wilson")
-        };
-
-        _logger.LogInformation("VetService initialized with {Count} veterinarians", _veterinarians.Count);
+        _logger.LogInformation("VetService initialized with database context");
     }
 
-    public IEnumerable<Veterinarian> GetAllVeterinarians()
+    public async Task<IEnumerable<Veterinarian>> GetAllVeterinariansAsync()
     {
-        _logger.LogDebug("Retrieving all veterinarians");
-        return _veterinarians;
+        _logger.LogDebug("Retrieving all veterinarians from database");
+
+        try
+        {
+            var veterinarians = await _context.Veterinarians.ToListAsync();
+            _logger.LogInformation("Successfully retrieved {Count} veterinarians from database", veterinarians.Count);
+            return veterinarians;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while retrieving veterinarians from database");
+            throw;
+        }
+    }
+
+    public async Task<Veterinarian?> GetVeterinarianByIdAsync(int id)
+    {
+        _logger.LogDebug("Retrieving veterinarian with ID: {Id} from database", id);
+
+        try
+        {
+            var veterinarian = await _context.Veterinarians.FindAsync(id);
+
+            if (veterinarian == null)
+            {
+                _logger.LogWarning("Veterinarian with ID {Id} not found in database", id);
+            }
+            else
+            {
+                _logger.LogInformation("Successfully retrieved veterinarian with ID: {Id} from database", id);
+            }
+
+            return veterinarian;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while retrieving veterinarian with ID: {Id} from database", id);
+            throw;
+        }
     }
 }
