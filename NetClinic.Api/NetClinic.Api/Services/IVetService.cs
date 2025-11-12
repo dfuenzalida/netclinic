@@ -1,9 +1,9 @@
-using NetClinic.Api.Models;
+using NetClinic.Api.Dto;
 
 namespace NetClinic.Api.Services;
 
 public interface IVetService
 {
-    Task<IEnumerable<Veterinarian>> GetAllVeterinariansAsync();
-    Task<Veterinarian?> GetVeterinarianByIdAsync(int id);
+    Task<IEnumerable<VetDto>> GetAllVeterinariansAsync();
+    Task<VetDto?> GetVeterinarianByIdAsync(int id);
 }

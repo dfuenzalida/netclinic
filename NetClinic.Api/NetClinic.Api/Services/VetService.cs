@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using NetClinic.Api.Data;
+using NetClinic.Api.Dto;
 using NetClinic.Api.Models;
 
 namespace NetClinic.Api.Services;
@@ -16,15 +17,16 @@ public class VetService : IVetService
         _logger.LogInformation("VetService initialized with database context");
     }
 
-    public async Task<IEnumerable<Veterinarian>> GetAllVeterinariansAsync()
+    public async Task<IEnumerable<VetDto>> GetAllVeterinariansAsync()
     {
         _logger.LogDebug("Retrieving all veterinarians from database");
 
         try
         {
-            var veterinarians = await _context.Veterinarians.ToListAsync();
+            var veterinarians = await _context.Veterinarians.Include(v => v.Specialties).ToListAsync();
+            var vetDtoList = await MapVeterinariansToDtosAsync(veterinarians);
             _logger.LogInformation("Successfully retrieved {Count} veterinarians from database", veterinarians.Count);
-            return veterinarians;
+            return vetDtoList;
         }
         catch (Exception ex)
         {
@@ -33,29 +35,66 @@ public class VetService : IVetService
         }
     }
 
-    public async Task<Veterinarian?> GetVeterinarianByIdAsync(int id)
+
+    public async Task<VetDto?> GetVeterinarianByIdAsync(int id)
     {
         _logger.LogDebug("Retrieving veterinarian with ID: {Id} from database", id);
 
         try
         {
-            var veterinarian = await _context.Veterinarians.FindAsync(id);
+            var vet = await _context.Veterinarians.FindAsync(id);
 
-            if (veterinarian == null)
+            if (vet == null)
             {
                 _logger.LogWarning("Veterinarian with ID {Id} not found in database", id);
+                return null;
             }
             else
             {
                 _logger.LogInformation("Successfully retrieved veterinarian with ID: {Id} from database", id);
-            }
+                var specialties = vet.Specialties;
 
-            return veterinarian;
+                return new VetDto
+                {
+                    Id = vet.Id,
+                    FirstName = vet.FirstName,
+                    LastName = vet.LastName,
+                    Specialties = specialties.Select(s => new SpecialtyDto
+                    {
+                        Id = s.Id,
+                        Name = s.Name
+                    }).ToList()
+                };
+            }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error occurred while retrieving veterinarian with ID: {Id} from database", id);
             throw;
         }
+    }
+
+    internal async Task<IEnumerable<VetDto>> MapVeterinariansToDtosAsync(IEnumerable<Veterinarian> veterinarians)
+    {
+        List<VetDto> vetList = new();
+
+        foreach (var vet in veterinarians)
+        {
+            var specialties = vet.Specialties;
+
+            vetList.Add(new VetDto
+            {
+                Id = vet.Id,
+                FirstName = vet.FirstName,
+                LastName = vet.LastName,
+                Specialties = specialties.Select(s => new SpecialtyDto
+                {
+                    Id = s.Id,
+                    Name = s.Name
+                }).ToList()
+            });
+        }
+
+        return vetList;
     }
 }

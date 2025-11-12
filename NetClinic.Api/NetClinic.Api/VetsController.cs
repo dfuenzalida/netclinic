@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using NetClinic.Api.Models;
+using NetClinic.Api.Dto;
 using NetClinic.Api.Services;
 
 namespace NetClinic.Api;
@@ -20,7 +20,7 @@ public class VetsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IEnumerable<Veterinarian>> Get()
+    public async Task<IEnumerable<VetDto>> Get()
     {
         _logger.LogInformation("Vets GET request received at {Timestamp}", DateTime.UtcNow);
         
@@ -38,7 +38,7 @@ public class VetsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Veterinarian>> GetById(int id)
+    public async Task<ActionResult<VetDto>> GetById(int id)
     {
         _logger.LogInformation("Vets GET by ID request received for ID: {Id} at {Timestamp}", id, DateTime.UtcNow);
         
