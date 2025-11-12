@@ -10,9 +10,11 @@ public class Veterinarian
     public int Id { get; set; }
     
     [Column("first_name")]
+    [Required]
     public string FirstName { get; set; } = string.Empty;
     
     [Column("last_name")]
+    [Required]
     public string LastName { get; set; } = string.Empty;
 
     // Parameterless constructor for EF Core
