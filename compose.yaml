@@ -1,0 +1,21 @@
+# Use postgres/example as user/password credentials
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    volumes:
+      - ./postgresql:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_PASSWORD: example
+    ports:
+      - 5432:5432
+
+  # Run docker compose up, wait for it to initialize completely, and visit http://localhost:8080 or http://host-ip:8080 (as appropriate).
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
