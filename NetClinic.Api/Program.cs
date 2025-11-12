@@ -1,4 +1,5 @@
 using NetClinic.Api;
+using NetClinic.Api.Services;
 
 namespace NetClinic.Api;
 
@@ -17,6 +18,9 @@ public class Program
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
         builder.Services.AddControllers();
+        
+        // Register custom services
+        builder.Services.AddScoped<IWeatherSummaryService, WeatherSummaryService>();
 
         var app = builder.Build();
 
