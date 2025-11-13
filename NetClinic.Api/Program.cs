@@ -28,6 +28,7 @@ public class Program
         // Register custom services
         builder.Services.AddScoped<IWeatherSummaryService, WeatherSummaryService>();
         builder.Services.AddScoped<IVetService, VetService>();
+        builder.Services.AddScoped<IOwnerService, OwnerService>();
 
         var app = builder.Build();
 

@@ -11,6 +11,7 @@ public class NetClinicDbContext : DbContext
 
     public DbSet<Veterinarian> Veterinarians { get; set; }
     public DbSet<Specialty> Specialties { get; set; }
+    public DbSet<Owner> Owners { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
