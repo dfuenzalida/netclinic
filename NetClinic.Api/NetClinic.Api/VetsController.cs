@@ -20,15 +20,19 @@ public class VetsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IEnumerable<VetDto>> Get()
+    public async Task<VetListDto> Get()
     {
         _logger.LogInformation("Vets GET request received at {Timestamp}", DateTime.UtcNow);
         
         try
         {
             var veterinarians = await _vetService.GetAllVeterinariansAsync();
+            var vetList = new VetListDto
+            {
+                VetList = veterinarians.ToList()
+            };
             _logger.LogInformation("Successfully retrieved {Count} veterinarians", veterinarians.Count());
-            return veterinarians;
+            return vetList;
         }
         catch (Exception ex)
         {
