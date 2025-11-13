@@ -19,13 +19,17 @@ public class OwnerService : IOwnerService
 
     public async Task<IEnumerable<OwnerDto>> GetAllOwnersAsync(string? lastName = null)
     {
-        _logger.LogInformation("Fetching all owners from the database");
+        _logger.LogInformation("Fetching owners from the database with lastName filter: {LastNameFilter}", lastName ?? "none");
 
-        string lastNameFilter = lastName ?? string.Empty;
-        var owners = await _context.Owners.ToListAsync();
-        var ownerDtos = owners
-            .Where(o => o.LastName.StartsWith(lastNameFilter, StringComparison.OrdinalIgnoreCase))
-            .Select(owner => MapOwnerToOwnerDto(owner)).ToList();
+        var query = _context.Owners.AsQueryable();
+
+        if (!string.IsNullOrEmpty(lastName))
+        {
+            query = query.Where(o => o.LastName.StartsWith(lastName));
+        }
+
+        var owners = await query.ToListAsync();
+        var ownerDtos = owners.Select(owner => MapOwnerToOwnerDto(owner)).ToList();
 
         _logger.LogInformation("Successfully fetched {Count} owners", ownerDtos.Count);
 
