@@ -24,17 +24,5 @@ public class NetClinicDbContext : DbContext
                 "vet_specialties",
                 j => j.HasOne<Specialty>().WithMany().HasForeignKey("specialty_id"),
                 j => j.HasOne<Veterinarian>().WithMany().HasForeignKey("vet_id"));
-
-        // Configure the Veterinarian entity
-        modelBuilder.Entity<Veterinarian>(entity =>
-        {
-            entity.HasKey(v => v.Id);
-        });
-
-        // Configure the Specialty entity
-        modelBuilder.Entity<Specialty>(entity =>
-        {
-            entity.HasKey(s => s.Id);
-        });
     }
 }
