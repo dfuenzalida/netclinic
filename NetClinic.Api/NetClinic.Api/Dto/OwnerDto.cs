@@ -8,4 +8,6 @@ public class OwnerDto
     public string Address { get; set; } = string.Empty;
     public string City { get; set; } = string.Empty;
     public string Telephone { get; set; } = string.Empty;
+
+    // TODO add the list of Pet names
 }
