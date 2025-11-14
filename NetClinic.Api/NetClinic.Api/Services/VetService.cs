@@ -24,7 +24,7 @@ public class VetService : IVetService
         try
         {
             var veterinarians = await _context.Veterinarians.Include(v => v.Specialties).ToListAsync();
-            var vetDtoList = await MapVeterinariansToDtosAsync(veterinarians);
+            var vetDtoList = veterinarians.Select(v => MapVeterinariansToDtos(v)).ToList();
             _logger.LogInformation("Successfully retrieved {Count} veterinarians from database", veterinarians.Count);
             return vetDtoList;
         }
@@ -74,27 +74,20 @@ public class VetService : IVetService
         }
     }
 
-    internal async Task<IEnumerable<VetDto>> MapVeterinariansToDtosAsync(IEnumerable<Veterinarian> veterinarians)
+    internal VetDto MapVeterinariansToDtos(Veterinarian veterinarian)
     {
-        List<VetDto> vetList = new();
+        var specialties = veterinarian.Specialties;
 
-        foreach (var vet in veterinarians)
+        return new VetDto
         {
-            var specialties = vet.Specialties;
-
-            vetList.Add(new VetDto
+            Id = veterinarian.Id,
+            FirstName = veterinarian.FirstName,
+            LastName = veterinarian.LastName,
+            Specialties = specialties.Select(s => new SpecialtyDto
             {
-                Id = vet.Id,
-                FirstName = vet.FirstName,
-                LastName = vet.LastName,
-                Specialties = specialties.Select(s => new SpecialtyDto
-                {
-                    Id = s.Id,
-                    Name = s.Name
-                }).ToList()
-            });
-        }
-
-        return vetList;
+                Id = s.Id,
+                Name = s.Name
+            }).ToList()
+        };
     }
 }
