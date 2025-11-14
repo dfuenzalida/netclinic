@@ -9,5 +9,6 @@ public class OwnerDto
     public string City { get; set; } = string.Empty;
     public string Telephone { get; set; } = string.Empty;
 
-    // TODO add the list of Pet names
+    // List of Pet names
+    public List<string> Pets { get; set; } = new();
 }

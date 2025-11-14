@@ -20,9 +20,10 @@ public class OwnersController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<OwnerListDto> Get([FromQuery] string? lastName = null)
+    public async Task<OwnerListDto> Get([FromQuery] string? lastName = null, [FromQuery] int page = 1)
     {
-        _logger.LogInformation("Owners GET request received at {Timestamp}", DateTime.UtcNow);
+        // TODO implement pagination using 'page' parameter
+        _logger.LogInformation("Owners GET request received at {Timestamp} for page {Page}", DateTime.UtcNow, page);
 
         try
         {

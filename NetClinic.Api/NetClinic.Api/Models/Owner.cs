@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NetClinic.Api.Models;
@@ -23,4 +22,6 @@ public class Owner
 
     [Column("telephone")]
     public string Telephone { get; set; } = string.Empty;
+
+    public IEnumerable<Pet> Pets { get; set; } = new List<Pet>();
 }
