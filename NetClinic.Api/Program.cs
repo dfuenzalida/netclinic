@@ -26,7 +26,6 @@ public class Program
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
         
         // Register custom services
-        builder.Services.AddScoped<IWeatherSummaryService, WeatherSummaryService>();
         builder.Services.AddScoped<IVetService, VetService>();
         builder.Services.AddScoped<IOwnerService, OwnerService>();
 
