@@ -18,7 +18,7 @@ public class Veterinarian
     public string LastName { get; set; } = string.Empty;
 
     // Navigation property for many-to-many relationship with Specialty
-    public ICollection<Specialty> Specialties { get; set; } = new List<Specialty>();
+    public ICollection<Specialty> Specialties { get; set; } = [];
 
     // Parameterless constructor for EF Core
     public Veterinarian()
