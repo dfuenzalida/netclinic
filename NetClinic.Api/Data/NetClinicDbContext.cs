@@ -10,9 +10,7 @@ public class NetClinicDbContext : DbContext
     }
 
     public DbSet<Veterinarian> Veterinarians { get; set; }
-    // public DbSet<Specialty> Specialties { get; set; }
     public DbSet<Owner> Owners { get; set; }
-    // public DbSet<Pet> Pets { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -31,5 +29,16 @@ public class NetClinicDbContext : DbContext
             .HasMany(o => o.Pets)
             .WithOne(p => p.Owner)
             .HasForeignKey(p => p.OwnerId);
+
+        modelBuilder.Entity<Pet>()
+            .HasMany(p => p.Visits)
+            .WithOne(v => v.Pet)
+            .HasForeignKey(v => v.PetId);
+
+        modelBuilder.Entity<Pet>()
+            .HasOne(p => p.PetType)
+            .WithMany()
+            .HasForeignKey(p => p.TypeId);
+
     }
 }

@@ -23,5 +23,5 @@ public class Owner
     [Column("telephone")]
     public string Telephone { get; set; } = string.Empty;
 
-    public IEnumerable<Pet> Pets { get; set; } = new List<Pet>();
+    public ICollection<Pet> Pets { get; set; } = [];
 }

@@ -41,4 +41,29 @@ public class OwnersController : ControllerBase
             throw;
         }
     }
+
+    [HttpGet("{ownerId}")]
+    public async Task<OwnerDetailsDto?> GetOwnerDetailsById([FromRoute] int ownerId)
+    {
+        _logger.LogInformation("Owner GET by ID request received at {Timestamp} for Owner ID {OwnerId}", DateTime.UtcNow, ownerId);
+
+        try
+        {
+            var owner = await _ownerService.GetOwnerDetailsByIdAsync(ownerId);
+            if (owner != null)
+            {
+                _logger.LogInformation("Successfully retrieved owner with ID {OwnerId}", ownerId);
+            }
+            else
+            {
+                _logger.LogWarning("Owner with ID {OwnerId} not found", ownerId);
+            }
+            return owner;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while retrieving owner with ID {OwnerId}", ownerId);
+            throw;
+        }
+    }
 }

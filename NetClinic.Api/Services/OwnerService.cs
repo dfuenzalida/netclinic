@@ -8,6 +8,8 @@ namespace NetClinic.Api.Services;
 public interface IOwnerService
 {
     Task<IEnumerable<OwnerDto>> GetAllOwnersAsync(string? lastName = null, int page = 1);
+
+    Task<OwnerDetailsDto?> GetOwnerDetailsByIdAsync(int ownerId);
 }
 
 public class OwnerService : IOwnerService
@@ -40,6 +42,54 @@ public class OwnerService : IOwnerService
         _logger.LogInformation("Successfully fetched {Count} owners", ownerDtos.Count);
 
         return ownerDtos;
+    }
+
+    public async Task<OwnerDetailsDto?> GetOwnerDetailsByIdAsync(int ownerId)
+    {
+        _logger.LogInformation("Fetching owner details for OwnerId: {OwnerId}", ownerId);
+
+        var query = _context.Owners.AsQueryable();
+
+        var owner = await _context.Owners
+            .Where(o => o.Id == ownerId)
+            .Include(o => o.Pets)
+                .ThenInclude(p => p.Visits)
+            .Include(o => o.Pets)
+                .ThenInclude(p => p.PetType)
+            .FirstOrDefaultAsync();
+
+        if (owner == null)
+        {
+            _logger.LogWarning("Owner with Id {OwnerId} not found", ownerId);
+            return null;
+        }
+
+        var ownerDetailsDto = new OwnerDetailsDto
+        {
+            Id = owner.Id,
+            FirstName = owner.FirstName,
+            LastName = owner.LastName,
+            Address = owner.Address,
+            City = owner.City,
+            Telephone = owner.Telephone,
+            Pets = owner.Pets.Select(p => new PetDetailsDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Type = p.PetType.Name,
+                BirthDate = p.BirthDate,
+                Visits = p.Visits.Select(v => new VisitDto
+                {
+                    Id = v.Id,
+                    VisitDate = v.VisitDate,
+                    Description = v.Description
+                }).ToList()
+            }).ToList()
+        };
+
+        _logger.LogInformation("Successfully fetched details for OwnerId: {OwnerId}", ownerId);
+
+        return ownerDetailsDto;
     }
 
     static OwnerDto MapOwnerToOwnerDto(Owner owner)
