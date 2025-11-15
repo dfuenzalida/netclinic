@@ -1,4 +1,4 @@
-namespace NetClinic.Api;
+namespace NetClinic.Api.Utils;
 
 public class RequestLoggingMiddleware
 {

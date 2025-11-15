@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using NetClinic.Api.Dto;
 using NetClinic.Api.Services;
 
-namespace NetClinic.Api;
+namespace NetClinic.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
