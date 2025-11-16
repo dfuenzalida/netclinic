@@ -76,7 +76,7 @@ Shows the details of an owner, their pets and each visit of each pet
             "name": "Leo",
             "birthDate": "2010-09-07",
             "type": "cat",
-            "visits": [
+            "visits": [http://localhost:3000/api/owners
               "date": "2025-11-12",
               "description": "Rabies shot and yearly check"
             ]
@@ -85,4 +85,20 @@ Shows the details of an owner, their pets and each visit of each pet
     }
 }
 
+```
+
+## `POST /owners`
+
+Takes a JSON body with an OwnerDto and creates a new Owner:
+
+Creation:
+
+```
+curl -v -X POST --header "Content-type: application/json" http://localhost:3000/api/owners --data '{"firstName":"Denis","lastName":"Fuenzalida","address":"1234 Restful Rd.", "city": "Seattle", "telephone": "5551112222"}'
+```
+
+Response:
+
+```
+{"id":12,"firstName":"Denis","lastName":"Fuenzalida","address":"1234 Restful Rd.","city":"Seattle","telephone":"5551112222","pets":[]}
 ```

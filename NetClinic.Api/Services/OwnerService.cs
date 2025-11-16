@@ -10,6 +10,8 @@ public interface IOwnerService
     Task<IEnumerable<OwnerDto>> GetAllOwnersAsync(string? lastName = null, int page = 1);
 
     Task<OwnerDetailsDto?> GetOwnerDetailsByIdAsync(int ownerId);
+    
+    Task<OwnerDto> CreateOwnerAsync(OwnerDto ownerDto);
 }
 
 public class OwnerService : IOwnerService
@@ -90,6 +92,28 @@ public class OwnerService : IOwnerService
         _logger.LogInformation("Successfully fetched details for OwnerId: {OwnerId}", ownerId);
 
         return ownerDetailsDto;
+    }
+
+    public async Task<OwnerDto> CreateOwnerAsync(OwnerDto ownerDto)
+    {
+        _logger.LogInformation("Creating new owner: {FirstName} {LastName}", ownerDto.FirstName, ownerDto.LastName);
+
+        var owner = new Owner
+        {
+            FirstName = ownerDto.FirstName,
+            LastName = ownerDto.LastName,
+            Address = ownerDto.Address,
+            City = ownerDto.City,
+            Telephone = ownerDto.Telephone
+        };
+
+        _context.Owners.Add(owner);
+        await _context.SaveChangesAsync();
+
+        _logger.LogInformation("Successfully created owner with Id: {OwnerId}", owner.Id);
+
+        // Return the created owner as DTO with the generated ID
+        return MapOwnerToOwnerDto(owner);
     }
 
     static OwnerDto MapOwnerToOwnerDto(Owner owner)

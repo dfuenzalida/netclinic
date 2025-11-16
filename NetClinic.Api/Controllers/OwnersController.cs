@@ -65,4 +65,22 @@ public class OwnersController : ControllerBase
             throw;
         }
     }
+
+    [HttpPost]
+    public async Task<ActionResult<OwnerDto>> CreateOwner([FromBody] OwnerDto ownerDto)
+    {
+        _logger.LogInformation("Owner POST request received at {Timestamp}", DateTime.UtcNow);
+
+        try
+        {
+            var createdOwner = await _ownerService.CreateOwnerAsync(ownerDto);
+            _logger.LogInformation("Successfully created owner with ID {OwnerId}", createdOwner.Id);
+            return CreatedAtAction(nameof(CreateOwner), new { ownerId = createdOwner.Id }, createdOwner);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while creating a new owner");
+            throw;
+        }
+    }
 }
