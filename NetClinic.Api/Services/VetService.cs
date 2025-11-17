@@ -93,7 +93,7 @@ public class VetService : IVetService
             {
                 Id = s.Id,
                 Name = s.Name
-            }).ToList()
+            }).OrderBy(s => s.Name).ToList()
         };
     }
 }
