@@ -1,0 +1,46 @@
+"use client";
+
+import { useState } from "react";
+
+import NavBar from "./components/NavBar";
+import Oops from "./components/Oops";
+import Owners from "./components/Owners";
+import Vets from "./components/Vets";
+import Welcome from "./components/Welcome";
+
+export default function App() {
+  const [currentView, setCurrentView] = useState<'welcome' | 'owners' | 'vets' | 'oops'>('welcome');
+
+  const renderCurrentView = () => {
+    switch (currentView) {
+      case 'owners':
+        return <Owners />;
+      case 'vets':
+        return <Vets />;
+      case 'oops':
+        return <Oops />;
+      default:
+        return <Welcome />;
+    }
+  };
+
+  return (
+    <>
+      <NavBar currentView={currentView} setCurrentView={setCurrentView} />
+      <div className="container-fluid">
+        <div className="container xd-container">
+        {renderCurrentView()}
+        </div>
+        <br />
+        <br />        
+        <div className="container">
+          <div className="row">
+            <div className="col-12 text-center">
+              <img src="logo.svg" alt="Footer Logo" className="logo" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
