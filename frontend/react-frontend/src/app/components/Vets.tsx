@@ -42,13 +42,9 @@ export default function Vets() {
     }
   };
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  }
-
   useEffect(() => {
     fetchVets();
-  }, [currentPage]);
+  }, [currentPage]); // Add currentPage as dependency to refetch when it changes
 
   if (loading) {
     return (
@@ -99,7 +95,7 @@ export default function Vets() {
           ))}
         </tbody>
       </table>
-      <Pagination currentPage={currentPage} setCurrentPage={handlePageChange} totalPages={totalPages} />
+      <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} />
       {vets.length === 0 && (
         <p>No veterinarians found.</p>
       )}
