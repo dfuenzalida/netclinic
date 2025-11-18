@@ -29,14 +29,14 @@ export default function App() {
       <NavBar currentView={currentView} setCurrentView={setCurrentView} />
       <div className="container-fluid">
         <div className="container xd-container">
-        {renderCurrentView()}
-        </div>
-        <br />
-        <br />        
-        <div className="container">
-          <div className="row">
-            <div className="col-12 text-center">
-              <img src="logo.svg" alt="Footer Logo" className="logo" />
+          {renderCurrentView()}
+          <br />
+          <br />        
+          <div className="container">
+            <div className="row">
+              <div className="col-12 text-center">
+                <img src="logo.svg" alt="Footer Logo" height={20} width={100} className="logo" />
+              </div>
             </div>
           </div>
         </div>
