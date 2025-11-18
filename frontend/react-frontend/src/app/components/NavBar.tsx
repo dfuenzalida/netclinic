@@ -31,6 +31,7 @@ export default function NavBar({ currentView, setCurrentView }: NavBarProps) {
             <li className="nav-item">
               <a className={`nav-link ${currentView === 'welcome' ? 'active' : ''}`} href="#" onClick={(e) => handleNavClick(e, 'welcome')} title="home page">
                 <span className="fa fa-home"></span>
+                &nbsp;
                 <span>Home</span>
               </a>
             </li>
@@ -38,6 +39,7 @@ export default function NavBar({ currentView, setCurrentView }: NavBarProps) {
             <li className="nav-item">
               <a className={`nav-link ${currentView === 'owners' ? 'active' : ''}`} href="#owners" onClick={(e) => handleNavClick(e, 'owners')} title="find owners">
                 <span className="fa fa-search"></span>
+                &nbsp;
                 <span>Find Owners</span>
               </a>
             </li>
@@ -45,6 +47,7 @@ export default function NavBar({ currentView, setCurrentView }: NavBarProps) {
             <li className="nav-item">
               <a className={`nav-link ${currentView === 'vets' ? 'active' : ''}`} href="#vets" onClick={(e) => handleNavClick(e, 'vets')} title="veterinarians">
                 <span className="fa fa-th-list"></span>
+                &nbsp;
                 <span>Veterinarians</span>
               </a>
             </li>
@@ -52,6 +55,7 @@ export default function NavBar({ currentView, setCurrentView }: NavBarProps) {
             <li className="nav-item">
               <a className={`nav-link ${currentView === 'oops' ? 'active' : ''}`} href="#oops" onClick={(e) => handleNavClick(e, 'oops')} title="trigger a RuntimeException to see how it is handled">
                 <span className="fa fa-exclamation-triangle"></span>
+                &nbsp;
                 <span>Error</span>
               </a>
             </li>
