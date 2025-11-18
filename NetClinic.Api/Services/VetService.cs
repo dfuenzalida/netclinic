@@ -7,7 +7,8 @@ namespace NetClinic.Api.Services;
 
 public interface IVetService
 {
-    Task<IEnumerable<VetDto>> GetAllVeterinariansAsync();
+    Task<IEnumerable<VetDto>> GetAllVeterinariansAsync(int page = 1, int pageSize = 5);
+    Task<int> GetVeterinariansCountAsync();
     Task<VetDto?> GetVeterinarianByIdAsync(int id);
 }
 
@@ -23,13 +24,16 @@ public class VetService : IVetService
         _logger.LogInformation("VetService initialized with database context");
     }
 
-    public async Task<IEnumerable<VetDto>> GetAllVeterinariansAsync()
+    public async Task<IEnumerable<VetDto>> GetAllVeterinariansAsync(int page = 1, int pageSize = 5)
     {
         _logger.LogDebug("Retrieving all veterinarians from database");
 
         try
         {
-            var veterinarians = await _context.Veterinarians.Include(v => v.Specialties).ToListAsync();
+            var veterinarians = await _context.Veterinarians.Include(v => v.Specialties)
+                                        .Skip((page - 1) * pageSize)
+                                        .Take(pageSize)
+                                        .ToListAsync();
             var vetDtoList = veterinarians.Select(v => MapVeterinariansToDtos(v)).ToList();
             _logger.LogInformation("Successfully retrieved {Count} veterinarians from database", veterinarians.Count);
             return vetDtoList;
@@ -41,6 +45,22 @@ public class VetService : IVetService
         }
     }
 
+    public async Task<int> GetVeterinariansCountAsync()
+    {
+        _logger.LogDebug("Counting total number of veterinarians in database");
+
+        try
+        {
+            var count = await _context.Veterinarians.CountAsync();
+            _logger.LogInformation("Total number of veterinarians: {Count}", count);
+            return count;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while counting veterinarians in database");
+            throw;
+        }
+    }
 
     public async Task<VetDto?> GetVeterinarianByIdAsync(int id)
     {

@@ -10,6 +10,7 @@ public class VetsController : ControllerBase
 {
     private readonly ILogger<VetsController> _logger;
     private readonly IVetService _vetService;
+   private const int PageSize = 5;
 
     public VetsController(
         ILogger<VetsController> logger,
@@ -20,16 +21,20 @@ public class VetsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<VetListDto> Get()
+    public async Task<VetListDto> Get([FromQuery] int page = 1)
     {
         _logger.LogInformation("Vets GET request received at {Timestamp}", DateTime.UtcNow);
         
         try
         {
-            var veterinarians = await _vetService.GetAllVeterinariansAsync();
+            var totalVets = await _vetService.GetVeterinariansCountAsync();
+            var totalPages = (int) Math.Floor(totalVets / (double)PageSize) + (totalVets % PageSize == 0 ? 0 : 1);
+
+            var veterinarians = await _vetService.GetAllVeterinariansAsync(page);
             var vetList = new VetListDto
             {
-                VetList = veterinarians.ToList()
+                VetList = veterinarians.ToList(),
+                TotalPages = totalPages
             };
             _logger.LogInformation("Successfully retrieved {Count} veterinarians", veterinarians.Count());
             return vetList;
