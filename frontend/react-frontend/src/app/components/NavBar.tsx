@@ -5,7 +5,7 @@ interface NavBarProps {
 
 export default function NavBar({ currentView, setCurrentView }: NavBarProps) {
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, viewName: string) => {
-    // e.preventDefault();
+    e.preventDefault();
     setCurrentView(viewName);
   };
 

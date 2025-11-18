@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Pagination from './Pagination';
 
 interface Vet {
   id: number;
@@ -16,30 +17,38 @@ interface Specialty {
 
 export default function Vets() {
   const [vets, setVets] = useState<Vet[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchVets = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch('/api/vets');
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        setVets(data.vetList);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
-      } finally {
-        setLoading(false);
+  const fetchVets = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/vets?page=${currentPage}`);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    };
+      
+      const data = await response.json();
+      console.log('# pages:', data.totalPages);
+      setVets(data.vetList);
+      setTotalPages(data.totalPages);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  }
+
+  useEffect(() => {
     fetchVets();
-  }, []);
+  }, [currentPage]);
 
   if (loading) {
     return (
@@ -74,14 +83,14 @@ export default function Vets() {
           </tr>
         </thead>
         <tbody>
-          {vets.map((vet) => (
+          {vets.map((vet: Vet) => (
             <tr key={vet.id}>
               <td>
                 {vet.firstName} {vet.lastName}
               </td>
               <td>
                 {vet.specialties.length > 0 ? (
-                  vet.specialties.map((specialty) => specialty.name).join(', ')
+                  vet.specialties.map((specialty: Specialty) => specialty.name).join(', ')
                 ) : (
                   <span>none</span>
                 )}
@@ -90,6 +99,7 @@ export default function Vets() {
           ))}
         </tbody>
       </table>
+      <Pagination currentPage={currentPage} setCurrentPage={handlePageChange} totalPages={totalPages} />
       {vets.length === 0 && (
         <p>No veterinarians found.</p>
       )}
