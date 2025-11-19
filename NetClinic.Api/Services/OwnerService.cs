@@ -35,7 +35,7 @@ public class OwnerService : IOwnerService
 
         if (!string.IsNullOrEmpty(lastName))
         {
-            query = query.Where(o => o.LastName.StartsWith(lastName));
+            query = query.Where(o => o.LastName.ToLower().StartsWith(lastName.ToLower()));
         }
 
         var owners = await query.Include(o => o.Pets).ToListAsync();
