@@ -7,7 +7,7 @@ namespace NetClinic.Api.Services;
 
 public interface IOwnerService
 {
-    Task<IEnumerable<OwnerDto>> GetAllOwnersAsync(string? lastName = null, int page = 1);
+    Task<IEnumerable<OwnerDto>> GetAllOwnersAsync(string? lastName = null, int page = 1, int pageSize = 5);
 
     Task<OwnerDetailsDto?> GetOwnerDetailsByIdAsync(int ownerId);
     
@@ -26,8 +26,7 @@ public class OwnerService : IOwnerService
         _logger.LogInformation("OwnerService initialized with database context");
     }
 
-    // TODO add pagination support
-    public async Task<IEnumerable<OwnerDto>> GetAllOwnersAsync(string? lastName = null, int page = 1)
+    public async Task<IEnumerable<OwnerDto>> GetAllOwnersAsync(string? lastName = null, int page = 1, int pageSize = 5)
     {
         _logger.LogInformation("Fetching owners from the database with lastName filter: {LastNameFilter}", lastName ?? "none");
 
@@ -38,7 +37,10 @@ public class OwnerService : IOwnerService
             query = query.Where(o => o.LastName.ToLower().StartsWith(lastName.ToLower()));
         }
 
-        var owners = await query.Include(o => o.Pets).ToListAsync();
+        var owners = await query.Include(o => o.Pets)
+                                        .Skip((page - 1) * pageSize)
+                                        .Take(pageSize)
+                                        .ToListAsync();
         var ownerDtos = owners.Select(owner => MapOwnerToOwnerDto(owner)).ToList();
 
         _logger.LogInformation("Successfully fetched {Count} owners", ownerDtos.Count);
