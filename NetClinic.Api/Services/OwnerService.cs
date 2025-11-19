@@ -7,7 +7,9 @@ namespace NetClinic.Api.Services;
 
 public interface IOwnerService
 {
-    Task<IEnumerable<OwnerDto>> GetAllOwnersAsync(string? lastName = null, int page = 1, int pageSize = 5);
+    Task<IEnumerable<OwnerDto>> GetOwnersByLastNameAsync(string? lastName = null, int page = 1, int pageSize = 5);
+
+    Task<int> GetOwnersByLastNameCountAsync(string? lastName = null);
 
     Task<OwnerDetailsDto?> GetOwnerDetailsByIdAsync(int ownerId);
     
@@ -26,7 +28,7 @@ public class OwnerService : IOwnerService
         _logger.LogInformation("OwnerService initialized with database context");
     }
 
-    public async Task<IEnumerable<OwnerDto>> GetAllOwnersAsync(string? lastName = null, int page = 1, int pageSize = 5)
+    public async Task<IEnumerable<OwnerDto>> GetOwnersByLastNameAsync(string? lastName = null, int page = 1, int pageSize = 5)
     {
         _logger.LogInformation("Fetching owners from the database with lastName filter: {LastNameFilter}", lastName ?? "none");
 
@@ -46,6 +48,24 @@ public class OwnerService : IOwnerService
         _logger.LogInformation("Successfully fetched {Count} owners", ownerDtos.Count);
 
         return ownerDtos;
+    }
+
+    public async Task<int> GetOwnersByLastNameCountAsync(string? lastName = null)
+    {
+        _logger.LogInformation("Fetching owners from the database with lastName filter: {LastNameFilter}", lastName ?? "none");
+
+        var query = _context.Owners.AsQueryable();
+
+        if (!string.IsNullOrEmpty(lastName))
+        {
+            query = query.Where(o => o.LastName.ToLower().StartsWith(lastName.ToLower()));
+        }
+
+        int ownerCount = await query.CountAsync();
+
+        _logger.LogInformation("Successfully found {Count} owners", ownerCount);
+
+        return ownerCount;
     }
 
     public async Task<OwnerDetailsDto?> GetOwnerDetailsByIdAsync(int ownerId)

@@ -26,10 +26,14 @@ public class OwnersController : ControllerBase
 
         try
         {
-            var owners = await _ownerService.GetAllOwnersAsync(lastName, page, pageSize);
+            var totalOwners = await _ownerService.GetOwnersByLastNameCountAsync(lastName);
+            var totalPages = (int) Math.Floor(totalOwners / (double)pageSize) + (totalOwners % pageSize == 0 ? 0 : 1);
+
+            var owners = await _ownerService.GetOwnersByLastNameAsync(lastName, page, pageSize);
             var ownerList = new OwnerListDto
             {
-                OwnerList = owners.ToList()
+                OwnerList = owners.ToList(),
+                TotalPages = totalPages
             };
             _logger.LogInformation("Successfully retrieved {Count} owners", owners.Count());
             return ownerList;
