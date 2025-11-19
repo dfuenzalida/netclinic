@@ -11,6 +11,10 @@ export default function Pagination({ currentPage, setCurrentPage, totalPages }: 
         pageRange.push(i);
     }
 
+  if (totalPages === 1) {
+    return <span></span>; // No pagination needed for a single page
+  }
+
   return (
     <>
     <div>
