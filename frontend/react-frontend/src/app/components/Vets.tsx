@@ -32,7 +32,6 @@ export default function Vets() {
       }
       
       const data = await response.json();
-      console.log('# pages:', data.totalPages);
       setVets(data.vetList);
       setTotalPages(data.totalPages);
     } catch (err) {
