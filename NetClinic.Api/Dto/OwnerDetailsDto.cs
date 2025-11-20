@@ -18,7 +18,7 @@ public class PetDetailsDto
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Type { get; set; } = string.Empty;
-    public DateTime BirthDate { get; set; }
+    public required string BirthDate { get; set; }
 
     // Collection of Visits
     public IEnumerable<VisitDto> Visits { get; set; } = [];
@@ -27,6 +27,6 @@ public class PetDetailsDto
 public class VisitDto
 {
     public int Id { get; set; }
-    public DateTime VisitDate { get; set; }
+    public required string VisitDate { get; set; }
     public string Description { get; set; } = string.Empty;
 }

@@ -88,28 +88,7 @@ public class OwnerService : IOwnerService
             return null;
         }
 
-        var ownerDetailsDto = new OwnerDetailsDto
-        {
-            Id = owner.Id,
-            FirstName = owner.FirstName,
-            LastName = owner.LastName,
-            Address = owner.Address,
-            City = owner.City,
-            Telephone = owner.Telephone,
-            Pets = owner.Pets.Select(p => new PetDetailsDto
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Type = p.PetType.Name,
-                BirthDate = p.BirthDate,
-                Visits = p.Visits.Select(v => new VisitDto
-                {
-                    Id = v.Id,
-                    VisitDate = v.VisitDate,
-                    Description = v.Description
-                }).ToList()
-            }).ToList()
-        };
+        var ownerDetailsDto = MapOwnerToOwnerDetailsDto(owner);
 
         _logger.LogInformation("Successfully fetched details for OwnerId: {OwnerId}", ownerId);
 
@@ -151,5 +130,33 @@ public class OwnerService : IOwnerService
             Telephone = owner.Telephone,
             Pets = pets
         };
+    }
+
+    static OwnerDetailsDto MapOwnerToOwnerDetailsDto(Owner owner)
+    {
+        var ownerDetailsDto = new OwnerDetailsDto
+        {
+            Id = owner.Id,
+            FirstName = owner.FirstName,
+            LastName = owner.LastName,
+            Address = owner.Address,
+            City = owner.City,
+            Telephone = owner.Telephone,
+            Pets = owner.Pets.Select(p => new PetDetailsDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Type = p.PetType.Name,
+                BirthDate = p.BirthDate.ToString("yyyy-MM-dd"),
+                Visits = p.Visits.Select(v => new VisitDto
+                {
+                    Id = v.Id,
+                    VisitDate = v.VisitDate.ToString("yyyy-MM-dd"),
+                    Description = v.Description
+                }).OrderBy(v => v.VisitDate).ToList()
+            }).OrderBy(p => p.Name).ToList()
+        };
+
+        return ownerDetailsDto;
     }
 }
