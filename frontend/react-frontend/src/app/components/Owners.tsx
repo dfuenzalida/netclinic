@@ -5,7 +5,7 @@ import Pagination from './Pagination';
 import { OwnerDetailsProps, OwnerOverview, OwnerSearchProps, OwnerSearchResultsProps,
   OwnerDetails, PetDetails, VisitDetails, OwnersViewNames } from '../types/Types';
 
-function OwnerSearchForm({ lastName, setLastName, setOwnersView, errorMessage, setErrorMessage } : OwnerSearchProps) {
+function OwnerSearchForm({ lastName, setLastName, setOwnersView, errorMessage } : OwnerSearchProps) {
   return (
     <div>
       <h2>Find Owners</h2>
@@ -61,6 +61,10 @@ function OwnerSearchResults({ lastName, ownersView, setOwnersView, errorMessage,
         console.log('No owners found with the given last name.');
         setErrorMessage('has not been found');
         setOwnersView('searchForm');
+      } if (data.ownerList.length === 1) {
+        // When there's exactly one owner in the search results, go to the details view for that owner
+        setOwnerId(data.ownerList[0].id);
+        setOwnersView('ownerDetails');
       } else {
         setErrorMessage(null);
       }

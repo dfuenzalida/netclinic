@@ -42,7 +42,6 @@ export interface OwnerSearchProps {
   setLastName: (name: string) => void;
   setOwnersView: (view: OwnersViewNames) => void;
   errorMessage: string | null;
-  setErrorMessage: (message: string | null) => void;
 }
 
 export interface OwnerSearchResultsProps {
