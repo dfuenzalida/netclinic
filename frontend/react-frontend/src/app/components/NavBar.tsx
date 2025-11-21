@@ -1,10 +1,7 @@
-interface NavBarProps {
-  currentView: string;
-  setCurrentView: (viewName: string) => void;
-}
+import { NavBarProps, PageNames } from "../types/Types";
 
 export default function NavBar({ currentView, setCurrentView }: NavBarProps) {
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, viewName: string) => {
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, viewName: PageNames) => {
     e.preventDefault();
     setCurrentView(viewName);
   };

@@ -2,66 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Pagination from './Pagination';
-
-interface OwnerOverview {
-  id: number;
-  firstName: string;
-  lastName: string;
-  address: string;
-  city: string;
-  telephone: string;
-  pets: string[];
-}
-
-interface VisitDetails {
-  id: number;
-  visitDate: string;
-  description: string;
-}
-interface PetDetails {
-  id: number;
-  name: string;
-  type: string;
-  birthDate: string;
-  visits: VisitDetails[];
-}
-
-interface OwnerDetails {
-  id: number;
-  firstName: string;
-  lastName: string;
-  address: string;
-  city: string;
-  telephone: string;
-  pets: PetDetails[];
-}
-
-interface OwnerDetailsProps {
-  ownerId: number;
-  setOwnersView: (view: string) => void;
-}
-
-interface OwnerSearchProps {
-  lastName: string;
-  setLastName: (name: string) => void;
-  setOwnersView: (view: string) => void;
-  errorMessage: string | null;
-  setErrorMessage: (message: string | null) => void;
-}
-
-interface OwnerSearchResultsProps {
-  lastName: string;
-  ownersView: string;
-  setOwnersView: (view: string) => void;
-  errorMessage: string | null;
-  setErrorMessage: (message: string | null) => void;
-  setOwnerId: (id: number) => void;
-}
-
-interface OwnerDetailsProps {
-  ownerId: number;
-  setOwnersView: (view: string) => void;
-}
+import { OwnerDetailsProps, OwnerOverview, OwnerSearchProps, OwnerSearchResultsProps,
+  OwnerDetails, PetDetails, VisitDetails } from '../types/Types';
 
 function OwnerSearchForm({ lastName, setLastName, setOwnersView, errorMessage, setErrorMessage } : OwnerSearchProps) {
   return (
@@ -184,7 +126,7 @@ function OwnerSearchResults({ lastName, ownersView, setOwnersView, errorMessage,
   );
 }
 
-function OwnerDetails({ownerId, setOwnersView}: OwnerDetailsProps) {
+function OwnerDetailsView({ownerId, setOwnersView}: OwnerDetailsProps) {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [owner, setOwner] = useState<OwnerDetails | null>(null);
@@ -308,7 +250,7 @@ export default function Owners() {
 
   switch (ownersView) {
     case 'ownerDetails':
-      return <OwnerDetails ownerId={ownerId} setOwnersView={setOwnersView} />;
+      return <OwnerDetailsView ownerId={ownerId} setOwnersView={setOwnersView} />;
     case 'searchResults':
       return <OwnerSearchResults lastName={lastName} ownersView={ownersView} setOwnersView={setOwnersView}
                 errorMessage={errorMessage} setErrorMessage={setErrorMessage} setOwnerId={setOwnerId} />;

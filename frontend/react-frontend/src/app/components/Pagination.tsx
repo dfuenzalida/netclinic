@@ -1,8 +1,4 @@
-interface PaginationProps {
-  currentPage: number;
-  setCurrentPage: (page: number) => void;
-  totalPages: number;
-}
+import { PaginationProps } from "../types/Types";
 
 export default function Pagination({ currentPage, setCurrentPage, totalPages }: PaginationProps) {
 
@@ -88,7 +84,6 @@ export default function Pagination({ currentPage, setCurrentPage, totalPages }: 
                         onClick={() => setCurrentPage(totalPages)}></a>
                 )
             }
-            {/* <a href="#" title="Last" className="fa fa-fast-forward"></a>         */}
         </span>
     </div>
     </>

@@ -2,18 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Pagination from './Pagination';
-
-interface Vet {
-  id: number;
-  firstName: string;
-  lastName: string;
-  specialties: Specialty[];
-}
-
-interface Specialty {
-  id: number;
-  name: string;
-}
+import { Vet, Specialty } from '../types/Types';
 
 export default function Vets() {
   const [vets, setVets] = useState<Vet[]>([]);

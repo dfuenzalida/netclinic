@@ -7,9 +7,10 @@ import Oops from "./components/Oops";
 import Owners from "./components/Owners";
 import Vets from "./components/Vets";
 import Welcome from "./components/Welcome";
+import { PageNames } from "./types/Types";
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<'welcome' | 'owners' | 'vets' | 'oops'>('welcome');
+  const [currentView, setCurrentView] = useState<PageNames>('welcome');
 
   const renderCurrentView = () => {
     switch (currentView) {
