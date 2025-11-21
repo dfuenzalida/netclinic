@@ -36,7 +36,7 @@ export default function App() {
           <div className="container">
             <div className="row">
               <div className="col-12 text-center">
-                <img src="logo.svg" alt="Footer Logo" height={20} width={100} className="logo" />
+                <img src="logo.svg" alt="Footer Logo" height={31} width={151} className="logo" />
               </div>
             </div>
           </div>
