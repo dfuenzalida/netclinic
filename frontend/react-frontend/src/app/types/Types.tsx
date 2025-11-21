@@ -1,4 +1,5 @@
 export type PageNames = "vets" | "welcome" | "owners" | "oops";
+export type OwnersViewNames = 'ownerDetails' | 'searchResults' | 'searchForm' | 'ownerCreateForm';
 
 // Owner Types
 
@@ -17,6 +18,7 @@ export interface VisitDetails {
   visitDate: string;
   description: string;
 }
+
 export interface PetDetails {
   id: number;
   name: string;
@@ -35,23 +37,18 @@ export interface OwnerDetails {
   pets: PetDetails[];
 }
 
-export interface OwnerDetailsProps {
-  ownerId: number;
-  setOwnersView: (view: string) => void;
-}
-
 export interface OwnerSearchProps {
   lastName: string;
   setLastName: (name: string) => void;
-  setOwnersView: (view: string) => void;
+  setOwnersView: (view: OwnersViewNames) => void;
   errorMessage: string | null;
   setErrorMessage: (message: string | null) => void;
 }
 
 export interface OwnerSearchResultsProps {
   lastName: string;
-  ownersView: string;
-  setOwnersView: (view: string) => void;
+  ownersView: OwnersViewNames;
+  setOwnersView: (view: OwnersViewNames) => void;
   errorMessage: string | null;
   setErrorMessage: (message: string | null) => void;
   setOwnerId: (id: number) => void;
@@ -59,7 +56,7 @@ export interface OwnerSearchResultsProps {
 
 export interface OwnerDetailsProps {
   ownerId: number;
-  setOwnersView: (view: string) => void;
+  setOwnersView: (view: OwnersViewNames) => void;
 }
 
 // Vets

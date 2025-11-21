@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Pagination from './Pagination';
 import { OwnerDetailsProps, OwnerOverview, OwnerSearchProps, OwnerSearchResultsProps,
-  OwnerDetails, PetDetails, VisitDetails } from '../types/Types';
+  OwnerDetails, PetDetails, VisitDetails, OwnersViewNames } from '../types/Types';
 
 function OwnerSearchForm({ lastName, setLastName, setOwnersView, errorMessage, setErrorMessage } : OwnerSearchProps) {
   return (
@@ -32,7 +32,7 @@ function OwnerSearchForm({ lastName, setLastName, setOwnersView, errorMessage, s
         </div>
       </div>
 
-      <a className="btn btn-primary" href="#/owners/new">Add Owner</a>
+      <a className="btn btn-primary" onClick={() => setOwnersView('ownerCreateForm')} href="#/owners/new">Add Owner</a>
 
     </div>
   );
@@ -241,11 +241,82 @@ function OwnerDetailsView({ownerId, setOwnersView}: OwnerDetailsProps) {
   );
 }
 
+function OwnerCreateForm() {
+  return (<div>
+    <h2>Owner</h2>
+      <form className="form-horizontal" id="add-owner-form" method="post">
+        <div className="form-group has-feedback">
+          
+          <div className="form-group has-error">
+            <label htmlFor="firstName" className="col-sm-2 control-label">First Name</label>
+            <div className="col-sm-10">
+              <div>
+                <input className="form-control" type="text" id="firstName" name="firstName" value="" />
+              </div>
+                <span className="fa fa-remove form-control-feedback" aria-hidden="true"></span>
+                <span className="help-inline">must not be blank</span>              
+            </div>
+          </div>
+          
+          <div className="form-group has-error">
+            <label htmlFor="lastName" className="col-sm-2 control-label">Last Name</label>
+            <div className="col-sm-10">
+              <div>
+                <input className="form-control" type="text" id="lastName" name="lastName" value="" />                
+              </div>
+                <span className="fa fa-remove form-control-feedback" aria-hidden="true"></span>
+                <span className="help-inline">must not be blank</span>              
+            </div>
+          </div>        
+          
+          <div className="form-group has-error">
+            <label htmlFor="address" className="col-sm-2 control-label">Address</label>
+            <div className="col-sm-10">
+              <div>
+                <input className="form-control" type="text" id="address" name="address" value="" />
+              </div>
+                <span className="fa fa-remove form-control-feedback" aria-hidden="true"></span>
+                <span className="help-inline">must not be blank</span>              
+            </div>
+          </div>
+          
+          <div className="form-group has-error">
+            <label htmlFor="city" className="col-sm-2 control-label">City</label>
+            <div className="col-sm-10">
+              <div>
+                <input className="form-control" type="text" id="city" name="city" value="" />
+              </div>
+                <span className="fa fa-remove form-control-feedback" aria-hidden="true"></span>
+                <span className="help-inline">must not be blank</span>
+            </div>
+          </div>
+          
+          <div className="form-group has-error">
+            <label htmlFor="telephone" className="col-sm-2 control-label">Telephone</label>
+            <div className="col-sm-10">
+              <div>
+                <input className="form-control" type="text" id="telephone" name="telephone" value="" />                
+              </div>
+                <span className="fa fa-remove form-control-feedback" aria-hidden="true"></span>
+                <span className="help-inline">Telephone must be a 10-digit number<br />must not be blank</span>              
+            </div>
+          </div>
+        
+        </div>
+        <div className="form-group">
+          <div className="col-sm-offset-2 col-sm-10">
+            <button className="btn btn-primary" type="submit">Add Owner</button>
+          </div>
+        </div>
+      </form>
+    </div>);
+}
+
 export default function Owners() {
 
   const [ownerId, setOwnerId] = useState<number>(0);
   const [lastName, setLastName] = useState<string>('');
-  const [ownersView, setOwnersView] = useState<string>('searchForm');
+  const [ownersView, setOwnersView] = useState<OwnersViewNames>('searchForm');
   const [errorMessage, setErrorMessage] = useState<string|null>(null);
 
   switch (ownersView) {
@@ -257,5 +328,7 @@ export default function Owners() {
     case 'searchForm':
       return <OwnerSearchForm lastName={lastName} setLastName={setLastName} errorMessage={errorMessage} setErrorMessage={setErrorMessage}
                setOwnersView={setOwnersView} />;
+    case 'ownerCreateForm':
+      return <OwnerCreateForm />;
   };
 }
