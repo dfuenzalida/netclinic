@@ -70,20 +70,65 @@ public class OwnersController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<OwnerDto>> CreateOwner([FromBody] OwnerDto ownerDto)
+    public async Task<ActionResult<OwnerDto>> CreateOwner([FromBody] OwnerDto newOwnerDto)
     {
         _logger.LogInformation("Owner POST request received at {Timestamp}", DateTime.UtcNow);
 
+        var errors = ValidateOwnerDto(newOwnerDto);
+
+        if (errors.Count != 0)
+        {
+            return BadRequest(errors);
+        }
+
         try
         {
-            var createdOwner = await _ownerService.CreateOwnerAsync(ownerDto);
+            var createdOwner = await _ownerService.CreateOwnerAsync(newOwnerDto);
             _logger.LogInformation("Successfully created owner with ID {OwnerId}", createdOwner.Id);
             return CreatedAtAction(nameof(CreateOwner), new { ownerId = createdOwner.Id }, createdOwner);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error occurred while creating a new owner");
+            _logger.LogError(ex, "Error occurred while creating a new Owner");
             throw;
         }
+    }
+
+    public static Dictionary<string, string> ValidateOwnerDto(OwnerDto? ownerDto)
+    {
+        var errors = new Dictionary<string, string>();
+
+        if (ownerDto == null)
+        {
+            errors.Add("Owner", "Owner data is required.");
+            return errors;
+        }
+
+        if (string.IsNullOrWhiteSpace(ownerDto.FirstName))
+        {
+            errors.Add("FirstName", "First name is required.");
+        }
+
+        if (string.IsNullOrWhiteSpace(ownerDto.LastName))
+        {
+            errors.Add("LastName", "Last name is required.");
+        }
+
+        if (string.IsNullOrWhiteSpace(ownerDto.Address))
+        {
+            errors.Add("Address", "Address is required.");
+        }
+
+        if (string.IsNullOrWhiteSpace(ownerDto.City))
+        {
+            errors.Add("City", "City is required.");
+        }
+
+        if (string.IsNullOrWhiteSpace(ownerDto.Telephone))
+        {
+            errors.Add("Telephone", "Telephone is required.");
+        }
+
+        return errors;
     }
 }
