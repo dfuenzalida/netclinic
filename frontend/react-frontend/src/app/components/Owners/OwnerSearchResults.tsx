@@ -25,8 +25,8 @@ export default function OwnerSearchResults({ lastName, ownersView, setOwnersView
         console.log('No owners found with the given last name.');
         setErrorMessage('has not been found');
         setOwnersView('searchForm');
-      } if (data.ownerList.length === 1) {
-        // When there's exactly one owner in the search results, go to the details view for that owner
+      } if (data.ownerList.length === 1 && currentPage === 1) {
+        // When there's exactly one owner in the first page ofsearch results, go to the details view for that owner
         setOwnerId(data.ownerList[0].id);
         setOwnersView('ownerDetails');
       } else {
