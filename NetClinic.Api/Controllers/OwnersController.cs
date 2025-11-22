@@ -9,7 +9,7 @@ namespace NetClinic.Api.Controllers;
 public class OwnersController : ControllerBase
 {
     private readonly ILogger<OwnersController> _logger;
-    private readonly IOwnerService _ownerService;
+    private readonly IOwnerService _ownerService;    
 
     public OwnersController(
         ILogger<OwnersController> logger,
@@ -90,6 +90,38 @@ public class OwnersController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error occurred while creating a new Owner");
+            throw;
+        }
+    }
+
+    [HttpPut("{ownerId}")]
+    public async Task<ActionResult<OwnerDto>> UpdateOwner([FromRoute] int ownerId, [FromBody] OwnerDto ownerDto)
+    {
+        _logger.LogInformation("Owner PUT request received at {Timestamp} for Owner ID {OwnerId}", DateTime.UtcNow, ownerDto.Id);
+
+        ownerDto.Id = ownerId; // Ensure the ID from the route is used
+        var errors = ValidateOwnerDto(ownerDto);
+
+        if (errors.Count != 0)
+        {
+            return BadRequest(errors);
+        }
+
+        try
+        {
+            var updatedOwner = await _ownerService.UpdateOwnerAsync(ownerDto);
+            if (updatedOwner == null)
+            {
+                _logger.LogWarning("Owner with ID {OwnerId} not found for update", ownerDto.Id);
+                return NotFound();
+            }
+
+            _logger.LogInformation("Successfully updated owner with ID {OwnerId}", ownerDto.Id);
+            return updatedOwner;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while updating Owner with ID {OwnerId}", ownerDto.Id);
             throw;
         }
     }

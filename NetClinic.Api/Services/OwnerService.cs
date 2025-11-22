@@ -14,6 +14,8 @@ public interface IOwnerService
     Task<OwnerDetailsDto?> GetOwnerDetailsByIdAsync(int ownerId);
     
     Task<OwnerDto> CreateOwnerAsync(OwnerDto ownerDto);
+
+    Task<OwnerDto?> UpdateOwnerAsync(OwnerDto ownerDto);
 }
 
 public class OwnerService : IOwnerService
@@ -40,6 +42,7 @@ public class OwnerService : IOwnerService
         }
 
         var owners = await query.Include(o => o.Pets)
+                                        .OrderBy(o => o.Id)
                                         .Skip((page - 1) * pageSize)
                                         .Take(pageSize)
                                         .ToListAsync();
@@ -114,6 +117,31 @@ public class OwnerService : IOwnerService
         _logger.LogInformation("Successfully created owner with Id: {OwnerId}", owner.Id);
 
         // Return the created owner as DTO with the generated ID
+        return MapOwnerToOwnerDto(owner);
+    }
+
+    public async Task<OwnerDto?> UpdateOwnerAsync(OwnerDto ownerDto)
+    {
+        _logger.LogInformation("Updating owner with Id: {OwnerId}", ownerDto.Id);
+
+        var owner = await _context.Owners.FindAsync(ownerDto.Id);
+        if (owner == null)
+        {
+            _logger.LogWarning("Owner with Id {OwnerId} not found for update", ownerDto.Id);
+            return null;
+        }
+
+        owner.FirstName = ownerDto.FirstName;
+        owner.LastName = ownerDto.LastName;
+        owner.Address = ownerDto.Address;
+        owner.City = ownerDto.City;
+        owner.Telephone = ownerDto.Telephone;
+
+        _context.Owners.Update(owner);
+        await _context.SaveChangesAsync();
+
+        _logger.LogInformation("Successfully updated owner with Id: {OwnerId}", owner.Id);
+
         return MapOwnerToOwnerDto(owner);
     }
 
