@@ -100,33 +100,33 @@ public class OwnersController : ControllerBase
 
         if (ownerDto == null)
         {
-            errors.Add("Owner", "Owner data is required.");
+            errors.Add("owner", "Owner data is required.");
             return errors;
         }
 
         if (string.IsNullOrWhiteSpace(ownerDto.FirstName))
         {
-            errors.Add("FirstName", "First name is required.");
+            errors.Add("firstName", "First name is required.");
         }
 
         if (string.IsNullOrWhiteSpace(ownerDto.LastName))
         {
-            errors.Add("LastName", "Last name is required.");
+            errors.Add("lastName", "Last name is required.");
         }
 
         if (string.IsNullOrWhiteSpace(ownerDto.Address))
         {
-            errors.Add("Address", "Address is required.");
+            errors.Add("address", "Address is required.");
         }
 
         if (string.IsNullOrWhiteSpace(ownerDto.City))
         {
-            errors.Add("City", "City is required.");
+            errors.Add("city", "City is required.");
         }
 
         if (string.IsNullOrWhiteSpace(ownerDto.Telephone))
         {
-            errors.Add("Telephone", "Telephone is required.");
+            errors.Add("telephone", "Telephone is required.");
         }
 
         return errors;
