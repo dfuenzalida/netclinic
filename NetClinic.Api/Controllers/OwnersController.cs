@@ -100,33 +100,40 @@ public class OwnersController : ControllerBase
 
         if (ownerDto == null)
         {
-            errors.Add("owner", "Owner data is required.");
+            errors.Add("owner", "must not be blank");
             return errors;
         }
 
         if (string.IsNullOrWhiteSpace(ownerDto.FirstName))
         {
-            errors.Add("firstName", "First name is required.");
+            errors.Add("firstName", "must not be blank");
         }
 
         if (string.IsNullOrWhiteSpace(ownerDto.LastName))
         {
-            errors.Add("lastName", "Last name is required.");
+            errors.Add("lastName", "must not be blank");
         }
 
         if (string.IsNullOrWhiteSpace(ownerDto.Address))
         {
-            errors.Add("address", "Address is required.");
+            errors.Add("address", "must not be blank");
         }
 
         if (string.IsNullOrWhiteSpace(ownerDto.City))
         {
-            errors.Add("city", "City is required.");
+            errors.Add("city", "must not be blank");
         }
 
         if (string.IsNullOrWhiteSpace(ownerDto.Telephone))
         {
-            errors.Add("telephone", "Telephone is required.");
+            errors.Add("telephone", "must not be blank");
+        }
+        else
+        {
+            if (ownerDto.Telephone.Length != 10 || !long.TryParse(ownerDto.Telephone, out _))
+            {
+                errors.Add("telephone", "Telephone must be a 10-digit number");
+            }
         }
 
         return errors;
