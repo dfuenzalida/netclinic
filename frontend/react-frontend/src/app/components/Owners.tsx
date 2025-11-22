@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { OwnersViewNames } from '../types/Types';
+import { OwnerCreateErrors, OwnersViewNames } from '../types/Types';
 import OwnerSearchForm from './Owners/OwnerSearchForm';
 import OwnerSearchResults from './Owners/OwnerSearchResults';
 import OwnerDetailsView from './Owners/OwnerDetailsView';
@@ -13,6 +13,7 @@ export default function Owners() {
   const [lastName, setLastName] = useState<string>('');
   const [ownersView, setOwnersView] = useState<OwnersViewNames>('searchForm');
   const [errorMessage, setErrorMessage] = useState<string|null>(null);
+  const [ownerCreateErrors, setOwnerCreateErrors] = useState<OwnerCreateErrors>({});
 
   switch (ownersView) {
     case 'ownerDetails':
@@ -24,6 +25,7 @@ export default function Owners() {
       return <OwnerSearchForm lastName={lastName} setLastName={setLastName}
                 errorMessage={errorMessage} setOwnersView={setOwnersView} />;
     case 'ownerCreateForm':
-      return <OwnerCreateForm />;
+      return <OwnerCreateForm setOwnerId={setOwnerId} setOwnersView={setOwnersView}
+        errors={ownerCreateErrors} setErrors={setOwnerCreateErrors} />;
   };
 }

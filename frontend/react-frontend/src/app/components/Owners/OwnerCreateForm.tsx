@@ -1,69 +1,142 @@
+import { OwnersViewNames, OwnerCreateFormProps, OwnerCreateErrors } from "../../types/Types";
+import { useState } from "react";
 
-export default function OwnerCreateForm() {
+export default function OwnerCreateForm({ setOwnersView, setOwnerId, errors, setErrors }: OwnerCreateFormProps) {
+
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+  const [address, setAddress] = useState<string>('');
+  const [city, setCity] = useState<string>('');
+  const [telephone, setTelephone] = useState<string>('');
+
+  function tryCreateOwner(e: React.FormEvent) {
+    e.preventDefault();
+
+    fetch('/api/owners', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        firstName,
+        lastName,
+        address,
+        city,
+        telephone,
+      }),
+    })
+    .then(async (response) => {
+      if (response.ok) {
+        const data = await response.json();
+        setOwnerId(data.id);
+        setOwnersView('ownerDetails');
+      } else if (response.status === 400) {
+        const errorResponse = await response.json();
+        console.log('Validation errors:', errorResponse);
+        setErrors(errorResponse as OwnerCreateErrors);
+      } else {
+        console.error('Failed to create owner:', response.statusText);
+      }
+    })
+    .catch((error) => {
+      console.error('Error creating owner:', error);
+    });
+  }
+
   return (<div>
     <h2>Owner</h2>
-      <form className="form-horizontal" id="add-owner-form" method="post">
+      <form className="form-horizontal" id="add-owner-form" action="#">
         <div className="form-group has-feedback">
-          
+
           <div className="form-group has-error">
             <label htmlFor="firstName" className="col-sm-2 control-label">First Name</label>
             <div className="col-sm-10">
               <div>
-                <input className="form-control" type="text" id="firstName" name="firstName" value="" />
+                <input className="form-control" type="text" id="firstName"
+                  value={firstName} onChange={(e) => setFirstName(e.target.value)} />
               </div>
+              {errors?.firstName ? (
+              <>
                 <span className="fa fa-remove form-control-feedback" aria-hidden="true"></span>
-                <span className="help-inline">must not be blank</span>              
+                &nbsp;
+                <span className="help-inline">{errors.firstName}</span>
+              </>) :
+              <span className="fa fa-ok form-control-feedback" aria-hidden="true"></span>}
             </div>
           </div>
-          
+
           <div className="form-group has-error">
             <label htmlFor="lastName" className="col-sm-2 control-label">Last Name</label>
             <div className="col-sm-10">
               <div>
-                <input className="form-control" type="text" id="lastName" name="lastName" value="" />                
+                <input className="form-control" type="text" id="lastName"
+                  value={lastName} onChange={(e) => setLastName(e.target.value)} />
               </div>
+              {errors?.lastName ? (
+              <>
                 <span className="fa fa-remove form-control-feedback" aria-hidden="true"></span>
-                <span className="help-inline">must not be blank</span>              
+                &nbsp;
+                <span className="help-inline">{errors.lastName}</span>
+              </>) : (
+              <span className="fa fa-ok form-control-feedback" aria-hidden="true"></span>)}
             </div>
-          </div>        
-          
+          </div>
+
           <div className="form-group has-error">
             <label htmlFor="address" className="col-sm-2 control-label">Address</label>
             <div className="col-sm-10">
               <div>
-                <input className="form-control" type="text" id="address" name="address" value="" />
+                <input className="form-control" type="text" id="address"
+                   value={address} onChange={(e) => setAddress(e.target.value)} />
               </div>
+              {errors?.address ? (
+              <>
                 <span className="fa fa-remove form-control-feedback" aria-hidden="true"></span>
-                <span className="help-inline">must not be blank</span>              
+                &nbsp;
+                <span className="help-inline">{errors.address}</span>
+              </>) : (
+              <span className="fa fa-ok form-control-feedback" aria-hidden="true"></span>)}
             </div>
           </div>
-          
+
           <div className="form-group has-error">
             <label htmlFor="city" className="col-sm-2 control-label">City</label>
             <div className="col-sm-10">
               <div>
-                <input className="form-control" type="text" id="city" name="city" value="" />
+                <input className="form-control" type="text" id="city"
+                  value={city} onChange={(e) => setCity(e.target.value)} />
               </div>
+              {errors?.city ? (
+              <>
                 <span className="fa fa-remove form-control-feedback" aria-hidden="true"></span>
-                <span className="help-inline">must not be blank</span>
+                &nbsp;
+                <span className="help-inline">{errors.city}</span>
+              </>) : (
+              <span className="fa fa-ok form-control-feedback" aria-hidden="true"></span>)}
             </div>
           </div>
-          
+
           <div className="form-group has-error">
             <label htmlFor="telephone" className="col-sm-2 control-label">Telephone</label>
             <div className="col-sm-10">
               <div>
-                <input className="form-control" type="text" id="telephone" name="telephone" value="" />                
+                <input className="form-control" type="text" id="telephone"
+                  value={telephone} onChange={(e) => setTelephone(e.target.value)} />
               </div>
+              {errors?.telephone ? (
+              <>
                 <span className="fa fa-remove form-control-feedback" aria-hidden="true"></span>
-                <span className="help-inline">Telephone must be a 10-digit number<br />must not be blank</span>              
+                &nbsp;
+                <span className="help-inline">{errors.telephone}</span>
+              </>) : (
+              <span className="fa fa-ok form-control-feedback" aria-hidden="true"></span>)}
             </div>
           </div>
-        
+
         </div>
         <div className="form-group">
           <div className="col-sm-offset-2 col-sm-10">
-            <button className="btn btn-primary" type="submit">Add Owner</button>
+            <button className="btn btn-primary" onClick={(e) => tryCreateOwner(e)}>Add Owner</button>
           </div>
         </div>
       </form>

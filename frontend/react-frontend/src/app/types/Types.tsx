@@ -87,3 +87,20 @@ export interface PaginationProps {
   setCurrentPage: (page: number) => void;
   totalPages: number;
 }
+
+// OwnerCreateForm
+
+export interface OwnerCreateErrors {
+  firstName?: string;
+  lastName?: string;
+  address?: string;
+  city?: string;
+  telephone?: string;
+}
+
+export interface OwnerCreateFormProps {
+  setOwnersView: (view: OwnersViewNames) => void;
+  setOwnerId: (id: number) => void; // When we create an owner, we get back its ID and shows a flash message
+  errors: OwnerCreateErrors;
+  setErrors: (errors: OwnerCreateErrors) => void;
+}
