@@ -11,7 +11,7 @@ public interface IOwnerService
 
     Task<int> GetOwnersByLastNameCountAsync(string? lastName = null);
 
-    Task<OwnerDetailsDto?> GetOwnerDetailsByIdAsync(int ownerId);
+    Task<OwnerDto?> GetOwnerDetailsByIdAsync(int ownerId);
     
     Task<OwnerDto> CreateOwnerAsync(OwnerDto ownerDto);
 
@@ -71,7 +71,7 @@ public class OwnerService : IOwnerService
         return ownerCount;
     }
 
-    public async Task<OwnerDetailsDto?> GetOwnerDetailsByIdAsync(int ownerId)
+    public async Task<OwnerDto?> GetOwnerDetailsByIdAsync(int ownerId)
     {
         _logger.LogInformation("Fetching owner details for OwnerId: {OwnerId}", ownerId);
 
@@ -79,10 +79,6 @@ public class OwnerService : IOwnerService
 
         var owner = await _context.Owners
             .Where(o => o.Id == ownerId)
-            // .Include(o => o.Pets)
-            //     .ThenInclude(p => p.Visits)
-            // .Include(o => o.Pets)
-            //     .ThenInclude(p => p.PetType)
             .FirstOrDefaultAsync();
 
         if (owner == null)
@@ -91,7 +87,7 @@ public class OwnerService : IOwnerService
             return null;
         }
 
-        var ownerDetailsDto = MapOwnerToOwnerDetailsDto(owner);
+        var ownerDetailsDto = MapOwnerToOwnerDto(owner);
 
         _logger.LogInformation("Successfully fetched details for OwnerId: {OwnerId}", ownerId);
 
@@ -155,36 +151,7 @@ public class OwnerService : IOwnerService
             LastName = owner.LastName,
             Address = owner.Address,
             City = owner.City,
-            Telephone = owner.Telephone,
-            Pets = pets
+            Telephone = owner.Telephone
         };
-    }
-
-    static OwnerDetailsDto MapOwnerToOwnerDetailsDto(Owner owner)
-    {
-        var ownerDetailsDto = new OwnerDetailsDto
-        {
-            Id = owner.Id,
-            FirstName = owner.FirstName,
-            LastName = owner.LastName,
-            Address = owner.Address,
-            City = owner.City,
-            Telephone = owner.Telephone,
-            Pets = owner.Pets.Select(p => new PetDetailsDto
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Type = p.PetType.Name,
-                BirthDate = p.BirthDate.ToString("yyyy-MM-dd"),
-                Visits = p.Visits.Select(v => new VisitDto
-                {
-                    Id = v.Id,
-                    VisitDate = v.VisitDate.ToString("yyyy-MM-dd"),
-                    Description = v.Description
-                }).OrderBy(v => v.VisitDate).ToList()
-            }).OrderBy(p => p.Name).ToList()
-        };
-
-        return ownerDetailsDto;
     }
 }

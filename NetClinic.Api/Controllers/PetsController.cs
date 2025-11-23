@@ -20,7 +20,7 @@ public class PetsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<PetDetailsDto>>> GetPetsByOwnerId([FromRoute] int ownerId)
+    public async Task<ActionResult<IEnumerable<PetDto>>> GetPetsByOwnerId([FromRoute] int ownerId)
     {
         _logger.LogInformation("Pets GET request received at {Timestamp} for Owner ID {OwnerId}", DateTime.UtcNow, ownerId);
 

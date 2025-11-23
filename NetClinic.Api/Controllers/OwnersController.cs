@@ -46,7 +46,7 @@ public class OwnersController : ControllerBase
     }
 
     [HttpGet("{ownerId}")]
-    public async Task<ActionResult<OwnerDetailsDto>> GetOwnerDetailsById([FromRoute] int ownerId)
+    public async Task<ActionResult<OwnerDto>> GetOwnerDetailsById([FromRoute] int ownerId)
     {
         _logger.LogInformation("Owner GET by ID request received at {Timestamp} for Owner ID {OwnerId}", DateTime.UtcNow, ownerId);
 

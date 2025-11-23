@@ -6,8 +6,8 @@ namespace NetClinic.Api.Services;
 
 public interface IPetService
 {
-    Task<IEnumerable<PetDetailsDto>?> GetPetsByOwnerIdAsync(int ownerId);
-    Task<PetDetailsDto?> GetPetByIdAsync(int petId);
+    Task<IEnumerable<PetDto>?> GetPetsByOwnerIdAsync(int ownerId);
+    Task<PetDto?> GetPetByIdAsync(int petId);
     Task<IEnumerable<VisitDto>?> GetVisitsByPetIdAsync(int ownerId, int petId);
 }
 
@@ -23,13 +23,14 @@ public class PetService : IPetService
         _logger.LogInformation("PetService initialized with database context");
     }
 
-    public async Task<IEnumerable<PetDetailsDto>?> GetPetsByOwnerIdAsync(int ownerId)
+    public async Task<IEnumerable<PetDto>?> GetPetsByOwnerIdAsync(int ownerId)
     {
         _logger.LogInformation("Fetching pets from the database for Owner ID: {OwnerId}", ownerId);
 
         var pets = await _context.Pets
                                  .Include(p => p.PetType)
                                  .Where(p => p.OwnerId == ownerId)
+                                 .OrderBy(p => p.Name)
                                  .ToListAsync();
 
         if (pets == null || pets.Count == 0)
@@ -38,13 +39,12 @@ public class PetService : IPetService
             return null;
         }
 
-        var petDtos = pets.Select(pet => new PetDetailsDto
+        var petDtos = pets.Select(pet => new PetDto
         {
             Id = pet.Id,
             Name = pet.Name,
             Type = pet.PetType.Name,
-            BirthDate = pet.BirthDate.ToString("yyyy-MM-dd"),
-            Visits = []
+            BirthDate = pet.BirthDate.ToString("yyyy-MM-dd")
         }).ToList();
 
         _logger.LogInformation("Successfully fetched {Count} pets for Owner ID: {OwnerId}", petDtos.Count, ownerId);
@@ -52,13 +52,13 @@ public class PetService : IPetService
         return petDtos;
     }
 
-    public async Task<PetDetailsDto?> GetPetByIdAsync(int petId)
+    public async Task<PetDto?> GetPetByIdAsync(int petId)
     {
         _logger.LogInformation("Fetching pet from the database for Pet ID: {PetId}", petId);
 
         var pet =  await _context.Pets
                            .Where(p => p.Id == petId)
-                           .Select(pet => new PetDetailsDto
+                           .Select(pet => new PetDto
                            {
                                Id = pet.Id,
                                Name = pet.Name,
@@ -86,6 +86,7 @@ public class PetService : IPetService
                                    .Where(p => p.OwnerId == ownerId)
                                    .Where(p => p.Id == petId)
                                    .SelectMany(p => p.Visits)
+                                   .OrderBy(v => v.VisitDate)
                                    .Select(visit => new VisitDto
                                    {
                                        Id = visit.Id,
