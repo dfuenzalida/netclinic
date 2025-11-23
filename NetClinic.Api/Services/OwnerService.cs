@@ -41,12 +41,11 @@ public class OwnerService : IOwnerService
             query = query.Where(o => o.LastName.ToLower().StartsWith(lastName.ToLower()));
         }
 
-        // TODO remove pet information to force the client to call the pets endpoint
-        var owners = await query.Include(o => o.Pets)
-                                        .OrderBy(o => o.Id)
-                                        .Skip((page - 1) * pageSize)
-                                        .Take(pageSize)
-                                        .ToListAsync();
+        var owners = await query
+                            .OrderBy(o => o.Id)
+                            .Skip((page - 1) * pageSize)
+                            .Take(pageSize)
+                            .ToListAsync();
         var ownerDtos = owners.Select(owner => MapOwnerToOwnerDto(owner)).ToList();
 
         _logger.LogInformation("Successfully fetched {Count} owners", ownerDtos.Count);
@@ -80,10 +79,10 @@ public class OwnerService : IOwnerService
 
         var owner = await _context.Owners
             .Where(o => o.Id == ownerId)
-            .Include(o => o.Pets)
-                .ThenInclude(p => p.Visits)
-            .Include(o => o.Pets)
-                .ThenInclude(p => p.PetType)
+            // .Include(o => o.Pets)
+            //     .ThenInclude(p => p.Visits)
+            // .Include(o => o.Pets)
+            //     .ThenInclude(p => p.PetType)
             .FirstOrDefaultAsync();
 
         if (owner == null)
