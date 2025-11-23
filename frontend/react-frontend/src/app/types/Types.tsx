@@ -3,16 +3,6 @@ export type OwnersViewNames = 'ownerDetails' | 'searchResults' | 'searchForm' | 
 
 // Owner Types
 
-export interface OwnerOverview {
-  id: number;
-  firstName: string;
-  lastName: string;
-  address: string;
-  city: string;
-  telephone: string;
-  pets: string[];
-}
-
 export interface VisitDetails {
   id: number;
   visitDate: string;

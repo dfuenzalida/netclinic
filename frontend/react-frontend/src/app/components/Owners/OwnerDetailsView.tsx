@@ -1,5 +1,6 @@
 import { OwnerDetails, OwnerDetailsProps, PetDetails, VisitDetails } from '../../types/Types';
 import { useEffect, useState } from "react";
+import { fetchOwnerById, fetchPetsForOwner, fetchVisitsForPet } from '../Api';
 
 export default function OwnerDetailsView({ownerId, setOwnersView}: OwnerDetailsProps) {
   const [loading, setLoading] = useState<boolean>(true);
@@ -10,14 +11,27 @@ export default function OwnerDetailsView({ownerId, setOwnersView}: OwnerDetailsP
     const fetchOwnerDetails = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/owners/${ownerId}`);
+        const data: OwnerDetails = await fetchOwnerById(ownerId);
+        const pets = await fetchPetsForOwner(ownerId);
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        const ownerWithPets: OwnerDetails = {
+          ...data,
+          pets
+        };
 
-        const data = await response.json();
-        setOwner(data);
+        const petsWithVisits = await Promise.all(
+          ownerWithPets.pets.map(async (pet: PetDetails) => {
+            const visits = await fetchVisitsForPet(ownerId, pet.id);
+            return {
+              ...pet,
+              visits
+            };
+          })
+        );
+
+        ownerWithPets.pets = petsWithVisits;
+
+        setOwner(ownerWithPets);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
       } finally {
