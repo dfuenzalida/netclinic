@@ -1,8 +1,8 @@
 ### Pending backend tasks
 
-[X] Error endpoint that responds with HTTP 5xx
-[X] Create Owner (with input validation)
-[ ] Update Owner (with input validation)
-[ ] Create Pet (with input validation)
-[ ] Update Pet (with input validation)
-[ ] Create Visit (with input validation)
+* List Pets by Owner
+* Create Pet (with input validation)
+* Update Pet (with input validation)
+* List Visits by Owner and Pet
+* Create Visit (with input validation)
+* Unit/integration tests

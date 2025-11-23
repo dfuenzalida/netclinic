@@ -41,6 +41,7 @@ public class OwnerService : IOwnerService
             query = query.Where(o => o.LastName.ToLower().StartsWith(lastName.ToLower()));
         }
 
+        // TODO remove pet information to force the client to call the pets endpoint
         var owners = await query.Include(o => o.Pets)
                                         .OrderBy(o => o.Id)
                                         .Skip((page - 1) * pageSize)

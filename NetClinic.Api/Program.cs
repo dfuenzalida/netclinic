@@ -26,8 +26,9 @@ public class Program
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
         
         // Register custom services
-        builder.Services.AddScoped<IVetService, VetService>();
         builder.Services.AddScoped<IOwnerService, OwnerService>();
+        builder.Services.AddScoped<IPetService, PetService>();
+        builder.Services.AddScoped<IVetService, VetService>();
 
         var app = builder.Build();
 
