@@ -27,6 +27,7 @@ export default function OwnerCreateEditForm({ ownerId, setOwnerId, setOwnersView
 
     // Only fetch if editing an existing owner
     if (ownerId !== null) {
+      setErrors({});
       fetchOwnerDetails();
     }
   }, [ownerId]);
