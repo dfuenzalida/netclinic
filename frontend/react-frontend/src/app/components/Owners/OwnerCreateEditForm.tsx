@@ -1,7 +1,8 @@
-import { OwnersViewNames, OwnerCreateFormProps, OwnerCreateErrors } from "../../types/Types";
-import { useState } from "react";
+import { OwnersViewNames, OwnerCreateEditFormProps, OwnerCreateErrors, OwnerDetails } from "../../types/Types";
+import { useEffect, useState } from "react";
+import { fetchOwnerById } from "../Api";
 
-export default function OwnerCreateForm({ setOwnersView, setOwnerId, errors, setErrors }: OwnerCreateFormProps) {
+export default function OwnerCreateEditForm({ ownerId, setOwnerId, setOwnersView, errors, setErrors }: OwnerCreateEditFormProps) {
 
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
@@ -9,11 +10,35 @@ export default function OwnerCreateForm({ setOwnersView, setOwnerId, errors, set
   const [city, setCity] = useState<string>('');
   const [telephone, setTelephone] = useState<string>('');
 
-  function tryCreateOwner(e: React.FormEvent) {
-    e.preventDefault();
+  // When editing an existing owner, fetch and populate fields
+  useEffect(() => {
+    const fetchOwnerDetails = async () => {
+      try {
+        const data: OwnerDetails = await fetchOwnerById(ownerId!);
+        setFirstName(data.firstName);
+        setLastName(data.lastName);
+        setAddress(data.address);
+        setCity(data.city);
+        setTelephone(data.telephone);
+      } catch (err) {
+        console.warn('Error fetching owner details for edit:', err);
+      }
+    };
 
-    fetch('/api/owners', {
-      method: 'POST',
+    // Only fetch if editing an existing owner
+    if (ownerId !== null) {
+      fetchOwnerDetails();
+    }
+  }, [firstName, lastName, address, city, telephone, ownerId]);
+
+  function upsertOwner(e: React.FormEvent) {
+    e.preventDefault();
+    const endpoint = ownerId ? `/api/owners/${ownerId}` : '/api/owners';
+    const method = ownerId ? 'PUT' : 'POST';
+    const flashMessage = ownerId ? 'Owner Values Updated' : 'New Owner Created';
+
+    fetch(endpoint, {
+      method: method,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -136,7 +161,7 @@ export default function OwnerCreateForm({ setOwnersView, setOwnerId, errors, set
         </div>
         <div className="form-group">
           <div className="col-sm-offset-2 col-sm-10">
-            <button className="btn btn-primary" onClick={(e) => tryCreateOwner(e)}>Add Owner</button>
+            <button className="btn btn-primary" onClick={(e) => upsertOwner(e)}>{ownerId ? 'Update Owner' : 'Add Owner'}</button>
           </div>
         </div>
       </form>

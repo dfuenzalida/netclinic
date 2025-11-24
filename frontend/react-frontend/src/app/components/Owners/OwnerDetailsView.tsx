@@ -2,7 +2,7 @@ import { OwnerDetails, OwnerDetailsProps, PetDetails, VisitDetails } from '../..
 import { useEffect, useState } from "react";
 import { fetchOwnerById, fetchPetsForOwner, fetchVisitsForPet } from '../Api';
 
-export default function OwnerDetailsView({ownerId, setOwnersView}: OwnerDetailsProps) {
+export default function OwnerDetailsView({ownerId, setOwnerId, setOwnersView}: OwnerDetailsProps) {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [owner, setOwner] = useState<OwnerDetails | null>(null);
@@ -74,9 +74,10 @@ export default function OwnerDetailsView({ownerId, setOwnersView}: OwnerDetailsP
         </tbody>
       </table>
 
-      <a href={`"#${ownerId}/edit"`} className="btn btn-primary">Edit Owner</a>
+      <a href={`#/owners/${ownerId}/edit`} onClick={() => { setOwnerId(owner!.id) ; setOwnersView('ownerCreateForm')}}
+        className="btn btn-primary">Edit Owner</a>
       &nbsp;
-      <a href={`"#${ownerId}/pets/new"`} className="btn btn-primary">Add New Pet</a>
+      <a href={`#/owners/${ownerId}/pets/new`} className="btn btn-primary">Add New Pet</a>
       <br />
       <br />
       <br />
@@ -115,8 +116,8 @@ export default function OwnerDetailsView({ownerId, setOwnersView}: OwnerDetailsP
                         ))
                       }
                       <tr>
-                        <td><a href="#8/pets/10/edit">Edit Pet</a></td>
-                        <td><a href="#8/pets/10/visits/new">Add Visit</a></td>
+                        <td><a href={`#/owners/${ownerId}/pets/${pet.id}/edit`}>Edit Pet</a></td>
+                        <td><a href={`#/owners/${ownerId}/pets/${pet.id}/visits/new`}>Add Visit</a></td>
                       </tr>
                     </tbody>
                   </table>

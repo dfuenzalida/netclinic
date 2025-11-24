@@ -29,7 +29,7 @@ export const fetchPetsForOwner = async (ownerId: number): Promise<PetDetails[]> 
         const pets = await response.json();
         return pets;
     } catch (err) {
-        console.error(`Error fetching pets for owner ${ownerId}:`, err);
+        console.warn(`Error fetching pets for owner ${ownerId}:`, err);
         return []; // Return empty array if pets fetch fails
     }
 };
@@ -46,7 +46,7 @@ export const fetchVisitsForPet = async (ownerId: number, petId: number): Promise
         const visits = await response.json();
         return visits;
     } catch (err) {
-        console.error(`Error fetching visits for pet ${petId} of owner ${ownerId}:`, err);
+        console.warn(`Error fetching visits for pet ${petId} of owner ${ownerId}:`, err);
         return []; // Return empty array if visits fetch fails
     }
 };

@@ -45,6 +45,7 @@ export interface OwnerSearchResultsProps {
 
 export interface OwnerDetailsProps {
   ownerId: number;
+  setOwnerId: (id: number) => void;
   setOwnersView: (view: OwnersViewNames) => void;
 }
 
@@ -88,9 +89,10 @@ export interface OwnerCreateErrors {
   telephone?: string;
 }
 
-export interface OwnerCreateFormProps {
+export interface OwnerCreateEditFormProps {
   setOwnersView: (view: OwnersViewNames) => void;
-  setOwnerId: (id: number) => void; // When we create an owner, we get back its ID and shows a flash message
+  ownerId: number | null; // Null when creating a new owner, defined when editing an existing owner
+  setOwnerId: (id: number | null) => void; // When we create an owner, we get back its ID and shows a flash message
   errors: OwnerCreateErrors;
   setErrors: (errors: OwnerCreateErrors) => void;
 }
