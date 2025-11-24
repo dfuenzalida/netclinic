@@ -29,7 +29,7 @@ export default function OwnerCreateEditForm({ ownerId, setOwnerId, setOwnersView
     if (ownerId !== null) {
       fetchOwnerDetails();
     }
-  }, [firstName, lastName, address, city, telephone, ownerId]);
+  }, [ownerId]);
 
   function upsertOwner(e: React.FormEvent) {
     e.preventDefault();
