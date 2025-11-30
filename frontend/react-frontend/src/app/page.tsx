@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import NavBar from "./components/NavBar";
 import Oops from "./components/Oops";
@@ -8,26 +8,35 @@ import Owners from "./components/Owners";
 import Vets from "./components/Vets";
 import Welcome from "./components/Welcome";
 import { PageNames } from "./types/Types";
+import useHash from "./components/Hash";
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<PageNames>('welcome');
+  const [hash, setHash] = useHash();
+
+  // Set initial hash if there's none
+  useEffect(() => {
+    if (!hash || hash === '#') {
+      setHash('#welcome');
+    }
+  }, [hash, setHash]);
 
   const renderCurrentView = () => {
-    switch (currentView) {
-      case 'owners':
+
+    // TODO implement proper routing logic
+    if (hash.startsWith('#owners')) {
         return <Owners />;
-      case 'vets':
-        return <Vets />;
-      case 'oops':
+    } else if (hash.startsWith('#vets')) {
+        return <Vets hash={hash} setHash={setHash} />;
+    } else if (hash === '#oops') {
         return <Oops />;
-      default:
+    } else {
         return <Welcome />;
     }
   };
 
   return (
     <>
-      <NavBar currentView={currentView} setCurrentView={setCurrentView} />
+      <NavBar hash={hash} setHash={setHash} />
       <div className="container-fluid">
         <div className="container xd-container">
           {renderCurrentView()}

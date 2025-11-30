@@ -2,14 +2,23 @@
 
 import { useState, useEffect } from 'react';
 import Pagination from './Pagination';
-import { Vet, Specialty } from '../types/Types';
+import { Vet, Specialty, VetsProps } from '../types/Types';
 
-export default function Vets() {
+export default function Vets({ hash, setHash }: VetsProps) {
   const [vets, setVets] = useState<Vet[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  // const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  var currentPage = 1;
+  if (hash && hash.indexOf('?page=') > -1) {
+    currentPage = parseInt(hash.substring(hash.indexOf('?page=') + 6)) || 1;
+  }
+
+  const setCurrentPage = (page: number) => {
+    setHash(`#vets?page=${page}`);
+  }
 
   const fetchVets = async () => {
     try {
@@ -31,8 +40,15 @@ export default function Vets() {
   };
 
   useEffect(() => {
+    if (hash) {
+      var pos = hash.indexOf('?page=');
+      if (pos > -1) {
+        var page = parseInt(hash.substring(pos + 6)) || 1;
+        setCurrentPage(page);
+      }
+    }
     fetchVets();
-  }, [currentPage]); // Add currentPage as dependency to refetch when it changes
+  }, [hash]); // Add hash as dependency to refetch when it changes
 
   if (loading) {
     return (
@@ -83,7 +99,7 @@ export default function Vets() {
           ))}
         </tbody>
       </table>
-      <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} />
+      <Pagination linkBase='#vets' currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} />
       {vets.length === 0 && (
         <p>No veterinarians found.</p>
       )}

@@ -63,11 +63,16 @@ export interface Specialty {
   name: string;
 }
 
+export interface VetsProps {
+  hash: string;
+  setHash: (hash: string) => void;
+}
+
 // NavBar
 
 export interface NavBarProps {
-  currentView: PageNames;
-  setCurrentView: (viewName: PageNames) => void;
+  hash: string;
+  setHash: (hash: string) => void;
 }
 
 
@@ -77,6 +82,7 @@ export interface PaginationProps {
   currentPage: number;
   setCurrentPage: (page: number) => void;
   totalPages: number;
+  linkBase: string;
 }
 
 // OwnerCreateForm

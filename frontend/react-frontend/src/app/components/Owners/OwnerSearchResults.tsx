@@ -116,7 +116,7 @@ export default function OwnerSearchResults({ lastName, ownersView, setOwnersView
           ))}
         </tbody>
       </table>
-      <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} />
+      <Pagination linkBase={`#owners/lastName/${lastName}/`} currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} />
     </div>
   );
 }
