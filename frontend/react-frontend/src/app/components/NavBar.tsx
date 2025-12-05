@@ -1,8 +1,8 @@
-import { NavBarProps, PageNames } from "../types/Types";
+import { HashProps } from "../types/Types";
   
-export default function NavBar({ hash, setHash }: NavBarProps) {
+export default function NavBar({ hash, setHash }: HashProps) {
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, viewName: PageNames) => {
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, viewName: string) => {
     e.preventDefault();
     setHash(viewName);
   };
@@ -35,7 +35,7 @@ export default function NavBar({ hash, setHash }: NavBarProps) {
             </li>
 
             <li className="nav-item">
-              <a className={`nav-link ${hash.startsWith('#owners') ? 'active' : ''}`} href="#owners" onClick={(e) => handleNavClick(e, 'owners')} title="find owners">
+              <a className={`nav-link ${hash.startsWith('#owners') ? 'active' : ''}`} href="#owners" onClick={(e) => handleNavClick(e, 'owners/search')} title="find owners">
                 <span className="fa fa-search"></span>
                 &nbsp;
                 <span>Find Owners</span>

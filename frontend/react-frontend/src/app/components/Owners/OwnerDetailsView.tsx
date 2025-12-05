@@ -1,11 +1,14 @@
-import { OwnerDetails, OwnerDetailsProps, PetDetails, VisitDetails } from '../../types/Types';
+import { HashProps, OwnerDetails, PetDetails, VisitDetails } from '../../types/Types';
 import { useEffect, useState } from "react";
 import { fetchOwnerById, fetchPetsForOwner, fetchVisitsForPet } from '../Api';
 
-export default function OwnerDetailsView({ownerId, setOwnerId, setOwnersView}: OwnerDetailsProps) {
+export default function OwnerDetailsView({hash, setHash}: HashProps) {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [owner, setOwner] = useState<OwnerDetails | null>(null);
+
+  const ownerIdStr = hash.split('/')[1];
+  const ownerId = parseInt(ownerIdStr, 10);
 
   useEffect(() => {
     const fetchOwnerDetails = async () => {
@@ -74,10 +77,11 @@ export default function OwnerDetailsView({ownerId, setOwnerId, setOwnersView}: O
         </tbody>
       </table>
 
-      <a href={`#/owners/${ownerId}/edit`} onClick={() => { setOwnerId(owner!.id) ; setOwnersView('ownerCreateForm')}}
+      <a href={`#/owners/${ownerId}/edit`} onClick={(e) => { e.preventDefault(); setHash(`#owners/${ownerId}/edit`); }}
         className="btn btn-primary">Edit Owner</a>
       &nbsp;
-      <a href={`#/owners/${ownerId}/pets/new`} className="btn btn-primary">Add New Pet</a>
+      <a href={`#/owners/${ownerId}/pets/new`} onClick={(e) => { e.preventDefault(); setHash(`#owners/${ownerId}/pets/new`); }}
+        className="btn btn-primary">Add New Pet</a>
       <br />
       <br />
       <br />

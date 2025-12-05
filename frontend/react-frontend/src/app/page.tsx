@@ -4,15 +4,18 @@ import { useState, useEffect } from "react";
 
 import NavBar from "./components/NavBar";
 import Oops from "./components/Oops";
-import Owners from "./components/Owners";
 import Vets from "./components/Vets";
 import Welcome from "./components/Welcome";
-import { PageNames } from "./types/Types";
 import useHash from "./components/Hash";
+import OwnerSearchForm from "./components/Owners/OwnerSearchForm";
+import OwnerSearchResults from "./components/Owners/OwnerSearchResults";
+import OwnerDetailsView from "./components/Owners/OwnerDetailsView";
+import OwnerCreateEditForm from "./components/Owners/OwnerCreateEditForm";
 
 export default function App() {
   const [hash, setHash] = useHash();
 
+  // Subscribe to hash changes and update current view accordingly
   // Set initial hash if there's none
   useEffect(() => {
     if (!hash || hash === '#') {
@@ -23,10 +26,19 @@ export default function App() {
   const renderCurrentView = () => {
 
     // TODO implement proper routing logic
-    if (hash.startsWith('#owners')) {
-        return <Owners />;
-    } else if (hash.startsWith('#vets')) {
+    if (hash.startsWith('#vets')) {
         return <Vets hash={hash} setHash={setHash} />;
+    } else if (hash.startsWith('#owners/search')) {
+        return <OwnerSearchForm hash={hash} setHash={setHash} />;
+    } else if (hash.startsWith('#owners/lastName')) {
+        return <OwnerSearchResults hash={hash} setHash={setHash} />;
+    // TODO add create and edit forms, for both owners and pets
+    } else if (hash.startsWith('#owners/new')) {
+        return <OwnerCreateEditForm hash={hash} setHash={setHash} />;
+    } else if (hash.startsWith('#owners/') && hash.endsWith('/edit')) {
+        return <OwnerCreateEditForm hash={hash} setHash={setHash} />;
+    } else if (hash.startsWith('#owners/')) {
+        return <OwnerDetailsView hash={hash} setHash={setHash} />;
     } else if (hash === '#oops') {
         return <Oops />;
     } else {

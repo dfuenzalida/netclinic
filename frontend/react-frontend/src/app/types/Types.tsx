@@ -1,6 +1,3 @@
-export type PageNames = "vets" | "welcome" | "owners" | "oops";
-export type OwnersViewNames = 'ownerDetails' | 'searchResults' | 'searchForm' | 'ownerCreateForm';
-
 // Owner Types
 
 export interface VisitDetails {
@@ -27,28 +24,6 @@ export interface OwnerDetails {
   pets: PetDetails[];
 }
 
-export interface OwnerSearchProps {
-  lastName: string;
-  setLastName: (name: string) => void;
-  setOwnersView: (view: OwnersViewNames) => void;
-  errorMessage: string | null;
-}
-
-export interface OwnerSearchResultsProps {
-  lastName: string;
-  ownersView: OwnersViewNames;
-  setOwnersView: (view: OwnersViewNames) => void;
-  errorMessage: string | null;
-  setErrorMessage: (message: string | null) => void;
-  setOwnerId: (id: number) => void;
-}
-
-export interface OwnerDetailsProps {
-  ownerId: number;
-  setOwnerId: (id: number) => void;
-  setOwnersView: (view: OwnersViewNames) => void;
-}
-
 // Vets
 
 export interface Vet {
@@ -63,14 +38,9 @@ export interface Specialty {
   name: string;
 }
 
-export interface VetsProps {
-  hash: string;
-  setHash: (hash: string) => void;
-}
+// Hash Props, used to pass state around using the hash
 
-// NavBar
-
-export interface NavBarProps {
+export interface HashProps {
   hash: string;
   setHash: (hash: string) => void;
 }
@@ -85,6 +55,8 @@ export interface PaginationProps {
   linkBase: string;
 }
 
+// Owners
+
 // OwnerCreateForm
 
 export interface OwnerCreateErrors {
@@ -93,12 +65,4 @@ export interface OwnerCreateErrors {
   address?: string;
   city?: string;
   telephone?: string;
-}
-
-export interface OwnerCreateEditFormProps {
-  setOwnersView: (view: OwnersViewNames) => void;
-  ownerId: number | null; // Null when creating a new owner, defined when editing an existing owner
-  setOwnerId: (id: number | null) => void; // When we create an owner, we get back its ID and shows a flash message
-  errors: OwnerCreateErrors;
-  setErrors: (errors: OwnerCreateErrors) => void;
 }

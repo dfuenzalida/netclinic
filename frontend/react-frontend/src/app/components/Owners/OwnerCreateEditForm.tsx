@@ -1,19 +1,31 @@
-import { OwnersViewNames, OwnerCreateEditFormProps, OwnerCreateErrors, OwnerDetails } from "../../types/Types";
+import { OwnerCreateErrors, OwnerDetails, HashProps } from "../../types/Types";
 import { useEffect, useState } from "react";
 import { fetchOwnerById } from "../Api";
 
-export default function OwnerCreateEditForm({ ownerId, setOwnerId, setOwnersView, errors, setErrors }: OwnerCreateEditFormProps) {
+export default function OwnerCreateEditForm({ hash, setHash }: HashProps) {
 
+  const [errors, setErrors] = useState<OwnerCreateErrors>({});
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [address, setAddress] = useState<string>('');
   const [city, setCity] = useState<string>('');
   const [telephone, setTelephone] = useState<string>('');
 
+  var ownerId : number|null = null;
+  if (!hash.startsWith('#owners/new')) {
+    const ownerIdStr = hash.split('/')[1];
+    ownerId = parseInt(ownerIdStr, 10);
+  }
+
   // When editing an existing owner, fetch and populate fields
   useEffect(() => {
     const fetchOwnerDetails = async () => {
       try {
+        if (hash.startsWith('#owners/new')) {
+          // Creating a new owner, no need to fetch details
+          return;
+        }
+
         const data: OwnerDetails = await fetchOwnerById(ownerId!);
         setFirstName(data.firstName);
         setLastName(data.lastName);
@@ -54,8 +66,7 @@ export default function OwnerCreateEditForm({ ownerId, setOwnerId, setOwnersView
     .then(async (response) => {
       if (response.ok) {
         const data = await response.json();
-        setOwnerId(data.id);
-        setOwnersView('ownerDetails');
+        setHash(`#owners/${data.id}?flash=${encodeURIComponent(flashMessage)}`);
       } else if (response.status === 400) {
         const errorResponse = await response.json();
         console.log('Validation errors:', errorResponse);

@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import Pagination from './Pagination';
-import { Vet, Specialty, VetsProps } from '../types/Types';
+import { Vet, Specialty, HashProps } from '../types/Types';
 
-export default function Vets({ hash, setHash }: VetsProps) {
+export default function Vets({ hash, setHash }: HashProps) {
   const [vets, setVets] = useState<Vet[]>([]);
   // const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { OwnerDetails, OwnerSearchResultsProps } from '../../types/Types';
+import { OwnerDetails, HashProps } from '../../types/Types';
 import Pagination from '../Pagination';
 import { fetchPetsForOwner } from '../Api';
 
-export default function OwnerSearchResults({ lastName, ownersView, setOwnersView, errorMessage, setErrorMessage, setOwnerId }: OwnerSearchResultsProps) {
+export default function OwnerSearchResults({ hash, setHash } : HashProps) {
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
@@ -11,10 +11,16 @@ export default function OwnerSearchResults({ lastName, ownersView, setOwnersView
   const [error, setError] = useState<string | null>(null);
   const [owners, setOwners] = useState<OwnerDetails[]>([]);
 
-  const fetchOwnersByLastName = async (lastName: string) => {
+  // Parse the last name from the hash
+  var lastName : string = hash.split('/').pop() ?? '';
+  if (lastName.includes('?')) {
+    lastName = lastName.split('?')[0];
+  }
+
+  const fetchOwnersByLastName = async (lastName: string, page: number) => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/owners?lastName=${lastName}&page=${currentPage}`);
+      const response = await fetch(`/api/owners?lastName=${lastName}&page=${page}`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -24,18 +30,14 @@ export default function OwnerSearchResults({ lastName, ownersView, setOwnersView
       // If no owners found, set an error message
       if (data.ownerList.length === 0) {
         console.log('No owners found with the given last name.');
-        setErrorMessage('has not been found');
-        setOwnersView('searchForm');
+        setHash('#owners/search');
         return;
       } 
       
-      if (data.ownerList.length === 1 && currentPage === 1) {
+      if (data.ownerList.length === 1 && page === 1) {
         // When there's exactly one owner in the first page of search results, go to the details view for that owner
-        setOwnerId(data.ownerList[0].id);
-        setOwnersView('ownerDetails');
+        setHash(`#owners/${data.ownerList[0].id}`);
         return;
-      } else {
-        setErrorMessage(null);
       }
 
       // Convert owners to the extended type with loading state
@@ -67,8 +69,23 @@ export default function OwnerSearchResults({ lastName, ownersView, setOwnersView
   };
 
   useEffect(() => {
-    fetchOwnersByLastName(lastName);
-  }, [lastName, ownersView, errorMessage, currentPage]);
+    // Parse the page number from the hash
+    let pageToUse = 1;
+    if (hash.includes('?page=')) {
+      const pageParam = new URLSearchParams(hash.split('?')[1]).get('page');
+      if (pageParam) {
+        pageToUse = parseInt(pageParam, 10);
+        console.log(`Parsed page number from hash: ${pageParam}`);
+      }
+    }
+    
+    // Update current page if it's different
+    if (pageToUse !== currentPage) {
+      setCurrentPage(pageToUse);
+    }
+    
+    fetchOwnersByLastName(lastName, pageToUse);
+  }, [hash]);
 
   if (loading) {
     return (
@@ -105,7 +122,7 @@ export default function OwnerSearchResults({ lastName, ownersView, setOwnersView
           {owners.map((owner: OwnerDetails) => (
             <tr key={owner.id}>
               <td><a href={`#/owners/${owner.id}`}
-                     onClick={() => { setOwnerId(owner.id); setOwnersView('ownerDetails'); }}> {owner.firstName} {owner.lastName}</a></td>
+                     onClick={(e) => { e.preventDefault(); setHash(`#owners/${owner.id}`); }}> {owner.firstName} {owner.lastName}</a></td>
               <td>{owner.address}</td>
               <td>{owner.city}</td>
               <td>{owner.telephone}</td>
@@ -116,7 +133,7 @@ export default function OwnerSearchResults({ lastName, ownersView, setOwnersView
           ))}
         </tbody>
       </table>
-      <Pagination linkBase={`#owners/lastName/${lastName}/`} currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} />
+      <Pagination linkBase={`#owners/lastName/${lastName}`} currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} />
     </div>
   );
 }
