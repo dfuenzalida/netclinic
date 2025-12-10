@@ -14,3 +14,9 @@ public class VisitDto
     public required string VisitDate { get; set; }
     public string Description { get; set; } = string.Empty;
 }
+
+public class PetTypeDto
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+}

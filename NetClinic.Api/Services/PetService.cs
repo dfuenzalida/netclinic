@@ -1,6 +1,7 @@
 using NetClinic.Api.Data;
 using NetClinic.Api.Dto;
 using Microsoft.EntityFrameworkCore;
+using NetClinic.Api.Models;
 
 namespace NetClinic.Api.Services;
 
@@ -9,12 +10,21 @@ public interface IPetService
     Task<IEnumerable<PetDto>?> GetPetsByOwnerIdAsync(int ownerId);
     Task<PetDto?> GetPetByIdAsync(int petId);
     Task<IEnumerable<VisitDto>?> GetVisitsByPetIdAsync(int ownerId, int petId);
+    Task<PetDto> CreatePetAsync(PetDto petDto, int ownerId);
+    Task<IEnumerable<PetTypeDto>> GetAllPetTypesAsync();
 }
 
 public class PetService : IPetService
 {
     private readonly NetClinicDbContext _context;
     private readonly ILogger<PetService> _logger;
+
+    public static PetType UnknownPetType = new PetType
+    {
+        Id = 0,
+        Name = "unknown"
+    };
+
 
     public PetService(NetClinicDbContext context, ILogger<PetService> logger)
     {
@@ -106,4 +116,58 @@ public class PetService : IPetService
         return visits;
     }
 
+    public async Task<IEnumerable<PetTypeDto>> GetAllPetTypesAsync()
+    {
+        _logger.LogInformation("Fetching all pet types from the database");
+
+        var petTypes = await _context.PetTypes
+                                     .OrderBy(pt => pt.Name)
+                                     .ToListAsync();
+
+        var petTypeDtos = petTypes.Select(pt => MapPetTypeToPetTypeDto(pt)).ToList();
+
+        _logger.LogInformation("Successfully fetched {Count} pet types", petTypeDtos.Count);
+
+        return petTypeDtos;
+    }
+
+    public async Task<PetDto> CreatePetAsync(PetDto petDto, int ownerId)
+    {
+        // Implementation for creating a new pet
+        var pet = new Pet
+        {
+            Name = petDto.Name,
+            BirthDate = DateTime.Parse(petDto.BirthDate),
+            PetType = await _context.PetTypes
+                                      .Where(pt => pt.Name == petDto.Type)
+                                      .FirstOrDefaultAsync() ?? UnknownPetType,
+            OwnerId = ownerId
+        };
+
+        _context.Pets.Add(pet);
+        await _context.SaveChangesAsync();
+        _logger.LogInformation("Successfully created a new pet with ID: {PetId}", pet.Id);
+
+        return MapPetToPetDto(pet);
+    }
+
+    public static PetDto MapPetToPetDto(Pet pet)
+    {
+        return new PetDto
+        {
+            Id = pet.Id,
+            Name = pet.Name,
+            Type = pet.PetType.Name,
+            BirthDate = pet.BirthDate.ToString("yyyy-MM-dd")
+        };
+    }
+
+    public static PetTypeDto MapPetTypeToPetTypeDto(PetType petType)
+    {
+        return new PetTypeDto
+        {
+            Id = petType.Id,
+            Name = petType.Name
+        };
+    }
 }

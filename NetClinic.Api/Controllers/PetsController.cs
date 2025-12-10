@@ -65,4 +65,69 @@ public class PetsController : ControllerBase
             throw;
         }
     }
+    
+    [HttpPost("new")]
+    public async Task<ActionResult<PetDto>> CreatePet([FromRoute] int ownerId, [FromBody] PetDto newPetDto)
+    {
+        _logger.LogInformation("Pet POST request received at {Timestamp}", DateTime.UtcNow);
+
+        var errors = ValidatePetDto(newPetDto);
+
+        if (errors.Count != 0)
+        {
+            return BadRequest(errors);
+        }
+
+        try
+        {
+            var createdPet = await _petService.CreatePetAsync(newPetDto, ownerId);
+            _logger.LogInformation("Successfully created pet with ID {PetId}", createdPet.Id);
+            return CreatedAtAction(nameof(CreatePet), new { petId = createdPet.Id }, createdPet);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while creating a new Pet");
+            throw;
+        }
+    }
+
+    [HttpGet("/pet/types")]
+    public async Task<ActionResult<IEnumerable<PetTypeDto>>> GetAllPetTypes()
+    {
+        _logger.LogInformation("Pet Types GET request received at {Timestamp}", DateTime.UtcNow);
+
+        try
+        {
+            var petTypes = await _petService.GetAllPetTypesAsync();
+            _logger.LogInformation("Successfully retrieved {Count} pet types", petTypes.Count());
+            return Ok(petTypes);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while retrieving pet types");
+            throw;
+        }
+    }
+
+    public static Dictionary<string, string> ValidatePetDto(PetDto petDto)
+    {
+        var errors = new Dictionary<string, string>();
+
+        if (string.IsNullOrWhiteSpace(petDto.Name))
+        {
+            errors.Add("Name", "Name is required.");
+        }
+
+        if (string.IsNullOrWhiteSpace(petDto.Type))
+        {
+            errors.Add("Type", "Type is required.");
+        }
+
+        if (string.IsNullOrWhiteSpace(petDto.BirthDate) || !DateTime.TryParse(petDto.BirthDate, out _))
+        {
+            errors.Add("BirthDate", "A valid BirthDate is required.");
+        }
+
+        return errors;
+    }
 }
