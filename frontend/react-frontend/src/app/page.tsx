@@ -11,6 +11,7 @@ import OwnerSearchForm from "./components/Owners/OwnerSearchForm";
 import OwnerSearchResults from "./components/Owners/OwnerSearchResults";
 import OwnerDetailsView from "./components/Owners/OwnerDetailsView";
 import OwnerCreateEditForm from "./components/Owners/OwnerCreateEditForm";
+import PetCreateEditForm from "./components/Pets/PetCreateEditForm";
 
 export default function App() {
   const [hash, setHash] = useHash();
@@ -37,6 +38,8 @@ export default function App() {
         return <OwnerCreateEditForm hash={hash} setHash={setHash} />;
     } else if (hash.startsWith('#owners/') && hash.endsWith('/edit')) {
         return <OwnerCreateEditForm hash={hash} setHash={setHash} />;
+    } else if (hash.startsWith('#owners/') && hash.endsWith('/pets/new')) {
+        return <PetCreateEditForm hash={hash} setHash={setHash} />;
     } else if (hash.startsWith('#owners/')) {
         return <OwnerDetailsView hash={hash} setHash={setHash} />;
     } else if (hash === '#oops') {

@@ -1,4 +1,4 @@
-import { OwnerDetails, PetDetails, VisitDetails } from "../types/Types";
+import { OwnerDetails, PetDetails, PetType, VisitDetails } from "../types/Types";
 
 // Fetch an owner by ID
 export const fetchOwnerById = async (ownerId: number): Promise<OwnerDetails> => {
@@ -50,3 +50,19 @@ export const fetchVisitsForPet = async (ownerId: number, petId: number): Promise
         return []; // Return empty array if visits fetch fails
     }
 };
+
+export const fetchPetTypes = async (): Promise<PetType[]> => {
+    try {
+        const response = await fetch('/api/pet/types');
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const types = await response.json();
+        return types as PetType[];
+    } catch (err) {
+        console.error('Error fetching pet types:', err);
+        return []; // Return empty array if fetch fails
+    }
+}

@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react';
 
+export function replaceHash(newHash: string) {
+  window.location.replace(window.location.pathname + window.location.search + newHash);
+}
+
 export default function useHash(): [string, (newHash: string) => void] {
   const [hash, setHash] = useState('');
 

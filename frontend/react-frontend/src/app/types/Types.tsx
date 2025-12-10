@@ -38,6 +38,11 @@ export interface Specialty {
   name: string;
 }
 
+export interface PetType {
+  id: number;
+  name: string;
+}
+
 // Hash Props, used to pass state around using the hash
 
 export interface HashProps {
