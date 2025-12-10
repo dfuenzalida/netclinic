@@ -137,10 +137,10 @@ public class PetService : IPetService
         var pet = new Pet
         {
             Name = petDto.Name,
-            BirthDate = DateTime.Parse(petDto.BirthDate),
+            BirthDate = DateTime.SpecifyKind(DateTime.Parse(petDto.BirthDate), DateTimeKind.Utc),
             PetType = await _context.PetTypes
-                                      .Where(pt => pt.Name == petDto.Type)
-                                      .FirstOrDefaultAsync() ?? UnknownPetType,
+                                  .Where(pt => pt.Name == petDto.Type)
+                                  .FirstOrDefaultAsync() ?? UnknownPetType,
             OwnerId = ownerId
         };
 

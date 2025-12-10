@@ -66,7 +66,7 @@ public class PetsController : ControllerBase
         }
     }
     
-    [HttpPost("new")]
+    [HttpPost]
     public async Task<ActionResult<PetDto>> CreatePet([FromRoute] int ownerId, [FromBody] PetDto newPetDto)
     {
         _logger.LogInformation("Pet POST request received at {Timestamp}", DateTime.UtcNow);
