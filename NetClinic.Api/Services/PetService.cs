@@ -11,6 +11,7 @@ public interface IPetService
     Task<PetDto?> GetPetByIdAsync(int petId);
     Task<IEnumerable<VisitDto>?> GetVisitsByPetIdAsync(int ownerId, int petId);
     Task<PetDto> CreatePetAsync(PetDto petDto, int ownerId);
+    Task<PetDto?> UpdatePetAsync(PetDto petDto);
     Task<IEnumerable<PetTypeDto>> GetAllPetTypesAsync();
 }
 
@@ -147,6 +148,28 @@ public class PetService : IPetService
         _context.Pets.Add(pet);
         await _context.SaveChangesAsync();
         _logger.LogInformation("Successfully created a new pet with ID: {PetId}", pet.Id);
+
+        return MapPetToPetDto(pet);
+    }
+
+    public async Task<PetDto?> UpdatePetAsync(PetDto petDto)
+    {
+        var pet = await _context.Pets.FindAsync(petDto.Id);
+        if (pet == null)
+        {
+            _logger.LogWarning("No pet found for ID: {PetId}", petDto.Id);
+            return null;
+        }
+
+        pet.Name = petDto.Name;
+        pet.BirthDate = DateTime.SpecifyKind(DateTime.Parse(petDto.BirthDate), DateTimeKind.Utc);
+        pet.PetType = await _context.PetTypes
+                                    .Where(pt => pt.Name == petDto.Type)
+                                    .FirstOrDefaultAsync() ?? UnknownPetType;
+
+        _context.Pets.Update(pet);
+        await _context.SaveChangesAsync();
+        _logger.LogInformation("Successfully updated pet with ID: {PetId}", pet.Id);
 
         return MapPetToPetDto(pet);
     }

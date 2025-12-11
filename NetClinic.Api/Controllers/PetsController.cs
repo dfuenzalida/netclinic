@@ -43,6 +43,30 @@ public class PetsController : ControllerBase
         }
     }
 
+    [HttpGet("{petId}")]
+    public async Task<ActionResult<PetDto?>> GetPetById([FromRoute] int ownerId, [FromRoute] int petId)
+    {
+        _logger.LogInformation("Pet GET by ID request received at {Timestamp} for Pet ID {PetId}", DateTime.UtcNow, petId);
+
+        try
+        {
+            var pet = await _petService.GetPetByIdAsync(petId);
+            if (pet == null)
+            {
+                _logger.LogWarning("No pet found for Pet ID {PetId}", petId);
+                return NotFound();
+            }
+
+            _logger.LogInformation("Successfully retrieved pet for Pet ID {PetId}", petId);
+            return Ok(pet);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while retrieving pet for Pet ID {PetId}", petId);
+            throw;
+        }
+    }
+
     [HttpGet("{petId}/visits")]
     public async Task<ActionResult<IEnumerable<VisitDto>?>> GetVisitsByPetId([FromRoute] int ownerId, [FromRoute] int petId)
     {
@@ -91,6 +115,43 @@ public class PetsController : ControllerBase
         }
     }
 
+    [HttpPut("{petId}")]
+    public async Task<ActionResult<PetDto?>> UpdatePet([FromRoute] int ownerId, [FromRoute] int petId, [FromBody] PetDto petDto)
+    {
+        _logger.LogInformation("Pet PUT request received at {Timestamp} for Pet ID {PetId}", DateTime.UtcNow, petId);
+
+        if (petId != petDto.Id)
+        {
+            _logger.LogWarning("Pet ID in route ({PetId}) does not match Pet ID in body ({BodyPetId})", petId, petDto.Id);
+            return BadRequest("Pet ID in route does not match Pet ID in body.");
+        }
+
+        var errors = ValidatePetDto(petDto);
+
+        if (errors.Count != 0)
+        {
+            return BadRequest(errors);
+        }
+
+        try
+        {
+            var updatedPet = await _petService.UpdatePetAsync(petDto);
+            if (updatedPet == null)
+            {
+                _logger.LogWarning("No pet found for Pet ID {PetId} to update", petId);
+                return NotFound();
+            }
+
+            _logger.LogInformation("Successfully updated pet with ID {PetId}", petId);
+            return Ok(updatedPet);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while updating Pet ID {PetId}", petId);
+            throw;
+        }
+    }
+
     [HttpGet("/pet/types")]
     public async Task<ActionResult<IEnumerable<PetTypeDto>>> GetAllPetTypes()
     {
@@ -115,17 +176,17 @@ public class PetsController : ControllerBase
 
         if (string.IsNullOrWhiteSpace(petDto.Name))
         {
-            errors.Add("Name", "Name is required.");
+            errors.Add("name", "is required");
         }
 
         if (string.IsNullOrWhiteSpace(petDto.Type))
         {
-            errors.Add("Type", "Type is required.");
+            errors.Add("type", "is required");
         }
 
         if (string.IsNullOrWhiteSpace(petDto.BirthDate) || !DateTime.TryParse(petDto.BirthDate, out _))
         {
-            errors.Add("BirthDate", "A valid BirthDate is required.");
+            errors.Add("birthDate", "is required");
         }
 
         return errors;
