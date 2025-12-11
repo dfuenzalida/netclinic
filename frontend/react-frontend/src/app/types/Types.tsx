@@ -71,3 +71,9 @@ export interface OwnerCreateErrors {
   city?: string;
   telephone?: string;
 }
+
+export interface PetCreateErrors {
+  name?: string;
+  birthDate?: string;
+  type?: string;
+}

@@ -33,13 +33,15 @@ export default function App() {
         return <OwnerSearchForm hash={hash} setHash={setHash} />;
     } else if (hash.startsWith('#owners/lastName')) {
         return <OwnerSearchResults hash={hash} setHash={setHash} />;
-    // TODO add create and edit forms, for both owners and pets
+    // TODO add visits page #/owners/:ownerId/pets/:petId/visits/new
     } else if (hash.startsWith('#owners/new')) {
-        return <OwnerCreateEditForm hash={hash} setHash={setHash} />;
-    } else if (hash.startsWith('#owners/') && hash.endsWith('/edit')) {
         return <OwnerCreateEditForm hash={hash} setHash={setHash} />;
     } else if (hash.startsWith('#owners/') && hash.endsWith('/pets/new')) {
         return <PetCreateEditForm hash={hash} setHash={setHash} />;
+    } else if (hash.startsWith('#owners/') && hash.indexOf('/pets/') > 0 && hash.endsWith('/edit')) {
+        return <PetCreateEditForm hash={hash} setHash={setHash} />;
+    } else if (hash.startsWith('#owners/') && hash.endsWith('/edit')) {
+        return <OwnerCreateEditForm hash={hash} setHash={setHash} />;
     } else if (hash.startsWith('#owners/')) {
         return <OwnerDetailsView hash={hash} setHash={setHash} />;
     } else if (hash === '#oops') {

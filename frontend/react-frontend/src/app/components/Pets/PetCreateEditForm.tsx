@@ -1,12 +1,20 @@
 import { useEffect, useState } from "react";
-import { HashProps, OwnerDetails, PetType } from "../../types/Types";
-import { fetchOwnerById, fetchPetTypes } from "../Api";
+import { HashProps, OwnerDetails, PetCreateErrors, PetType } from "../../types/Types";
+import { fetchOwnerById, fetchPetById, fetchPetTypes } from "../Api";
 
 export default function PetCreateEditForm({ hash, setHash }: HashProps) {
 
     // State for owner details rendered on the top of the form
     const [firstName, setFirstName] = useState<string>('');
     const [lastName, setLastName] = useState<string>('');
+
+    // State for form fields
+    const [name, setName] = useState<string>('');
+    const [birthDate, setBirthDate] = useState<string>('');
+    const [type, setType] = useState<string>('');
+
+    // State for form errors
+    const [errors, setErrors] = useState<PetCreateErrors>({});
 
     // State for pet types dropdown
     const [petTypes, setPetTypes] = useState<PetType[]>([]);
@@ -33,8 +41,7 @@ export default function PetCreateEditForm({ hash, setHash }: HashProps) {
             } catch (err) {
             console.warn('Error fetching owner details for edit:', err);
             }
-        };
-    
+        };    
 
         // Fetch pet types on component mount
         const fetchPetTypeDetails = async () => {
@@ -46,12 +53,61 @@ export default function PetCreateEditForm({ hash, setHash }: HashProps) {
             }
         };
 
+        const fetchPetDetails = async () => {
+            if (ownerId && petId) {
+                try {
+                    const data = await fetchPetById(ownerId, petId);
+                    setName(data.name);
+                    setBirthDate(data.birthDate);
+                    setType(data.type);
+                } catch (err) {
+                    console.warn('Error fetching pet details for edit:', err);
+                }
+            }
+        };
+
         fetchOwnerDetails();
         fetchPetTypeDetails();
+        fetchPetDetails();
     }, []);
 
+      function upsertPet(e: React.FormEvent) {
+        e.preventDefault();
+        const endpoint = petId ? `/api/owners/${ownerId}/pets/${petId}` : '/api/owners/${ownerId}/pets';
+        const method = petId ? 'PUT' : 'POST';
+        const flashMessage = petId ? 'Pet Values Updated' : 'New Pet Created';
+
+        fetch(endpoint, {
+          method: method,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: petId,
+            name,
+            birthDate,
+            type,
+          }),
+        })
+        .then(async (response) => {
+          if (response.ok) {
+            const data = await response.json();
+            setHash(`#owners/${ownerId}/pets/${data.id}?flash=${encodeURIComponent(flashMessage)}`);
+          } else if (response.status === 400) {
+            const errorResponse = await response.json();
+            console.log('Validation errors:', errorResponse);
+            setErrors(errorResponse as PetCreateErrors);
+          } else {
+            console.error('Failed to create owner:', response.statusText);
+          }
+        })
+        .catch((error) => {
+          console.error('Error creating owner:', error);
+        });
+      }
+
     return (<div>
-  <h2>{ownerId ? 'Edit Pet' : 'Create Pet'}</h2>
+  <h2>{ownerId ? 'Pet' : 'Create Pet'}</h2>
   <form className="form-horizontal" method="post">
     <input type="hidden" name="id" value="" />
     <div className="form-group has-feedback">
@@ -66,24 +122,35 @@ export default function PetCreateEditForm({ hash, setHash }: HashProps) {
         <label htmlFor="name" className="col-sm-2 control-label">Name</label>
         <div className="col-sm-10">
           <div>
-            <input className="form-control" type="text" id="name" name="name" value="" />
-
+            <input className="form-control" type="text" id="name" name="name"
+                value={name} onChange={(e) => setName(e.target.value)} />
           </div>
-          <span className="fa fa-ok form-control-feedback" aria-hidden="true"></span>
-
+            {errors?.name ? (
+              <>
+                <span className="fa fa-remove form-control-feedback" aria-hidden="true"></span>
+                &nbsp;
+                <span className="help-inline">{errors.name}</span>
+              </>) : (
+              <span className="fa fa-ok form-control-feedback" aria-hidden="true"></span>)}
         </div>
       </div>
 
 
       <div className="form-group">
-        <label for="birthDate" className="col-sm-2 control-label">Birth Date</label>
+        <label htmlFor="birthDate" className="col-sm-2 control-label">Birth Date</label>
         <div className="col-sm-10">
           <div>
 
-            <input className="form-control" type="date" id="birthDate" name="birthDate" value="" />
+            <input className="form-control" type="date" id="birthDate" name="birthDate"
+                value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
           </div>
-          <span className="fa fa-ok form-control-feedback" aria-hidden="true"></span>
-
+              {errors?.birthDate ? (
+              <>
+                <span className="fa fa-remove form-control-feedback" aria-hidden="true"></span>
+                &nbsp;
+                <span className="help-inline">{errors.birthDate}</span>
+              </>) : (
+              <span className="fa fa-ok form-control-feedback" aria-hidden="true"></span>)}
         </div>
       </div>
 
@@ -92,20 +159,19 @@ export default function PetCreateEditForm({ hash, setHash }: HashProps) {
         <label htmlFor="type" className="col-sm-2 control-label">Type</label>
 
         <div className="col-sm-10">
-          <select id="type" name="type">
+          <select id="type" name="type" onChange={(e) => {setType(e.target.value)}}>
             {petTypes.map((petType) => (
-              <option key={petType.id} value={petType.id}>{petType.name}</option>
+              <option key={petType.id} value={petType.name} selected={petType.name === type}>{petType.name}</option>
             ))}
           </select>
           <span className="fa fa-ok form-control-feedback" aria-hidden="true"></span>
-
         </div>
       </div>
 
     </div>
     <div className="form-group">
       <div className="col-sm-offset-2 col-sm-10">
-        <button className="btn btn-primary" type="submit">Add Pet</button>
+        <button className="btn btn-primary" onClick={(e) => upsertPet(e)}>{petId ? 'Update Pet' : 'Add Pet'}</button>
       </div>
     </div>
   </form></div>);

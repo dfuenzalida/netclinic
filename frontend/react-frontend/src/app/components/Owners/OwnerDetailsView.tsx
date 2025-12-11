@@ -120,8 +120,10 @@ export default function OwnerDetailsView({hash, setHash}: HashProps) {
                         ))
                       }
                       <tr>
-                        <td><a href={`#/owners/${ownerId}/pets/${pet.id}/edit`}>Edit Pet</a></td>
-                        <td><a href={`#/owners/${ownerId}/pets/${pet.id}/visits/new`}>Add Visit</a></td>
+                        <td><a href={`#/owners/${ownerId}/pets/${pet.id}/edit`}
+                          onClick={(e) => { e.preventDefault(); setHash(`#owners/${ownerId}/pets/${pet.id}/edit`); }}>Edit Pet</a></td>
+                        <td><a href={`#/owners/${ownerId}/pets/${pet.id}/visits/new`}
+                          onClick={(e) => { e.preventDefault(); setHash(`#owners/${ownerId}/pets/${pet.id}/visits/new`); }}>Add Visit</a></td>
                       </tr>
                     </tbody>
                   </table>

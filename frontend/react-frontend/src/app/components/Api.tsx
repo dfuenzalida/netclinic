@@ -66,3 +66,19 @@ export const fetchPetTypes = async (): Promise<PetType[]> => {
         return []; // Return empty array if fetch fails
     }
 }
+
+export const fetchPetById = async (ownerId: number, petId: number): Promise<PetDetails> => {
+    try {
+        const response = await fetch(`/api/owners/${ownerId}/pets/${petId}`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const pet = await response.json();
+        return pet;
+    } catch (err) {
+        console.error(`Error fetching pet with ID ${petId} for owner ${ownerId}:`, err);
+        throw err;
+    }
+}

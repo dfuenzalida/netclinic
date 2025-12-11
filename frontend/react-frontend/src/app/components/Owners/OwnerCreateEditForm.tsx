@@ -81,7 +81,7 @@ export default function OwnerCreateEditForm({ hash, setHash }: HashProps) {
   }
 
   return (<div>
-    <h2>{ownerId ? 'Edit Owner' : 'Create Owner'}</h2>
+    <h2>{ownerId ? 'Owner' : 'Create Owner'}</h2>
       <form className="form-horizontal" id="add-owner-form" action="#">
         <div className="form-group has-feedback">
 
