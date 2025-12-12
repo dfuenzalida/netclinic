@@ -1,4 +1,4 @@
-import { OwnerDetails, PetDetails, PetType, VisitDetails } from "../types/Types";
+import { OwnerDetails, PetDetails, PetType, PetVisit, VisitDetails } from "../types/Types";
 
 // Fetch an owner by ID
 export const fetchOwnerById = async (ownerId: number): Promise<OwnerDetails> => {
@@ -79,6 +79,22 @@ export const fetchPetById = async (ownerId: number, petId: number): Promise<PetD
         return pet;
     } catch (err) {
         console.error(`Error fetching pet with ID ${petId} for owner ${ownerId}:`, err);
+        throw err;
+    }
+}
+
+export const fetchPetVisitsById = async (ownerId: number, petId: number): Promise<PetVisit[]> => {
+    try {
+        const response = await fetch(`/api/owners/${ownerId}/pets/${petId}/visits`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const visits = await response.json();
+        return visits;
+    } catch (err) {
+        console.error(`Error fetching pet visits for pet ${petId} of owner ${ownerId}:`, err);
         throw err;
     }
 }

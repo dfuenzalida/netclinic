@@ -43,6 +43,11 @@ export interface PetType {
   name: string;
 }
 
+export interface PetVisit {
+  visitDate: string;
+  description: string;
+}
+
 // Hash Props, used to pass state around using the hash
 
 export interface HashProps {
@@ -76,4 +81,9 @@ export interface PetCreateErrors {
   name?: string;
   birthDate?: string;
   type?: string;
+}
+
+export interface VisitCreateErrors {
+    visitDate?: string;
+    description?: string;
 }

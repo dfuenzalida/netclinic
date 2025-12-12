@@ -12,6 +12,7 @@ import OwnerSearchResults from "./components/Owners/OwnerSearchResults";
 import OwnerDetailsView from "./components/Owners/OwnerDetailsView";
 import OwnerCreateEditForm from "./components/Owners/OwnerCreateEditForm";
 import PetCreateEditForm from "./components/Pets/PetCreateEditForm";
+import CreateVisitForm from "./components/Pets/CreateVisitForm";
 
 export default function App() {
   const [hash, setHash] = useHash();
@@ -33,7 +34,8 @@ export default function App() {
         return <OwnerSearchForm hash={hash} setHash={setHash} />;
     } else if (hash.startsWith('#owners/lastName')) {
         return <OwnerSearchResults hash={hash} setHash={setHash} />;
-    // TODO add visits page #/owners/:ownerId/pets/:petId/visits/new
+    } else if (hash.endsWith('/visits/new')) {
+        return <CreateVisitForm hash={hash} setHash={setHash} />;
     } else if (hash.startsWith('#owners/new')) {
         return <OwnerCreateEditForm hash={hash} setHash={setHash} />;
     } else if (hash.startsWith('#owners/') && hash.endsWith('/pets/new')) {
