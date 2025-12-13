@@ -73,7 +73,7 @@ export default function PetCreateEditForm({ hash, setHash }: HashProps) {
 
       function upsertPet(e: React.FormEvent) {
         e.preventDefault();
-        const endpoint = petId ? `/api/owners/${ownerId}/pets/${petId}` : '/api/owners/${ownerId}/pets';
+        const endpoint = petId ? `/api/owners/${ownerId}/pets/${petId}` : `/api/owners/${ownerId}/pets`;
         const method = petId ? 'PUT' : 'POST';
         const flashMessage = petId ? 'Pet Values Updated' : 'New Pet Created';
 
@@ -83,7 +83,6 @@ export default function PetCreateEditForm({ hash, setHash }: HashProps) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            id: petId,
             name,
             birthDate,
             type,
@@ -107,7 +106,7 @@ export default function PetCreateEditForm({ hash, setHash }: HashProps) {
       }
 
     return (<div>
-  <h2>{ownerId ? 'Pet' : 'Create Pet'}</h2>
+  <h2>{petId ? 'Pet' : 'New Pet'}</h2>
   <form className="form-horizontal" method="post">
     <input type="hidden" name="id" value="" />
     <div className="form-group has-feedback">
