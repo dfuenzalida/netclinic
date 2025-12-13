@@ -112,12 +112,8 @@ public class PetsController(ILogger<PetsController> logger, IPetService petServi
     {
         _logger.LogInformation("Pet PUT request received at {Timestamp} for Pet ID {PetId}", DateTime.UtcNow, petId);
 
-        if (petId != petDto.Id)
-        {
-            _logger.LogWarning("Pet ID in route ({PetId}) does not match Pet ID in body ({BodyPetId})", petId, petDto.Id);
-            return BadRequest("Pet ID in route does not match Pet ID in body.");
-        }
-
+        // Use the petId from the route
+        petDto.Id = petId;
         var errors = ValidatePetDto(petDto);
 
         if (errors.Count != 0)
