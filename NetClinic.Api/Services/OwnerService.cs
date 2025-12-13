@@ -18,17 +18,10 @@ public interface IOwnerService
     Task<OwnerDto?> UpdateOwnerAsync(OwnerDto ownerDto);
 }
 
-public class OwnerService : IOwnerService
+public class OwnerService(NetClinicDbContext context, ILogger<OwnerService> logger) : IOwnerService
 {
-    private readonly NetClinicDbContext _context;
-    private readonly ILogger<OwnerService> _logger;
-
-    public OwnerService(NetClinicDbContext context, ILogger<OwnerService> logger)
-    {
-        _context = context;
-        _logger = logger;
-        _logger.LogInformation("OwnerService initialized with database context");
-    }
+    private readonly NetClinicDbContext _context = context;
+    private readonly ILogger<OwnerService> _logger = logger;
 
     public async Task<IEnumerable<OwnerDto>> GetOwnersByLastNameAsync(string? lastName = null, int page = 1, int pageSize = 5)
     {

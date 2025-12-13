@@ -3,12 +3,8 @@ using NetClinic.Api.Models;
 
 namespace NetClinic.Api.Data;
 
-public class NetClinicDbContext : DbContext
+public class NetClinicDbContext(DbContextOptions<NetClinicDbContext> options) : DbContext(options)
 {
-    public NetClinicDbContext(DbContextOptions<NetClinicDbContext> options) : base(options)
-    {
-    }
-
     public DbSet<Veterinarian> Veterinarians { get; set; }
     public DbSet<Owner> Owners { get; set; }
     public DbSet<Pet> Pets { get; set; }

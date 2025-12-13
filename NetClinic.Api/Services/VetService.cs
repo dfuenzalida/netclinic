@@ -12,17 +12,10 @@ public interface IVetService
     Task<VetDto?> GetVeterinarianByIdAsync(int id);
 }
 
-public class VetService : IVetService
+public class VetService(NetClinicDbContext context, ILogger<VetService> logger) : IVetService
 {
-    private readonly NetClinicDbContext _context;
-    private readonly ILogger<VetService> _logger;
-
-    public VetService(NetClinicDbContext context, ILogger<VetService> logger)
-    {
-        _context = context;
-        _logger = logger;
-        _logger.LogInformation("VetService initialized with database context");
-    }
+    private readonly NetClinicDbContext _context = context;
+    private readonly ILogger<VetService> _logger = logger;
 
     public async Task<IEnumerable<VetDto>> GetAllVeterinariansAsync(int page = 1, int pageSize = 5)
     {

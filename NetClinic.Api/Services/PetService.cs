@@ -16,24 +16,16 @@ public interface IPetService
     Task<VisitDto> CreateVisitAsync(int petId, VisitDto newVisitDto);
 }
 
-public class PetService : IPetService
+public class PetService(NetClinicDbContext context, ILogger<PetService> logger) : IPetService
 {
-    private readonly NetClinicDbContext _context;
-    private readonly ILogger<PetService> _logger;
+    private readonly NetClinicDbContext _context = context;
+    private readonly ILogger<PetService> _logger = logger;
 
     public static PetType UnknownPetType = new PetType
     {
         Id = 0,
         Name = "unknown"
     };
-
-
-    public PetService(NetClinicDbContext context, ILogger<PetService> logger)
-    {
-        _context = context;
-        _logger = logger;
-        _logger.LogInformation("PetService initialized with database context");
-    }
 
     public async Task<IEnumerable<PetDto>?> GetPetsByOwnerIdAsync(int ownerId)
     {
