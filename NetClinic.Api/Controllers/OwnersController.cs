@@ -6,18 +6,10 @@ namespace NetClinic.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class OwnersController : ControllerBase
+public class OwnersController(ILogger<OwnersController> logger, IOwnerService ownerService) : ControllerBase
 {
-    private readonly ILogger<OwnersController> _logger;
-    private readonly IOwnerService _ownerService;    
-
-    public OwnersController(
-        ILogger<OwnersController> logger,
-        IOwnerService ownerService)
-    {
-        _logger = logger;
-        _ownerService = ownerService;
-    }
+    private readonly ILogger<OwnersController> _logger = logger;
+    private readonly IOwnerService _ownerService = ownerService;
 
     [HttpGet]
     public async Task<OwnerListDto> Get([FromQuery] string? lastName = null, [FromQuery] int page = 1, [FromQuery] int pageSize = 5)

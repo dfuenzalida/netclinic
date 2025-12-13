@@ -6,19 +6,11 @@ namespace NetClinic.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class VetsController : ControllerBase
+public class VetsController(ILogger<VetsController> logger, IVetService vetService) : ControllerBase
 {
-    private readonly ILogger<VetsController> _logger;
-    private readonly IVetService _vetService;
+    private readonly ILogger<VetsController> _logger = logger;
+    private readonly IVetService _vetService = vetService;
    private const int PageSize = 5;
-
-    public VetsController(
-        ILogger<VetsController> logger,
-        IVetService vetService)
-    {
-        _logger = logger;
-        _vetService = vetService;
-    }
 
     [HttpGet]
     public async Task<VetListDto> Get([FromQuery] int page = 1)
