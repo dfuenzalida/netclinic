@@ -70,7 +70,7 @@ export default function CreateVisitForm({ hash, setHash }: HashProps) {
 
     function createVisit(e: React.FormEvent) {
         e.preventDefault();
-        const endpoint = `/api/owners/${ownerId}/pets/${petId}/visits/new`;
+        const endpoint = `/api/owners/${ownerId}/pets/${petId}/visits`;
 
         fetch(endpoint, {
           method: 'POST',
