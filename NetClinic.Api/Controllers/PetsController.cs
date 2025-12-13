@@ -6,18 +6,10 @@ namespace NetClinic.Api.Controllers;
 
 [ApiController]
 [Route("owners/{ownerId}/[controller]")]
-public class PetsController : ControllerBase
+public class PetsController(ILogger<PetsController> logger, IPetService petService) : ControllerBase
 {
-    private readonly ILogger<PetsController> _logger;
-    private readonly IPetService _petService;
-
-    public PetsController(
-        ILogger<PetsController> logger,
-        IPetService petService)
-    {
-        _logger = logger;
-        _petService = petService;
-    }
+    private readonly ILogger<PetsController> _logger = logger;
+    private readonly IPetService _petService = petService;
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PetDto>>> GetPetsByOwnerId([FromRoute] int ownerId)
@@ -168,6 +160,54 @@ public class PetsController : ControllerBase
             _logger.LogError(ex, "Error occurred while retrieving pet types");
             throw;
         }
+    }
+
+    [HttpPost("{petId}/visits")]
+    public async Task<ActionResult<VisitDto>> CreateVisit([FromRoute] int petId, [FromBody] VisitDto newVisitDto)
+    {
+        _logger.LogInformation("Visit POST request received at {Timestamp}", DateTime.UtcNow);
+
+        var errors = ValidateVisitDto(newVisitDto);
+
+        if (errors.Count != 0)
+        {
+            return BadRequest(errors);
+        }
+
+        try
+        {
+            var createdVisit = await _petService.CreateVisitAsync(petId, newVisitDto);
+            _logger.LogInformation("Successfully created visit with ID {VisitId}", createdVisit.Id);
+            return CreatedAtAction(nameof(CreateVisit), new { visitId = createdVisit.Id }, createdVisit);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while creating a new Visit");
+            throw;
+        }
+    }
+
+    public static Dictionary<string, string> ValidateVisitDto(VisitDto newVisitDto)
+    {
+        var errors = new Dictionary<string, string>();
+
+        if (newVisitDto == null)
+        {
+            errors.Add("visit", "must not be blank");
+            return errors;
+        }
+
+        if (string.IsNullOrWhiteSpace(newVisitDto.Description))
+        {
+            errors.Add("description", "must not be blank");
+        }
+
+        if (newVisitDto.VisitDate == default)
+        {
+            errors.Add("visitDate", "must not be blank");
+        }
+
+        return errors;
     }
 
     public static Dictionary<string, string> ValidatePetDto(PetDto petDto)

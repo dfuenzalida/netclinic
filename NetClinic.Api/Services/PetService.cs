@@ -13,6 +13,7 @@ public interface IPetService
     Task<PetDto> CreatePetAsync(PetDto petDto, int ownerId);
     Task<PetDto?> UpdatePetAsync(PetDto petDto);
     Task<IEnumerable<PetTypeDto>> GetAllPetTypesAsync();
+    Task<VisitDto> CreateVisitAsync(int petId, VisitDto newVisitDto);
 }
 
 public class PetService : IPetService
@@ -172,6 +173,34 @@ public class PetService : IPetService
         _logger.LogInformation("Successfully updated pet with ID: {PetId}", pet.Id);
 
         return MapPetToPetDto(pet);
+    }
+
+    public async Task<VisitDto> CreateVisitAsync(int petId, VisitDto newVisitDto)
+    {
+        var pet = await _context.Pets.FindAsync(petId);
+        if (pet == null)
+        {
+            _logger.LogWarning("No pet found for ID: {PetId}", petId);
+            throw new ArgumentException($"No pet found for ID: {petId}");
+        }
+
+        var visit = new Visit
+        {
+            PetId = petId,
+            VisitDate = DateTime.SpecifyKind(DateTime.Parse(newVisitDto.VisitDate), DateTimeKind.Utc),
+            Description = newVisitDto.Description
+        };
+
+        _context.Visits.Add(visit);
+        await _context.SaveChangesAsync();
+        _logger.LogInformation("Successfully created a new visit with ID: {VisitId} for Pet ID: {PetId}", visit.Id, petId);
+
+        return new VisitDto
+        {
+            Id = visit.Id,
+            VisitDate = visit.VisitDate.ToString("yyyy-MM-dd"),
+            Description = visit.Description
+        };
     }
 
     public static PetDto MapPetToPetDto(Pet pet)
