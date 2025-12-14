@@ -48,6 +48,8 @@ export default function PetCreateEditForm({ hash, setHash }: HashProps) {
             try {
                 const types = await fetchPetTypes();
                 setPetTypes(types);
+                // Set default pet type if not already set
+                if (type == '') { setType(types[0].name); }
             } catch (err) {
                 console.warn('Error fetching pet types:', err);
             }
