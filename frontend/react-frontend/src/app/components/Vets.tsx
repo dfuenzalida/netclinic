@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Pagination from './Pagination';
 import { Vet, Specialty, HashProps } from '../types/Types';
+import T from './Translations';
 
 export default function Vets({ hash, setHash }: HashProps) {
   const [vets, setVets] = useState<Vet[]>([]);
@@ -70,15 +71,15 @@ export default function Vets({ hash, setHash }: HashProps) {
 
   return (
     <div>
-      <h2>Veterinarians</h2>
+      <h2>{T("vets")}</h2>
       <table className="table table-striped">
         <thead>
           <tr>
             <th>
-              Name
+              {T("name")}
             </th>
             <th>
-              Specialties
+              {T("specialties")}
             </th>
           </tr>
         </thead>
@@ -92,7 +93,7 @@ export default function Vets({ hash, setHash }: HashProps) {
                 {vet.specialties.length > 0 ? (
                   vet.specialties.map((specialty: Specialty) => specialty.name).join(', ')
                 ) : (
-                  <span>none</span>
+                  <span>{T("none")}</span>
                 )}
               </td>
             </tr>

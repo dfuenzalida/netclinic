@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import T from "./Translations";
 
 export default function Oops() {
 
@@ -15,7 +16,7 @@ export default function Oops() {
       }
       
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : T("somethingHappened"));
     } finally {
       setLoading(false);
     }
@@ -37,7 +38,7 @@ export default function Oops() {
     return (
       <div>
         <img src="images/pets.png" />
-          <h2>Something happened...</h2>
+          <h2>{T("somethingHappened")}</h2>
           <p></p>
       </div>
     );

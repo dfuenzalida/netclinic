@@ -1,6 +1,7 @@
 import { OwnerCreateErrors, OwnerDetails, HashProps } from "../../types/Types";
 import { useEffect, useState } from "react";
 import { fetchOwnerById } from "../Api";
+import T from "../Translations";
 
 export default function OwnerCreateEditForm({ hash, setHash }: HashProps) {
 
@@ -81,12 +82,12 @@ export default function OwnerCreateEditForm({ hash, setHash }: HashProps) {
   }
 
   return (<div>
-    <h2>{ownerId ? 'Owner' : 'Create Owner'}</h2>
+    <h2>{ownerId ? T("editOwner") : T("addOwner")}</h2>
       <form className="form-horizontal" id="add-owner-form" action="#">
         <div className="form-group has-feedback">
 
           <div className="form-group has-error">
-            <label htmlFor="firstName" className="col-sm-2 control-label">First Name</label>
+            <label htmlFor="firstName" className="col-sm-2 control-label">{T("firstName")}</label>
             <div className="col-sm-10">
               <div>
                 <input className="form-control" type="text" id="firstName"
@@ -103,7 +104,7 @@ export default function OwnerCreateEditForm({ hash, setHash }: HashProps) {
           </div>
 
           <div className="form-group has-error">
-            <label htmlFor="lastName" className="col-sm-2 control-label">Last Name</label>
+            <label htmlFor="lastName" className="col-sm-2 control-label">{T("lastName")}</label>
             <div className="col-sm-10">
               <div>
                 <input className="form-control" type="text" id="lastName"
@@ -120,7 +121,7 @@ export default function OwnerCreateEditForm({ hash, setHash }: HashProps) {
           </div>
 
           <div className="form-group has-error">
-            <label htmlFor="address" className="col-sm-2 control-label">Address</label>
+            <label htmlFor="address" className="col-sm-2 control-label">{T("address")}</label>
             <div className="col-sm-10">
               <div>
                 <input className="form-control" type="text" id="address"
@@ -137,7 +138,7 @@ export default function OwnerCreateEditForm({ hash, setHash }: HashProps) {
           </div>
 
           <div className="form-group has-error">
-            <label htmlFor="city" className="col-sm-2 control-label">City</label>
+            <label htmlFor="city" className="col-sm-2 control-label">{T("city")}</label>
             <div className="col-sm-10">
               <div>
                 <input className="form-control" type="text" id="city"
@@ -154,7 +155,7 @@ export default function OwnerCreateEditForm({ hash, setHash }: HashProps) {
           </div>
 
           <div className="form-group has-error">
-            <label htmlFor="telephone" className="col-sm-2 control-label">Telephone</label>
+            <label htmlFor="telephone" className="col-sm-2 control-label">{T("telephone")}</label>
             <div className="col-sm-10">
               <div>
                 <input className="form-control" type="text" id="telephone"
@@ -173,7 +174,7 @@ export default function OwnerCreateEditForm({ hash, setHash }: HashProps) {
         </div>
         <div className="form-group">
           <div className="col-sm-offset-2 col-sm-10">
-            <button className="btn btn-primary" onClick={(e) => upsertOwner(e)}>{ownerId ? 'Update Owner' : 'Add Owner'}</button>
+            <button className="btn btn-primary" onClick={(e) => upsertOwner(e)}>{ownerId ? T("editOwner") : T("addOwner")}</button>
           </div>
         </div>
       </form>

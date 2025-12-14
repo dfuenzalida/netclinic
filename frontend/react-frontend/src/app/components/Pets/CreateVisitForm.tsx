@@ -2,6 +2,7 @@ import { HashProps, PetDetails, PetVisit } from "../../types/Types";
 import { useEffect, useState } from "react";
 import { VisitCreateErrors, OwnerDetails } from "../../types/Types";
 import { fetchOwnerById, fetchPetById, fetchPetVisitsById } from "../Api";
+import T from "../Translations";
 
 export default function CreateVisitForm({ hash, setHash }: HashProps) {
 
@@ -98,16 +99,16 @@ export default function CreateVisitForm({ hash, setHash }: HashProps) {
     }
 
     return (<>
-      <h2>New Visit</h2>
+      <h2>{T("addVisit")}</h2>
 
-      <b>Pet</b>
+      <b>{T("pet")}</b>
       <table className="table table-striped">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Birth Date</th>
-                <th>Type</th>
-                <th>Owner</th>
+                <th>{T("name")}</th>
+                <th>{T("birthDate")}</th>
+                <th>{T("type")}</th>
+                <th>{T("owner")}</th>
             </tr>
         </thead>
         <tbody>
@@ -122,7 +123,7 @@ export default function CreateVisitForm({ hash, setHash }: HashProps) {
 
       <form className="form-horizontal" method="post" onSubmit={createVisit}>
         <div className="form-group has-feedback">
-          <label htmlFor="date" className="col-sm-2 control-label">Date</label>
+          <label htmlFor="date" className="col-sm-2 control-label">{T("date")}</label>
 
           <div className="col-sm-10">
             <div>
@@ -141,7 +142,7 @@ export default function CreateVisitForm({ hash, setHash }: HashProps) {
         </div>
 
         <div className="form-group has-feedback">
-          <label htmlFor="description" className="col-sm-2 control-label">Description</label>
+          <label htmlFor="description" className="col-sm-2 control-label">{T("description")}</label>
 
           <div className="col-sm-10">
             <input type="text" className="form-control" id="description" name="description"
@@ -158,18 +159,18 @@ export default function CreateVisitForm({ hash, setHash }: HashProps) {
 
         <div className="form-group">
           <div className="col-sm-offset-2 col-sm-10">
-            <button onClick={createVisit} className="btn btn-primary">Add Visit</button>
+            <button onClick={createVisit} className="btn btn-primary">{T("addVisit")}</button>
           </div>
         </div>
       </form>
 
         <br />
-        <b>Previous Visits</b>
+        <b>{T("previousVisits")}</b>
         <table className="table table-striped">
           <tbody>
             <tr>
-                <th>Date</th>
-                <th>Description</th>
+                <th>{T("date")}</th>
+                <th>{T("description")}</th>
             </tr>
             {
             petVisits.map((visit, index) => (

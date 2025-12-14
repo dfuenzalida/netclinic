@@ -2,6 +2,7 @@ import { HashProps, OwnerDetails, PetDetails, VisitDetails } from '../../types/T
 import { useEffect, useState } from "react";
 import { fetchOwnerById, fetchPetsForOwner, fetchVisitsForPet } from '../Api';
 import { flash, replaceHash } from '../Hash';
+import T from '../Translations';
 
 export default function OwnerDetailsView({hash, setHash}: HashProps) {
   const [loading, setLoading] = useState<boolean>(true);
@@ -61,7 +62,7 @@ export default function OwnerDetailsView({hash, setHash}: HashProps) {
 
   return (
     <div>
-      <h2>Owner Information</h2>
+      <h2>{T("ownerInformation")}</h2>
 
       {
         flashMessage &&
@@ -73,34 +74,33 @@ export default function OwnerDetailsView({hash, setHash}: HashProps) {
       <table className="table table-striped">
         <tbody>
           <tr>
-            <th>Name</th>
+            <th>{T("name")}</th>
             <td><b>{owner?.firstName} {owner?.lastName}</b></td>
           </tr>
           <tr>
-            <th>Address</th>
+            <th>{T("address")}</th>
             <td>{owner?.address}</td>
           </tr>
           <tr>
-            <th>City</th>
+            <th>{T("city")}</th>
             <td>{owner?.city}</td>
           </tr>
           <tr>
-            <th>Telephone</th>
+            <th>{T("telephone")}</th>
             <td>{owner?.telephone}</td>
           </tr>
         </tbody>
       </table>
 
       <a href={`#/owners/${ownerId}/edit`} onClick={(e) => { e.preventDefault(); setHash(`#owners/${ownerId}/edit`); }}
-        className="btn btn-primary">Edit Owner</a>
+        className="btn btn-primary">{T("editOwner")}</a>
       &nbsp;
       <a href={`#/owners/${ownerId}/pets/new`} onClick={(e) => { e.preventDefault(); setHash(`#owners/${ownerId}/pets/new`); }}
-        className="btn btn-primary">Add New Pet</a>
+        className="btn btn-primary">{T("addNewPet")}</a>
       <br />
       <br />
       <br />
-      <h2>Pets and Visits</h2>
-
+      <h2>{T("petsAndVisits")}</h2>
       <table className="table table-striped">
         <tbody>
           {
@@ -108,11 +108,11 @@ export default function OwnerDetailsView({hash, setHash}: HashProps) {
               <tr key={'pet' + pet.id}>
                 <td valign="top">
                   <dl className="dl-horizontal">
-                    <dt>Name</dt>
+                    <dt>{T("name")}</dt>
                     <dd>{pet.name}</dd>
-                    <dt>Birth Date</dt>
+                    <dt>{T("birthDate")}</dt>
                     <dd>{pet.birthDate}</dd>
-                    <dt>Type</dt>
+                    <dt>{T("type")}</dt>
                     <dd>{pet.type}</dd>
                   </dl>
                 </td>
@@ -120,8 +120,8 @@ export default function OwnerDetailsView({hash, setHash}: HashProps) {
                   <table className="table-condensed">
                     <thead>
                       <tr>
-                        <th style={{ width: '120px' }}>Visit Date</th>
-                        <th>Description</th>
+                        <th style={{ width: '120px' }}>{T("visitDate")}</th>
+                        <th>{T("description")}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -135,9 +135,9 @@ export default function OwnerDetailsView({hash, setHash}: HashProps) {
                       }
                       <tr>
                         <td><a href={`#/owners/${ownerId}/pets/${pet.id}/edit`}
-                          onClick={(e) => { e.preventDefault(); setHash(`#owners/${ownerId}/pets/${pet.id}/edit`); }}>Edit Pet</a></td>
+                          onClick={(e) => { e.preventDefault(); setHash(`#owners/${ownerId}/pets/${pet.id}/edit`); }}>{T("editPet")}</a></td>
                         <td><a href={`#/owners/${ownerId}/pets/${pet.id}/visits/new`}
-                          onClick={(e) => { e.preventDefault(); setHash(`#owners/${ownerId}/pets/${pet.id}/visits/new`); }}>Add Visit</a></td>
+                          onClick={(e) => { e.preventDefault(); setHash(`#owners/${ownerId}/pets/${pet.id}/visits/new`); }}>{T("addVisit")}</a></td>
                       </tr>
                     </tbody>
                   </table>

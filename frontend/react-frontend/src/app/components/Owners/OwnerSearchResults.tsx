@@ -3,6 +3,7 @@ import { OwnerDetails, HashProps } from '../../types/Types';
 import Pagination from '../Pagination';
 import { fetchPetsForOwner } from '../Api';
 import { replaceHash } from '../Hash';
+import T from '../Translations';
 
 export default function OwnerSearchResults({ hash, setHash } : HashProps) {
 
@@ -108,15 +109,15 @@ export default function OwnerSearchResults({ hash, setHash } : HashProps) {
 
   return (
     <div>
-      <h2>Owners</h2>
+      <h2>{T("owners")}</h2>
       <table id="owners" className="table table-striped">
         <thead>
           <tr>
-            <th style={{ width: '150px' }}>Name</th>
-            <th style={{ width: '200px' }}>Address</th>
-            <th>City</th>
-            <th style={{ width: '120px' }}>Telephone</th>
-            <th>Pets</th>
+            <th style={{ width: '150px' }}>{T("name")}</th>
+            <th style={{ width: '200px' }}>{T("address")}</th>
+            <th>{T("city")}</th>
+            <th style={{ width: '120px' }}>{T("telephone")}</th>
+            <th>{T("pets")}</th>
           </tr>
         </thead>
         <tbody>

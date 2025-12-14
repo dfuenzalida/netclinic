@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { PaginationProps } from "../types/Types";
 import page from '../page';
+import T from './Translations';
 
 export default function Pagination({ currentPage, setCurrentPage, totalPages, linkBase }: PaginationProps) {
 
@@ -16,7 +17,7 @@ export default function Pagination({ currentPage, setCurrentPage, totalPages, li
   return (
     <>
     <div>
-        <span>pages</span>
+        <span>{T("pages")}</span>
             &nbsp;
             <span>[</span>
             &nbsp;
@@ -41,9 +42,9 @@ export default function Pagination({ currentPage, setCurrentPage, totalPages, li
             &nbsp;
             {
                 currentPage === 1 ? (
-                    <span title="First" className="fa fa-fast-backward"></span>
+                    <span title={T("first")} className="fa fa-fast-backward"></span>
                 ) : (
-                    <a href={`${linkBase}?page=1`} title="First"
+                    <a href={`${linkBase}?page=1`} title={T("first")}
                         className="fa fa-fast-backward"
                         onClick={() => setCurrentPage(1)}></a>
                 )
@@ -53,9 +54,9 @@ export default function Pagination({ currentPage, setCurrentPage, totalPages, li
         &nbsp;
             {
                 currentPage === 1 ? (
-                    <span title="Previous" className="fa fa-step-backward"></span>
+                    <span title={T("previous")} className="fa fa-step-backward"></span>
                 ) : (
-                    <a href={`${linkBase}?page=${currentPage - 1}`} title="Previous"
+                    <a href={`${linkBase}?page=${currentPage - 1}`} title={T("previous")}
                         className="fa fa-step-backward"
                         onClick={() => setCurrentPage(currentPage - 1)}></a>
                 )
@@ -66,9 +67,9 @@ export default function Pagination({ currentPage, setCurrentPage, totalPages, li
             &nbsp;
             {
                 currentPage === totalPages ? (
-                    <span title="Next" className="fa fa-step-forward"></span>
+                    <span title={T("next")} className="fa fa-step-forward"></span>
                 ) : (
-                    <a href={`${linkBase}?page=${currentPage + 1}`} title="Next"
+                    <a href={`${linkBase}?page=${currentPage + 1}`} title={T("next")}
                         className="fa fa-step-forward"
                         onClick={() => setCurrentPage(currentPage + 1)}></a>
                 )
@@ -79,9 +80,9 @@ export default function Pagination({ currentPage, setCurrentPage, totalPages, li
             &nbsp;
             {
                 currentPage === totalPages ? (
-                    <span title="Last" className="fa fa-fast-forward"></span>
+                    <span title={T("last")} className="fa fa-fast-forward"></span>
                 ) : (
-                    <a href={`${linkBase}?page=${totalPages}`} title="Last"
+                    <a href={`${linkBase}?page=${totalPages}`} title={T("last")}
                         className="fa fa-fast-forward"
                         onClick={() => setCurrentPage(totalPages)}></a>
                 )

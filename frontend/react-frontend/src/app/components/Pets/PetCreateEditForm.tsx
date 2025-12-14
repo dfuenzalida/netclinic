@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { HashProps, OwnerDetails, PetCreateErrors, PetType } from "../../types/Types";
 import { fetchOwnerById, fetchPetById, fetchPetTypes } from "../Api";
+import T from "../Translations";
 
 export default function PetCreateEditForm({ hash, setHash }: HashProps) {
 
@@ -108,19 +109,19 @@ export default function PetCreateEditForm({ hash, setHash }: HashProps) {
       }
 
     return (<div>
-  <h2>{petId ? 'Pet' : 'New Pet'}</h2>
+  <h2>{petId ? T("pet") : T("addNewPet")}</h2>
   <form className="form-horizontal" method="post">
     <input type="hidden" name="id" value="" />
     <div className="form-group has-feedback">
       <div className="form-group">
-        <label className="col-sm-2 control-label">Owner</label>
+        <label className="col-sm-2 control-label">{T("owner")}</label>
         <div className="col-sm-10">
           <span>{firstName} {lastName}</span>
         </div>
       </div>
 
       <div className="form-group">
-        <label htmlFor="name" className="col-sm-2 control-label">Name</label>
+        <label htmlFor="name" className="col-sm-2 control-label">{T("name")}</label>
         <div className="col-sm-10">
           <div>
             <input className="form-control" type="text" id="name" name="name"
@@ -138,7 +139,7 @@ export default function PetCreateEditForm({ hash, setHash }: HashProps) {
 
 
       <div className="form-group">
-        <label htmlFor="birthDate" className="col-sm-2 control-label">Birth Date</label>
+        <label htmlFor="birthDate" className="col-sm-2 control-label">{T("birthDate")}</label>
         <div className="col-sm-10">
           <div>
 
@@ -157,7 +158,7 @@ export default function PetCreateEditForm({ hash, setHash }: HashProps) {
 
 
       <div className="form-group">
-        <label htmlFor="type" className="col-sm-2 control-label">Type</label>
+        <label htmlFor="type" className="col-sm-2 control-label">{T("type")}</label>
 
         <div className="col-sm-10">
           <select id="type" name="type" onChange={(e) => {setType(e.target.value)}}>
@@ -172,7 +173,7 @@ export default function PetCreateEditForm({ hash, setHash }: HashProps) {
     </div>
     <div className="form-group">
       <div className="col-sm-offset-2 col-sm-10">
-        <button className="btn btn-primary" onClick={(e) => upsertPet(e)}>{petId ? 'Update Pet' : 'Add Pet'}</button>
+        <button className="btn btn-primary" onClick={(e) => upsertPet(e)}>{petId ? T("editPet") : T("addNewPet")}</button>
       </div>
     </div>
   </form></div>);

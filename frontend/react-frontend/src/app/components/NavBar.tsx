@@ -1,4 +1,5 @@
 import { HashProps } from "../types/Types";
+import T from "./Translations";
   
 export default function NavBar({ hash, setHash }: HashProps) {
 
@@ -27,26 +28,26 @@ export default function NavBar({ hash, setHash }: HashProps) {
         <div className="collapse navbar-collapse" id="main-navbar">
           <ul className="navbar-nav me-auto">
             <li className="nav-item">
-              <a className={`nav-link ${hash === '#welcome' ? 'active' : ''}`} href="#welcome" onClick={(e) => handleNavClick(e, 'welcome')} title="home page">
+              <a className={`nav-link ${hash === '#welcome' ? 'active' : ''}`} href="#welcome" onClick={(e) => handleNavClick(e, 'welcome')} title={T("home")}>
                 <span className="fa fa-home"></span>
                 &nbsp;
-                <span>Home</span>
+                <span>{T("home")}</span>
               </a>
             </li>
 
             <li className="nav-item">
-              <a className={`nav-link ${hash.startsWith('#owners') ? 'active' : ''}`} href="#owners" onClick={(e) => handleNavClick(e, 'owners/search')} title="find owners">
+              <a className={`nav-link ${hash.startsWith('#owners') ? 'active' : ''}`} href="#owners" onClick={(e) => handleNavClick(e, 'owners/search')} title={T("findOwners")}>
                 <span className="fa fa-search"></span>
                 &nbsp;
-                <span>Find Owners</span>
+                <span>{T("findOwners")}</span>
               </a>
             </li>
 
             <li className="nav-item">
-              <a className={`nav-link ${hash.startsWith('#vets') ? 'active' : ''}`} href="#vets" onClick={(e) => handleNavClick(e, 'vets')} title="veterinarians">
+              <a className={`nav-link ${hash.startsWith('#vets') ? 'active' : ''}`} href="#vets" onClick={(e) => handleNavClick(e, 'vets')} title={T("vets")}>
                 <span className="fa fa-th-list"></span>
                 &nbsp;
-                <span>Veterinarians</span>
+                <span>{T("vets")}</span>
               </a>
             </li>
 
@@ -54,7 +55,7 @@ export default function NavBar({ hash, setHash }: HashProps) {
               <a className={`nav-link ${hash === 'oops' ? 'active' : ''}`} href="#oops" onClick={(e) => handleNavClick(e, 'oops')} title="trigger a RuntimeException to see how it is handled">
                 <span className="fa fa-exclamation-triangle"></span>
                 &nbsp;
-                <span>Error</span>
+                <span>{T("error")}</span>
               </a>
             </li>
           </ul>
