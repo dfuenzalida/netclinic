@@ -67,7 +67,7 @@ public class PetsController(ILogger<PetsController> logger, IPetService petServi
         try
         {
             var visits = await _petService.GetVisitsByPetIdAsync(ownerId, petId);
-            if (visits == null || !visits.Any())
+            if (visits == null)
             {
                 _logger.LogWarning("No visits found for Pet ID {PetId}", petId);
                 return NotFound();

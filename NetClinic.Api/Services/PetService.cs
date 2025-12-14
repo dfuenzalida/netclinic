@@ -86,6 +86,8 @@ public class PetService(NetClinicDbContext context, ILogger<PetService> logger) 
     {
         _logger.LogInformation("Fetching visits from the database for Pet ID: {PetId}", petId);
 
+        List<VisitDto> results = [];
+
         var visits = await _context.Pets
                                    .Where(p => p.OwnerId == ownerId)
                                    .Where(p => p.Id == petId)
@@ -102,12 +104,12 @@ public class PetService(NetClinicDbContext context, ILogger<PetService> logger) 
         if (visits == null || visits.Count == 0)
         {
             _logger.LogWarning("No visits found for Pet ID: {PetId}", petId);
-            return null;
         }
 
         _logger.LogInformation("Successfully fetched {Count} visits for Pet ID: {PetId}", visits.Count, petId);
 
-        return visits;
+        results.AddRange(visits);
+        return results;
     }
 
     public async Task<IEnumerable<PetTypeDto>> GetAllPetTypesAsync()
