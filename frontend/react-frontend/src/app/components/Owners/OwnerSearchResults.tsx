@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { OwnerDetails, HashProps } from '../../types/Types';
 import Pagination from '../Pagination';
 import { fetchPetsForOwner } from '../Api';
+import { replaceHash } from '../Hash';
 
 export default function OwnerSearchResults({ hash, setHash } : HashProps) {
 
@@ -36,7 +37,7 @@ export default function OwnerSearchResults({ hash, setHash } : HashProps) {
       
       if (data.ownerList.length === 1 && page === 1) {
         // When there's exactly one owner in the first page of search results, go to the details view for that owner
-        setHash(`#owners/${data.ownerList[0].id}`);
+        replaceHash(`#owners/${data.ownerList[0].id}`);
         return;
       }
 
