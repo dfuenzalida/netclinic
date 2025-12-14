@@ -104,11 +104,12 @@ public class PetService(NetClinicDbContext context, ILogger<PetService> logger) 
         if (visits == null || visits.Count == 0)
         {
             _logger.LogWarning("No visits found for Pet ID: {PetId}", petId);
+        } else
+        {
+            _logger.LogInformation("Successfully fetched {Count} visits for Pet ID: {PetId}", visits.Count, petId);
+            results.AddRange(visits);
         }
 
-        _logger.LogInformation("Successfully fetched {Count} visits for Pet ID: {PetId}", visits.Count, petId);
-
-        results.AddRange(visits);
         return results;
     }
 
