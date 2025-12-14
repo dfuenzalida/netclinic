@@ -1,5 +1,15 @@
 import { useState, useEffect } from 'react';
 
+export function flash() {
+  if (window.location.hash.indexOf("?flash=") > 0) {
+    var pos = window.location.hash.indexOf("?flash=") + 7;
+    var msg = decodeURIComponent(window.location.hash.substring(pos));
+    return msg;
+  } else {
+    return null;
+  }
+}
+
 export function replaceHash(newHash: string) {
   window.location.replace(window.location.pathname + window.location.search + newHash);
 }

@@ -1,6 +1,5 @@
 ### Pending front-end tasks
 
-* Move upsert UI functions to Api.tsx
-* Add flash message to Owner Details, Pet Details
+* When creating a new Pet, a pet type needs to be manually selected (doesn't use the default)
 * I18n support
 * UI Tests

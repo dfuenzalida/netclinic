@@ -84,7 +84,7 @@ export default function CreateVisitForm({ hash, setHash }: HashProps) {
         })
         .then(async (response) => {
           if (response.ok) {
-            setHash(`#owners/${ownerId}/pets/${petId}?flash=Visit+Created`);
+            setHash(`#owners/${ownerId}/pets/${petId}?flash=Visit Created`);
           } else if (response.status === 400) {
             const errorData = await response.json();
             setErrors(errorData);

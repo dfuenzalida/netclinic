@@ -1,6 +1,7 @@
 import { HashProps, OwnerDetails, PetDetails, VisitDetails } from '../../types/Types';
 import { useEffect, useState } from "react";
 import { fetchOwnerById, fetchPetsForOwner, fetchVisitsForPet } from '../Api';
+import { flash, replaceHash } from '../Hash';
 
 export default function OwnerDetailsView({hash, setHash}: HashProps) {
   const [loading, setLoading] = useState<boolean>(true);
@@ -53,9 +54,22 @@ export default function OwnerDetailsView({hash, setHash}: HashProps) {
     return <p style={{ color: 'red' }}>Error loading owner details: {error}</p>;
   }
 
+  var flashMessage = flash();
+  if (flashMessage) {
+    setTimeout(() => { replaceHash(`#owners/${ownerId}`); }, 3000);
+  }  
+
   return (
     <div>
       <h2>Owner Information</h2>
+
+      {
+        flashMessage &&
+          <div className="alert alert-success" id="success-message">
+            <span>{flashMessage}</span>
+          </div>
+      }
+
       <table className="table table-striped">
         <tbody>
           <tr>
