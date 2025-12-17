@@ -19,58 +19,59 @@ export default function OwnerSearchResults({ hash, setHash } : HashProps) {
     lastName = lastName.split('?')[0];
   }
 
-  const fetchOwnersByLastName = async (lastName: string, page: number) => {
-    try {
-      setLoading(true);
-      const response = await fetch(`/api/owners?lastName=${lastName}&page=${page}`);
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      // If no owners found, set an error message
-      if (data.ownerList.length === 0) {
-        console.log('No owners found with the given last name.');
-        setHash('#owners/search');
-        return;
-      } 
-      
-      if (data.ownerList.length === 1 && page === 1) {
-        // When there's exactly one owner in the first page of search results, go to the details view for that owner
-        replaceHash(`#owners/${data.ownerList[0].id}`);
-        return;
-      }
-
-      // Convert owners to the extended type with loading state
-      const ownersWithDetailedPets: OwnerDetails[] = data.ownerList.map((owner: OwnerDetails) => ({
-        ...owner,
-        pets: []
-      }));
-
-      setOwners(ownersWithDetailedPets);
-      setTotalPages(data.totalPages);
-
-      // Fetch pets for each owner
-      const updatedOwners = await Promise.all(
-        ownersWithDetailedPets.map(async (owner) => {
-          const pets = await fetchPetsForOwner(owner.id);
-          return {
-            ...owner,
-            pets
-          };
-        })
-      );
-
-      setOwners(updatedOwners);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+
+    const fetchOwnersByLastName = async (lastName: string, page: number) => {
+      try {
+        setLoading(true);
+        const response = await fetch(`/api/owners?lastName=${lastName}&page=${page}`);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        // If no owners found, set an error message
+        if (data.ownerList.length === 0) {
+          console.log('No owners found with the given last name.');
+          setHash('#owners/search');
+          return;
+        } 
+        
+        if (data.ownerList.length === 1 && page === 1) {
+          // When there's exactly one owner in the first page of search results, go to the details view for that owner
+          replaceHash(`#owners/${data.ownerList[0].id}`);
+          return;
+        }
+
+        // Convert owners to the extended type with loading state
+        const ownersWithDetailedPets: OwnerDetails[] = data.ownerList.map((owner: OwnerDetails) => ({
+          ...owner,
+          pets: []
+        }));
+
+        setOwners(ownersWithDetailedPets);
+        setTotalPages(data.totalPages);
+
+        // Fetch pets for each owner
+        const updatedOwners = await Promise.all(
+          ownersWithDetailedPets.map(async (owner) => {
+            const pets = await fetchPetsForOwner(owner.id);
+            return {
+              ...owner,
+              pets
+            };
+          })
+        );
+
+        setOwners(updatedOwners);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+      } finally {
+        setLoading(false);
+      }
+    };
+
     // Parse the page number from the hash
     let pageToUse = 1;
     if (hash.includes('?page=')) {
@@ -87,7 +88,7 @@ export default function OwnerSearchResults({ hash, setHash } : HashProps) {
     }
     
     fetchOwnersByLastName(lastName, pageToUse);
-  }, [hash]);
+  }, [hash, setHash, currentPage, lastName]);
 
   if (loading) {
     return (

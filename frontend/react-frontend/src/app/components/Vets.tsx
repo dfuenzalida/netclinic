@@ -26,7 +26,7 @@ export default function Vets({ hash, setHash }: HashProps) {
       const pos = hash.indexOf('?page=');
       if (pos > -1) {
         const page = parseInt(hash.substring(pos + 6)) || 1;
-        setCurrentPage(page);
+        setHash(`#vets?page=${page}`);
       }
     }
 
@@ -50,7 +50,7 @@ export default function Vets({ hash, setHash }: HashProps) {
     };
 
     fetchVets();
-  }, [hash]); // Add hash as dependency to refetch when it changes
+  }, [hash, setHash, currentPage]); // Add hash and currentPage as dependencies to refetch when they change
 
   if (loading) {
     return (
