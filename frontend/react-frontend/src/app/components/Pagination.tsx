@@ -1,6 +1,4 @@
-import Link from 'next/link';
 import { PaginationProps } from "../types/Types";
-import page from '../page';
 import T from './Translations';
 
 export default function Pagination({ currentPage, setCurrentPage, totalPages, linkBase }: PaginationProps) {

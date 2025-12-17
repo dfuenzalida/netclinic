@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 
 export function flash() {
   if (window.location.hash.indexOf("?flash=") > 0) {
-    var pos = window.location.hash.indexOf("?flash=") + 7;
-    var msg = decodeURIComponent(window.location.hash.substring(pos));
+    const pos = window.location.hash.indexOf("?flash=") + 7;
+    const msg = decodeURIComponent(window.location.hash.substring(pos));
     return msg;
   } else {
     return null;
@@ -18,8 +18,6 @@ export default function useHash(): [string, (newHash: string) => void] {
   const [hash, setHash] = useState('');
 
   useEffect(() => {
-    // Set initial hash value on client side
-    setHash(window.location.hash);
 
     const handleHashChange = () => {
       setHash(window.location.hash);

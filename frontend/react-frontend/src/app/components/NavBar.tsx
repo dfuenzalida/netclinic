@@ -11,7 +11,7 @@ export default function NavBar({ hash, setHash }: HashProps) {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark" role="navigation">
       <div className="container-fluid">
-        <a className="navbar-brand" href="/">
+        <a className="navbar-brand" href="#">
           <span></span>
         </a>
         <button 

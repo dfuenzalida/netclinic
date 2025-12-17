@@ -37,7 +37,7 @@ export default function Oops() {
   if (error) {
     return (
       <div>
-        <img src="images/pets.png" />
+        <img src="images/pets.png" alt={T("somethingHappened")} />
           <h2>{T("somethingHappened")}</h2>
           <p></p>
       </div>

@@ -20,8 +20,8 @@ export default function CreateVisitForm({ hash, setHash }: HashProps) {
     const [errors, setErrors] = useState<VisitCreateErrors>({});
 
     // Find the ownerId and petId from the hash
-    var ownerId : number|null = null;
-    var petId: number|null = null;
+    let ownerId : number|null = null;
+    let petId: number|null = null;
     const ownerIdStr = hash.split('/')[1];
     ownerId = parseInt(ownerIdStr, 10);
     const petIdStr = hash.split('/')[3];

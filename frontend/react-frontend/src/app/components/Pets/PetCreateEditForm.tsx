@@ -21,8 +21,8 @@ export default function PetCreateEditForm({ hash, setHash }: HashProps) {
     const [petTypes, setPetTypes] = useState<PetType[]>([]);
 
     // Find the ownerId from the hash
-    var ownerId : number|null = null;
-    var petId: number|null = null;
+    let ownerId : number|null = null;
+    let petId: number|null = null;
     const ownerIdStr = hash.split('/')[1];
     ownerId = parseInt(ownerIdStr, 10);
     if (!hash.endsWith('/pets/new')) {
@@ -72,7 +72,7 @@ export default function PetCreateEditForm({ hash, setHash }: HashProps) {
         fetchOwnerDetails();
         fetchPetTypeDetails();
         fetchPetDetails();
-    }, []);
+    }, [ownerId, petId, type]);
 
       function upsertPet(e: React.FormEvent) {
         e.preventDefault();

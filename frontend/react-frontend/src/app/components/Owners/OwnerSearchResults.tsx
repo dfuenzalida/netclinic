@@ -14,7 +14,7 @@ export default function OwnerSearchResults({ hash, setHash } : HashProps) {
   const [owners, setOwners] = useState<OwnerDetails[]>([]);
 
   // Parse the last name from the hash
-  var lastName : string = hash.split('/').pop() ?? '';
+  let lastName : string = hash.split('/').pop() ?? '';
   if (lastName.includes('?')) {
     lastName = lastName.split('?')[0];
   }

@@ -55,7 +55,7 @@ export default function OwnerDetailsView({hash, setHash}: HashProps) {
     return <p style={{ color: 'red' }}>Error loading owner details: {error}</p>;
   }
 
-  var flashMessage = flash();
+  const flashMessage = flash();
   if (flashMessage) {
     setTimeout(() => { replaceHash(`#owners/${ownerId}`); }, 3000);
   }  

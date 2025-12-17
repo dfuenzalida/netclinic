@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { HashProps } from '../../types/Types';
 import T from '../Translations';
 
-export default function OwnerSearchForm({ hash, setHash } : HashProps) {
+export default function OwnerSearchForm({ setHash } : HashProps) {
 
   const [lastName, setLastName] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string|null>(null);
+  const [errorMessage] = useState<string|null>(null);
 
   function search() {
     setHash(`#owners/lastName/${lastName}`);

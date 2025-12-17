@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 import NavBar from "./components/NavBar";
 import Oops from "./components/Oops";

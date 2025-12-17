@@ -12,7 +12,7 @@ export default function OwnerCreateEditForm({ hash, setHash }: HashProps) {
   const [city, setCity] = useState<string>('');
   const [telephone, setTelephone] = useState<string>('');
 
-  var ownerId : number|null = null;
+  let ownerId : number|null = null;
   if (!hash.startsWith('#owners/new')) {
     const ownerIdStr = hash.split('/')[1];
     ownerId = parseInt(ownerIdStr, 10);
@@ -21,6 +21,7 @@ export default function OwnerCreateEditForm({ hash, setHash }: HashProps) {
   // When editing an existing owner, fetch and populate fields
   useEffect(() => {
     const fetchOwnerDetails = async () => {
+      setErrors({});
       try {
         if (hash.startsWith('#owners/new')) {
           // Creating a new owner, no need to fetch details
@@ -40,10 +41,9 @@ export default function OwnerCreateEditForm({ hash, setHash }: HashProps) {
 
     // Only fetch if editing an existing owner
     if (ownerId !== null) {
-      setErrors({});
       fetchOwnerDetails();
     }
-  }, [ownerId]);
+  }, [hash, ownerId]);
 
   function upsertOwner(e: React.FormEvent) {
     e.preventDefault();

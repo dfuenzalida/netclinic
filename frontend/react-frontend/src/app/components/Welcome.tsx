@@ -6,7 +6,7 @@ export default function Welcome() {
       <h2>{T("welcome")}</h2>
       <div className="row">
         <div className="col-md-12">
-          <img className="img-responsive" src="images/pets.png" />
+          <img className="img-responsive" alt="Pets" src="images/pets.png" />
         </div>
       </div>
     </>
