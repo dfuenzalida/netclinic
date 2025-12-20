@@ -97,11 +97,20 @@ describe('OwnerSearchResults', () => {
     currentPage: 1
   }
 
+  let consoleLogSpy: jest.SpyInstance
+
   beforeEach(() => {
     mockSetHash.mockClear()
     fetchPetsForOwner.mockClear()
     replaceHash.mockClear()
     ;(global.fetch as jest.Mock).mockClear()
+    
+    // Suppress console logs by default to reduce test noise
+    consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
+  })
+
+  afterEach(() => {
+    consoleLogSpy.mockRestore()
   })
 
   test('displays search results after loading', async () => {
