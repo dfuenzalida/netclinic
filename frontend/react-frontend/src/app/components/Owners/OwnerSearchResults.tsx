@@ -125,7 +125,7 @@ export default function OwnerSearchResults({ hash, setHash } : HashProps) {
           {owners.map((owner: OwnerDetails) => (
             <tr key={owner.id}>
               <td><a href={`#/owners/${owner.id}`}
-                     onClick={(e) => { e.preventDefault(); setHash(`#owners/${owner.id}`); }}> {owner.firstName} {owner.lastName}</a></td>
+                     onClick={(e) => { e.preventDefault(); setHash(`#owners/${owner.id}`); }}>{owner.firstName} {owner.lastName}</a></td>
               <td>{owner.address}</td>
               <td>{owner.city}</td>
               <td>{owner.telephone}</td>

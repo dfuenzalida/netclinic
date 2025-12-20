@@ -90,7 +90,7 @@ export default function CreateVisitForm({ hash, setHash }: HashProps) {
             const errorData = await response.json();
             setErrors(errorData);
           } else {
-            console.error('Unexpected error creating visit:', response.statusText);
+            console.error('Failed to create visit:', response.statusText);
           }
         })
         .catch((err) => {

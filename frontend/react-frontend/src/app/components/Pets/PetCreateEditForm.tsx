@@ -60,9 +60,11 @@ export default function PetCreateEditForm({ hash, setHash }: HashProps) {
             if (ownerId && petId) {
                 try {
                     const data = await fetchPetById(ownerId, petId);
-                    setName(data.name);
-                    setBirthDate(data.birthDate);
-                    setType(data.type);
+                    if (data && data.name !== undefined) {
+                        setName(data.name);
+                        setBirthDate(data.birthDate);
+                        setType(data.type);
+                    }
                 } catch (err) {
                     console.warn('Error fetching pet details for edit:', err);
                 }
@@ -100,11 +102,11 @@ export default function PetCreateEditForm({ hash, setHash }: HashProps) {
             console.log('Validation errors:', errorResponse);
             setErrors(errorResponse as PetCreateErrors);
           } else {
-            console.error('Failed to create owner:', response.statusText);
+            console.error('Failed to save pet:', response.statusText);
           }
         })
         .catch((error) => {
-          console.error('Error creating owner:', error);
+          console.error('Error saving pet:', error);
         });
       }
 
@@ -161,9 +163,9 @@ export default function PetCreateEditForm({ hash, setHash }: HashProps) {
         <label htmlFor="type" className="col-sm-2 control-label">{T("type")}</label>
 
         <div className="col-sm-10">
-          <select id="type" name="type" onChange={(e) => {setType(e.target.value)}}>
+          <select id="type" name="type" value={type} onChange={(e) => {setType(e.target.value)}}>
             {petTypes.map((petType) => (
-              <option key={petType.id} value={petType.name} selected={petType.name === type}>{petType.name}</option>
+              <option key={petType.id} value={petType.name}>{petType.name}</option>
             ))}
           </select>
           <span className="fa fa-ok form-control-feedback" aria-hidden="true"></span>
