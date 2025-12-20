@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import T from "./Translations";
+import { HashProps } from "../types/Types";
 
-export default function Oops() {
+export default function Oops({ hash, setHash } : HashProps) {
 
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -24,7 +25,7 @@ export default function Oops() {
 
   useEffect(() => {
     fetchOops();
-  }, []); // Add currentPage as dependency to refetch when it changes
+  }, []);
 
   if (loading) {
     return (

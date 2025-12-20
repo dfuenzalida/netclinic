@@ -25,32 +25,31 @@ export default function App() {
     }
   }, [hash, setHash]);
 
-  const renderCurrentView = () => {
+  // Route configuration with pattern matching
+  const routes = [
+    { pattern: /^#vets/, component: Vets },
+    { pattern: /^#owners\/search/, component: OwnerSearchForm },
+    { pattern: /^#owners\/lastName/, component: OwnerSearchResults },
+    { pattern: /\/visits\/new$/, component: CreateVisitForm },
+    { pattern: /^#owners\/new$/, component: OwnerCreateEditForm },
+    { pattern: /^#owners\/[^\/]+\/pets\/new$/, component: PetCreateEditForm },
+    { pattern: /^#owners\/[^\/]+\/pets\/[^\/]+\/edit$/, component: PetCreateEditForm },
+    { pattern: /^#owners\/[^\/]+\/edit$/, component: OwnerCreateEditForm },
+    { pattern: /^#owners\/[^\/]+$/, component: OwnerDetailsView },
+    { pattern: /^#oops$/, component: Oops },
+  ];
 
-    // TODO implement proper routing logic
-    if (hash.startsWith('#vets')) {
-        return <Vets hash={hash} setHash={setHash} />;
-    } else if (hash.startsWith('#owners/search')) {
-        return <OwnerSearchForm hash={hash} setHash={setHash} />;
-    } else if (hash.startsWith('#owners/lastName')) {
-        return <OwnerSearchResults hash={hash} setHash={setHash} />;
-    } else if (hash.endsWith('/visits/new')) {
-        return <CreateVisitForm hash={hash} setHash={setHash} />;
-    } else if (hash.startsWith('#owners/new')) {
-        return <OwnerCreateEditForm hash={hash} setHash={setHash} />;
-    } else if (hash.startsWith('#owners/') && hash.endsWith('/pets/new')) {
-        return <PetCreateEditForm hash={hash} setHash={setHash} />;
-    } else if (hash.startsWith('#owners/') && hash.indexOf('/pets/') > 0 && hash.endsWith('/edit')) {
-        return <PetCreateEditForm hash={hash} setHash={setHash} />;
-    } else if (hash.startsWith('#owners/') && hash.endsWith('/edit')) {
-        return <OwnerCreateEditForm hash={hash} setHash={setHash} />;
-    } else if (hash.startsWith('#owners/')) {
-        return <OwnerDetailsView hash={hash} setHash={setHash} />;
-    } else if (hash === '#oops') {
-        return <Oops />;
-    } else {
-        return <Welcome />;
+  const renderCurrentView = () => {
+    // Find matching route
+    const matchedRoute = routes.find(route => route.pattern.test(hash));
+    
+    if (matchedRoute) {
+      const Component = matchedRoute.component;
+      return <Component hash={hash} setHash={setHash} />;
     }
+    
+    // Default to Welcome
+    return <Welcome />;
   };
 
   return (

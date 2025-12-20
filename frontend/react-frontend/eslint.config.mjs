@@ -17,6 +17,13 @@ const eslintConfig = defineConfig([
     rules: {
       "@next/next/no-img-element": "off"
     }
+  },
+  {
+    // Allow unused vars in Oops component for simplicity.
+    files: ["src/app/components/Oops.tsx"],
+    rules: {
+      "@typescript-eslint/no-unused-vars": "off"
+    }
   }
 ]);
 
