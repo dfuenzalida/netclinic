@@ -21,14 +21,29 @@ public class Program
         builder.Services.AddOpenApi();
         builder.Services.AddControllers();
         
-        // Configure PostgreSQL
+        // Configure PostgreSQL - prioritize Azure connection string if available
+        var connectionString = builder.Configuration.GetConnectionString("AZURE_POSTGRESQL_CONNECTIONSTRING") 
+                             ?? builder.Configuration.GetConnectionString("DefaultConnection");
+        
         builder.Services.AddDbContext<NetClinicDbContext>(options =>
-            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+            options.UseNpgsql(connectionString));
         
         // Register custom services
         builder.Services.AddScoped<IOwnerService, OwnerService>();
         builder.Services.AddScoped<IPetService, PetService>();
         builder.Services.AddScoped<IVetService, VetService>();
+
+        // CORS for the frontend application
+        builder.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.WithOrigins("https://delightful-flower-0bef4d40f.1.azurestaticapps.net")
+                    .WithOrigins("https://netclinic.plustrastra.com")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+        });
 
         var app = builder.Build();
 
