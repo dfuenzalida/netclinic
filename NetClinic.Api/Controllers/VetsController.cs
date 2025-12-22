@@ -5,7 +5,7 @@ using NetClinic.Api.Services;
 namespace NetClinic.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class VetsController(ILogger<VetsController> logger, IVetService vetService) : ControllerBase
 {
     private readonly ILogger<VetsController> _logger = logger;

@@ -38,10 +38,9 @@ public class Program
         {
             options.AddDefaultPolicy(policy =>
             {
-                policy.WithOrigins("https://delightful-flower-0bef4d40f.1.azurestaticapps.net")
-                    .WithOrigins("https://netclinic.plustrastra.com")
-                    .AllowAnyMethod()
-                    .AllowAnyHeader();
+                policy.AllowAnyOrigin()
+                      .AllowAnyMethod()
+                      .AllowAnyHeader();
             });
         });
 

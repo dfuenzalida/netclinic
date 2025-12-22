@@ -5,7 +5,7 @@ using NetClinic.Api.Services;
 namespace NetClinic.Api.Controllers;
 
 [ApiController]
-[Route("owners/{ownerId}/[controller]")]
+[Route("api/owners/{ownerId}/[controller]")]
 public class PetsController(ILogger<PetsController> logger, IPetService petService) : ControllerBase
 {
     private readonly ILogger<PetsController> _logger = logger;
@@ -140,7 +140,7 @@ public class PetsController(ILogger<PetsController> logger, IPetService petServi
         }
     }
 
-    [HttpGet("/pet/types")]
+    [HttpGet("api/pet/types")]
     public async Task<ActionResult<IEnumerable<PetTypeDto>>> GetAllPetTypes()
     {
         _logger.LogInformation("Pet Types GET request received at {Timestamp}", DateTime.UtcNow);

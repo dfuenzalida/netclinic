@@ -5,7 +5,7 @@ using NetClinic.Api.Services;
 namespace NetClinic.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class OwnersController(ILogger<OwnersController> logger, IOwnerService ownerService) : ControllerBase
 {
     private readonly ILogger<OwnersController> _logger = logger;

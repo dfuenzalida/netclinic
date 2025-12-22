@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace NetClinic.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class OopsController : ControllerBase
 {
     [HttpGet]
