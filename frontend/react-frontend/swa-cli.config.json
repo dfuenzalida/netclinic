@@ -1,0 +1,13 @@
+{
+  "configurations": {
+    "react-frontend": {
+      "appLocation": ".",
+      "outputLocation": "out",
+      "appBuildCommand": "npm run build",
+      "run": "npm run dev",
+      "appDevserverUrl": "http://localhost:3000",
+      "appName": "netclinic",
+      "resourceGroup": "netclinic"
+    }
+  }
+}
