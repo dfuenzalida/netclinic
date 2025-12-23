@@ -15,7 +15,7 @@ public class PetsControllerIntegrationTests : BaseIntegrationTest
     public async Task GetPetsByOwnerId_ShouldReturnPets_WhenOwnerHasPets()
     {
         // Act - Owner 1 has 2 pets (Buddy and Whiskers)
-        var response = await HttpClient.GetAsync("/owners/1/pets");
+        var response = await HttpClient.GetAsync("/api/owners/1/pets");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -42,12 +42,12 @@ public class PetsControllerIntegrationTests : BaseIntegrationTest
             Telephone = "1234567890"
         };
         
-        var ownerResponse = await HttpClient.PostAsJsonAsync("/owners", newOwner);
+        var ownerResponse = await HttpClient.PostAsJsonAsync("/api/owners", newOwner);
         ownerResponse.StatusCode.Should().Be(HttpStatusCode.Created);
         var createdOwner = await ownerResponse.Content.ReadFromJsonAsync<OwnerDto>();
         
         // Act
-        var response = await HttpClient.GetAsync($"/owners/{createdOwner!.Id}/pets");
+        var response = await HttpClient.GetAsync($"/api/owners/{createdOwner!.Id}/pets");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -57,12 +57,12 @@ public class PetsControllerIntegrationTests : BaseIntegrationTest
     public async Task GetPetById_ShouldReturnPet_WhenPetExists()
     {
         // Get the first pet ID dynamically 
-        var petsResponse = await HttpClient.GetAsync("/owners/1/pets");
+        var petsResponse = await HttpClient.GetAsync("/api/owners/1/pets");
         var pets = await petsResponse.Content.ReadFromJsonAsync<IEnumerable<PetDto>>();
         var firstPet = pets!.First();
 
         // Act - Get pet (Buddy) for owner 1
-        var response = await HttpClient.GetAsync($"/owners/1/pets/{firstPet.Id}");
+        var response = await HttpClient.GetAsync($"/api/owners/1/pets/{firstPet.Id}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -78,7 +78,7 @@ public class PetsControllerIntegrationTests : BaseIntegrationTest
     public async Task GetPetById_ShouldReturnNotFound_WhenPetDoesNotExist()
     {
         // Act
-        var response = await HttpClient.GetAsync("/owners/1/pets/999");
+        var response = await HttpClient.GetAsync("/api/owners/1/pets/999");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -88,7 +88,7 @@ public class PetsControllerIntegrationTests : BaseIntegrationTest
     public async Task GetAllPetTypes_ShouldReturnAllPetTypes()
     {
         // Act
-        var response = await HttpClient.GetAsync("/pet/types");
+        var response = await HttpClient.GetAsync("/api/pet/types");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -108,12 +108,12 @@ public class PetsControllerIntegrationTests : BaseIntegrationTest
     public async Task GetVisitsByPetId_ShouldReturnEmptyList_WhenPetHasNoVisits()
     {
         // Get the first pet ID dynamically 
-        var petsResponse = await HttpClient.GetAsync("/owners/1/pets");
+        var petsResponse = await HttpClient.GetAsync("/api/owners/1/pets");
         var pets = await petsResponse.Content.ReadFromJsonAsync<IEnumerable<PetDto>>();
         var firstPet = pets!.First();
 
         // Act - Pet (Buddy) has no visits in our seed data
-        var response = await HttpClient.GetAsync($"/owners/1/pets/{firstPet.Id}/visits");
+        var response = await HttpClient.GetAsync($"/api/owners/1/pets/{firstPet.Id}/visits");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -134,12 +134,12 @@ public class PetsControllerIntegrationTests : BaseIntegrationTest
         };
 
         // Get the first pet ID dynamically 
-        var petsResponse = await HttpClient.GetAsync("/owners/1/pets");
+        var petsResponse = await HttpClient.GetAsync("/api/owners/1/pets");
         var pets = await petsResponse.Content.ReadFromJsonAsync<IEnumerable<PetDto>>();
         var firstPet = pets!.First();
 
         // Act
-        var response = await HttpClient.PostAsJsonAsync($"/owners/1/pets/{firstPet.Id}/visits", newVisit);
+        var response = await HttpClient.PostAsJsonAsync($"/api/owners/1/pets/{firstPet.Id}/visits", newVisit);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -150,7 +150,7 @@ public class PetsControllerIntegrationTests : BaseIntegrationTest
         createdVisit.Id.Should().BeGreaterThan(0);
 
         // Verify the visit was created by trying to get visits for the pet
-        var getVisitsResponse = await HttpClient.GetAsync($"/owners/1/pets/{firstPet.Id}/visits");
+        var getVisitsResponse = await HttpClient.GetAsync($"/api/owners/1/pets/{firstPet.Id}/visits");
         getVisitsResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         
         var visits = await getVisitsResponse.Content.ReadFromJsonAsync<IEnumerable<VisitDto>>();
@@ -171,11 +171,11 @@ public class PetsControllerIntegrationTests : BaseIntegrationTest
 
         // Act
         // Get the first pet ID dynamically 
-        var petsResponse = await HttpClient.GetAsync("/owners/1/pets");
+        var petsResponse = await HttpClient.GetAsync("/api/owners/1/pets");
         var pets = await petsResponse.Content.ReadFromJsonAsync<IEnumerable<PetDto>>();
         var firstPet = pets!.First();
 
-        var response = await HttpClient.PostAsJsonAsync($"/owners/1/pets/{firstPet.Id}/visits", invalidVisit);
+        var response = await HttpClient.PostAsJsonAsync($"/api/owners/1/pets/{firstPet.Id}/visits", invalidVisit);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -190,8 +190,8 @@ public class PetsControllerIntegrationTests : BaseIntegrationTest
     public async Task GetPetsByOwnerId_ShouldHandleDifferentOwners()
     {
         // Act - Test different owners
-        var owner2Response = await HttpClient.GetAsync("/owners/2/pets");
-        var owner3Response = await HttpClient.GetAsync("/owners/3/pets");
+        var owner2Response = await HttpClient.GetAsync("/api/owners/2/pets");
+        var owner3Response = await HttpClient.GetAsync("/api/owners/3/pets");
 
         // Assert
         owner2Response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -213,12 +213,12 @@ public class PetsControllerIntegrationTests : BaseIntegrationTest
     public async Task GetPetById_ShouldReturnCorrectPetType()
     {
         // Get pets for owner 1 and find the cat (Whiskers)
-        var petsResponse = await HttpClient.GetAsync("/owners/1/pets");
+        var petsResponse = await HttpClient.GetAsync("/api/owners/1/pets");
         var pets = await petsResponse.Content.ReadFromJsonAsync<IEnumerable<PetDto>>();
         var catPet = pets!.First(p => p.Type == "Cat");
 
         // Act - Get cat pet (Whiskers)
-        var response = await HttpClient.GetAsync($"/owners/1/pets/{catPet.Id}");
+        var response = await HttpClient.GetAsync($"/api/owners/1/pets/{catPet.Id}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);

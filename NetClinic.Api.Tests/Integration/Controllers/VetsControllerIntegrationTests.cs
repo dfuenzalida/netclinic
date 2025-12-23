@@ -14,7 +14,7 @@ public class VetsControllerIntegrationTests : BaseIntegrationTest
     public async Task Get_ShouldReturnVetList_WhenNoFilters()
     {
         // Act
-        var response = await HttpClient.GetAsync("/vets");
+        var response = await HttpClient.GetAsync("/api/vets");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -29,7 +29,7 @@ public class VetsControllerIntegrationTests : BaseIntegrationTest
     public async Task Get_ShouldRespectPagination_WhenPageRequested()
     {
         // Act - Request first page (the default page size is 5 according to controller)
-        var response = await HttpClient.GetAsync("/vets?page=1");
+        var response = await HttpClient.GetAsync("/api/vets?page=1");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -44,7 +44,7 @@ public class VetsControllerIntegrationTests : BaseIntegrationTest
     public async Task GetById_ShouldReturnVet_WhenVetExists()
     {
         // Act
-        var response = await HttpClient.GetAsync("/vets/1");
+        var response = await HttpClient.GetAsync("/api/vets/1");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -61,7 +61,7 @@ public class VetsControllerIntegrationTests : BaseIntegrationTest
     public async Task GetById_ShouldReturnNotFound_WhenVetDoesNotExist()
     {
         // Act
-        var response = await HttpClient.GetAsync("/vets/999");
+        var response = await HttpClient.GetAsync("/api/vets/999");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -71,7 +71,7 @@ public class VetsControllerIntegrationTests : BaseIntegrationTest
     public async Task Get_ShouldReturnVetsInCorrectOrder()
     {
         // Act
-        var response = await HttpClient.GetAsync("/vets");
+        var response = await HttpClient.GetAsync("/api/vets");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -91,7 +91,7 @@ public class VetsControllerIntegrationTests : BaseIntegrationTest
     public async Task GetById_ShouldReturnVetWithSpecialties_WhenVetHasSpecialties()
     {
         // First, let's verify we can get a vet by ID
-        var response = await HttpClient.GetAsync("/vets/2");
+        var response = await HttpClient.GetAsync("/api/vets/2");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -109,7 +109,7 @@ public class VetsControllerIntegrationTests : BaseIntegrationTest
     public async Task Get_ShouldHandleEmptyResult_WhenRequestingHighPageNumber()
     {
         // Act - Request a very high page number
-        var response = await HttpClient.GetAsync("/vets?page=100");
+        var response = await HttpClient.GetAsync("/api/vets?page=100");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);

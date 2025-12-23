@@ -140,7 +140,7 @@ public class PetsController(ILogger<PetsController> logger, IPetService petServi
         }
     }
 
-    [HttpGet("api/pet/types")]
+    [HttpGet("/api/pet/types")]
     public async Task<ActionResult<IEnumerable<PetTypeDto>>> GetAllPetTypes()
     {
         _logger.LogInformation("Pet Types GET request received at {Timestamp}", DateTime.UtcNow);

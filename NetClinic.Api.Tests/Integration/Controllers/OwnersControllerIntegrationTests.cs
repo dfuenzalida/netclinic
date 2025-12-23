@@ -15,7 +15,7 @@ public class OwnersControllerIntegrationTests : BaseIntegrationTest
     public async Task Get_ShouldReturnOwnerList_WhenNoFilters()
     {
         // Act
-        var response = await HttpClient.GetAsync("/owners");
+        var response = await HttpClient.GetAsync("/api/owners");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -30,7 +30,7 @@ public class OwnersControllerIntegrationTests : BaseIntegrationTest
     public async Task Get_ShouldFilterByLastName_WhenLastNameProvided()
     {
         // Act
-        var response = await HttpClient.GetAsync("/owners?lastName=Smith");
+        var response = await HttpClient.GetAsync("/api/owners?lastName=Smith");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -45,7 +45,7 @@ public class OwnersControllerIntegrationTests : BaseIntegrationTest
     public async Task Get_ShouldRespectPagination_WhenPageSizeIsSmall()
     {
         // Act
-        var response = await HttpClient.GetAsync("/owners?pageSize=2");
+        var response = await HttpClient.GetAsync("/api/owners?pageSize=2");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -60,7 +60,7 @@ public class OwnersControllerIntegrationTests : BaseIntegrationTest
     public async Task Get_ShouldReturnSecondPage_WhenPageTwoRequested()
     {
         // Act
-        var response = await HttpClient.GetAsync("/owners?page=2&pageSize=2");
+        var response = await HttpClient.GetAsync("/api/owners?page=2&pageSize=2");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -74,12 +74,12 @@ public class OwnersControllerIntegrationTests : BaseIntegrationTest
     public async Task GetOwnerDetailsById_ShouldReturnOwner_WhenOwnerExists()
     {
         // Get the first owner ID dynamically
-        var ownersResponse = await HttpClient.GetAsync("/owners");
+        var ownersResponse = await HttpClient.GetAsync("/api/owners");
         var ownerList = await ownersResponse.Content.ReadFromJsonAsync<OwnerListDto>();
         var firstOwner = ownerList!.OwnerList.First();
 
         // Act
-        var response = await HttpClient.GetAsync($"/owners/{firstOwner.Id}");
+        var response = await HttpClient.GetAsync($"/api/owners/{firstOwner.Id}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -95,7 +95,7 @@ public class OwnersControllerIntegrationTests : BaseIntegrationTest
     public async Task GetOwnerDetailsById_ShouldReturnNotFound_WhenOwnerDoesNotExist()
     {
         // Act
-        var response = await HttpClient.GetAsync("/owners/999");
+        var response = await HttpClient.GetAsync("/api/owners/999");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -115,7 +115,7 @@ public class OwnersControllerIntegrationTests : BaseIntegrationTest
         };
 
         // Act
-        var response = await HttpClient.PostAsJsonAsync("/owners", newOwner);
+        var response = await HttpClient.PostAsJsonAsync("/api/owners", newOwner);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -147,7 +147,7 @@ public class OwnersControllerIntegrationTests : BaseIntegrationTest
         };
 
         // Act
-        var response = await HttpClient.PostAsJsonAsync("/owners", invalidOwner);
+        var response = await HttpClient.PostAsJsonAsync("/api/owners", invalidOwner);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -167,12 +167,12 @@ public class OwnersControllerIntegrationTests : BaseIntegrationTest
         };
 
         // Get the first owner ID dynamically
-        var ownersResponse = await HttpClient.GetAsync("/owners");
+        var ownersResponse = await HttpClient.GetAsync("/api/owners");
         var ownerList = await ownersResponse.Content.ReadFromJsonAsync<OwnerListDto>();
         var firstOwner = ownerList!.OwnerList.First();
 
         // Act
-        var response = await HttpClient.PutAsJsonAsync($"/owners/{firstOwner.Id}", updatedOwner);
+        var response = await HttpClient.PutAsJsonAsync($"/api/owners/{firstOwner.Id}", updatedOwner);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -204,7 +204,7 @@ public class OwnersControllerIntegrationTests : BaseIntegrationTest
         };
 
         // Act
-        var response = await HttpClient.PutAsJsonAsync("/owners/999", updatedOwner);
+        var response = await HttpClient.PutAsJsonAsync("/api/owners/999", updatedOwner);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -224,7 +224,7 @@ public class OwnersControllerIntegrationTests : BaseIntegrationTest
         };
 
         // Act
-        var response = await HttpClient.PostAsJsonAsync("/owners", invalidOwner);
+        var response = await HttpClient.PostAsJsonAsync("/api/owners", invalidOwner);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
