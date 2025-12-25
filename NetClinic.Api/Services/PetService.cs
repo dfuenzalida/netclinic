@@ -2,6 +2,7 @@ using NetClinic.Api.Data;
 using NetClinic.Api.Dto;
 using Microsoft.EntityFrameworkCore;
 using NetClinic.Api.Models;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace NetClinic.Api.Services;
 
@@ -16,10 +17,13 @@ public interface IPetService
     Task<VisitDto> CreateVisitAsync(int petId, VisitDto newVisitDto);
 }
 
-public class PetService(NetClinicDbContext context, ILogger<PetService> logger) : IPetService
+public class PetService(NetClinicDbContext context, ILogger<PetService> logger, IMemoryCache memoryCache) : IPetService
 {
     private readonly NetClinicDbContext _context = context;
     private readonly ILogger<PetService> _logger = logger;
+    private readonly IMemoryCache _cache = memoryCache;
+    private const string PetTypesCacheKey = "pet_types";
+    private static readonly TimeSpan CacheDuration = TimeSpan.FromHours(24); // Cache for 24 hours
 
     public static PetType UnknownPetType = new PetType
     {
@@ -115,7 +119,14 @@ public class PetService(NetClinicDbContext context, ILogger<PetService> logger) 
 
     public async Task<IEnumerable<PetTypeDto>> GetAllPetTypesAsync()
     {
-        _logger.LogInformation("Fetching all pet types from the database");
+        // Check cache first
+        if (_cache.TryGetValue(PetTypesCacheKey, out IEnumerable<PetTypeDto>? cachedPetTypes))
+        {
+            _logger.LogInformation("Retrieved {Count} pet types from cache", cachedPetTypes!.Count());
+            return cachedPetTypes!;
+        }
+
+        _logger.LogInformation("Cache miss - fetching all pet types from the database");
 
         var petTypes = await _context.PetTypes
                                      .OrderBy(pt => pt.Name)
@@ -123,7 +134,10 @@ public class PetService(NetClinicDbContext context, ILogger<PetService> logger) 
 
         var petTypeDtos = petTypes.Select(pt => MapPetTypeToPetTypeDto(pt)).ToList();
 
-        _logger.LogInformation("Successfully fetched {Count} pet types", petTypeDtos.Count);
+        // Store in cache with expiration
+        _cache.Set(PetTypesCacheKey, petTypeDtos, CacheDuration);
+
+        _logger.LogInformation("Successfully fetched and cached {Count} pet types", petTypeDtos.Count);
 
         return petTypeDtos;
     }

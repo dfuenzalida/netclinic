@@ -28,6 +28,9 @@ public class Program
         builder.Services.AddDbContext<NetClinicDbContext>(options =>
             options.UseNpgsql(connectionString));
         
+        // Add memory caching
+        builder.Services.AddMemoryCache();
+        
         // Register custom services
         builder.Services.AddScoped<IOwnerService, OwnerService>();
         builder.Services.AddScoped<IPetService, PetService>();

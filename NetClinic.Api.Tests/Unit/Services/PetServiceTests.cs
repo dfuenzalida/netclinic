@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using FluentAssertions;
 using Xunit;
@@ -20,6 +21,7 @@ public class PetServiceTests : IDisposable
 {
     private readonly NetClinicDbContext _context;
     private readonly Mock<ILogger<PetService>> _loggerMock;
+    private readonly IMemoryCache _memoryCache;
     private readonly PetService _petService;
 
     public PetServiceTests()
@@ -30,7 +32,8 @@ public class PetServiceTests : IDisposable
 
         _context = new NetClinicDbContext(options);
         _loggerMock = new Mock<ILogger<PetService>>();
-        _petService = new PetService(_context, _loggerMock.Object);
+        _memoryCache = new MemoryCache(new MemoryCacheOptions());
+        _petService = new PetService(_context, _loggerMock.Object, _memoryCache);
 
         SeedTestData();
     }
