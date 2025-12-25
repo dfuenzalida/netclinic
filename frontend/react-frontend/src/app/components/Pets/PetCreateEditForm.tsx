@@ -74,7 +74,7 @@ export default function PetCreateEditForm({ hash, setHash }: HashProps) {
         fetchOwnerDetails();
         fetchPetTypeDetails();
         fetchPetDetails();
-    }, [ownerId, petId, type]);
+    }, [ownerId, petId]);
 
       function upsertPet(e: React.FormEvent) {
         e.preventDefault();
