@@ -41,7 +41,7 @@ jobs:
           CI: true
 
       - name: Build and export static files
-        run: npm run export
+        run: npm run build
         working-directory: ./frontend/react-frontend
 
       - name: Build And Deploy
