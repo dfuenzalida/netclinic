@@ -1,8 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using NetClinic.Api.Data;
 using NetClinic.Api.Dto;
-using Microsoft.EntityFrameworkCore;
 using NetClinic.Api.Models;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace NetClinic.Api.Services;
 
