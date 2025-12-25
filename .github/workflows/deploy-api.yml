@@ -42,7 +42,7 @@ jobs:
       working-directory: ./NetClinic.Api
 
     - name: Run tests
-      run: dotnet test --no-build --configuration Release --logger trx --results-directory TestResults/
+      run: dotnet test --configuration Release --logger trx --results-directory TestResults/
       working-directory: ./NetClinic.Api.Tests
 
     - name: Publish test results
