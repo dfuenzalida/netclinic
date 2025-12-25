@@ -21,8 +21,15 @@ To run the front-end, go to the `frontend/react-frontend` folder and install the
 
 ## Deployment
 
+To create a release of the front-end, run `npm run export` from the `frontend/react-frontend` folder, which will create the static content in the `out` folder.
+
+To create a release of the backend, go to the `NetClinic.Api` directory and run `dotnet publish -c Release -o publish`.
+
+## Cloud deployment
+
 A convenient way to deploy this app is to use:
 * [Azure Database for PostgreSQL flexible server](https://azure.microsoft.com/products/postgresql/) for your database,
 * [Azure App Service](https://azure.microsoft.com/products/app-service/) to run the backend API,
 * [Azure Static Web Apps](https://azure.microsoft.com/products/app-service/static) to run the front-end. The front-end can be [linked to the API](https://learn.microsoft.com/en-us/azure/static-web-apps/apis-app-service) in a few simple steps. 
 
+To deploy the frontend to Azure Static Web Apps, run `npx swa deploy --env production --app-location out --resource-group $resourceGroup --app-name $appName`
