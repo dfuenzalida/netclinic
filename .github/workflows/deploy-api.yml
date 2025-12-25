@@ -23,6 +23,11 @@ env:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: read
+      checks: write
+      pull-requests: write
     
     steps:
     - name: Checkout code
@@ -42,16 +47,15 @@ jobs:
       working-directory: ./NetClinic.Api
 
     - name: Run tests
-      run: dotnet test --configuration Release --logger trx --results-directory TestResults/
+      run: dotnet test --configuration Release --logger trx --results-directory TestResults/ --verbosity normal
       working-directory: ./NetClinic.Api.Tests
 
-    - name: Publish test results
-      uses: dorny/test-reporter@v1
-      if: success() || failure()
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
       with:
-        name: .NET Tests
+        name: test-results
         path: ./NetClinic.Api.Tests/TestResults/*.trx
-        reporter: dotnet-trx
 
     - name: Publish application
       run: dotnet publish --no-restore --configuration Release --output ${{ env.PUBLISH_PATH }}
