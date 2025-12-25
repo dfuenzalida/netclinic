@@ -112,7 +112,8 @@ const MultiLangTranslations: MultiLangTranslations = {
 }
 
 export default function T(msg: string): string {
-    const userLang = navigator?.language?.slice(0, 2);
+    // Check if we're in the browser environment before accessing navigator
+    const userLang = typeof window !== 'undefined' ? navigator?.language?.slice(0, 2) : 'en';
     const translations = MultiLangTranslations[userLang];
     if (translations && translations[msg]) {
         return translations[msg];
