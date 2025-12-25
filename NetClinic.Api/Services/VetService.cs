@@ -93,7 +93,7 @@ public class VetService(NetClinicDbContext context, ILogger<VetService> logger) 
         }
     }
 
-    internal VetDto MapVeterinariansToDtos(Veterinarian veterinarian)
+    internal static VetDto MapVeterinariansToDtos(Veterinarian veterinarian)
     {
         var specialties = veterinarian.Specialties;
 
