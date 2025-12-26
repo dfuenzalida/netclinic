@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "font-awesome/css/font-awesome.min.css";
 import "./globals.css";
+import BootstrapClient from "./components/BootstrapClient";
 
 export const metadata: Metadata = {
   title: "Pet Clinic Single Page App",
@@ -22,6 +23,7 @@ export default function RootLayout({
         <link rel="icon" type="image/x-icon" href="images/favicon.svg" />
       </head>
       <body>
+        <BootstrapClient />
         {children}
       </body>
     </html>
