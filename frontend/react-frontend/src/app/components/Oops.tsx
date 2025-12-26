@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import T from "./Translations";
-import { HashProps } from "../types/Types";
+import { HashProps } from "../../types/types";
 
 export default function Oops({ hash, setHash } : HashProps) {
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { OwnerDetails, HashProps } from '../../types/Types';
+import { OwnerDetails, HashProps } from '../../../types/types';
 import Pagination from '../Pagination';
 import { fetchPetsForOwner } from '../Api';
 import { replaceHash } from '../Hash';

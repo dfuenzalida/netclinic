@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Pagination from './Pagination';
-import { Vet, Specialty, HashProps } from '../types/Types';
+import { Vet, Specialty, HashProps } from '../../types/types';
 import T from './Translations';
 
 export default function Vets({ hash, setHash }: HashProps) {

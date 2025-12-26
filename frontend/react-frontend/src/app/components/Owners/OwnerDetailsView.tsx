@@ -1,4 +1,4 @@
-import { HashProps, OwnerDetails, PetDetails, VisitDetails } from '../../types/Types';
+import { HashProps, OwnerDetails, PetDetails, VisitDetails } from '../../../types/types';
 import { useEffect, useState } from "react";
 import { fetchOwnerById, fetchPetsForOwner, fetchVisitsForPet } from '../Api';
 import { flash, replaceHash } from '../Hash';

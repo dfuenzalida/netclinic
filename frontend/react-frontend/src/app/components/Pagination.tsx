@@ -1,4 +1,4 @@
-import { PaginationProps } from "../types/Types";
+import { PaginationProps } from "../../types/types";
 import T from './Translations';
 
 export default function Pagination({ currentPage, setCurrentPage, totalPages, linkBase }: PaginationProps) {

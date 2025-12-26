@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { HashProps, OwnerDetails, PetCreateErrors, PetType } from "../../types/Types";
+import { HashProps, OwnerDetails, PetCreateErrors, PetType } from "../../../types/types";
 import { fetchOwnerById, fetchPetById, fetchPetTypes } from "../Api";
 import T from "../Translations";
 

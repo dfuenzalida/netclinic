@@ -1,4 +1,4 @@
-import { OwnerCreateErrors, OwnerDetails, HashProps } from "../../types/Types";
+import { OwnerCreateErrors, OwnerDetails, HashProps } from "../../../types/types";
 import { useEffect, useState } from "react";
 import { fetchOwnerById } from "../Api";
 import T from "../Translations";

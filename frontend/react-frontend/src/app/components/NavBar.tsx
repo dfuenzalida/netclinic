@@ -1,4 +1,4 @@
-import { HashProps } from "../types/Types";
+import { HashProps } from "../../types/types";
 import T from "./Translations";
   
 export default function NavBar({ hash, setHash }: HashProps) {

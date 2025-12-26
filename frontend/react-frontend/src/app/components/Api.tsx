@@ -1,4 +1,4 @@
-import { OwnerDetails, PetDetails, PetType, PetVisit, VisitDetails } from "../types/Types";
+import { OwnerDetails, PetDetails, PetType, PetVisit, VisitDetails } from "../../types/types";
 
 // Fetch an owner by ID
 export const fetchOwnerById = async (ownerId: number): Promise<OwnerDetails> => {

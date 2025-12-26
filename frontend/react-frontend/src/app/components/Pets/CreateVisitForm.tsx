@@ -1,6 +1,6 @@
-import { HashProps, PetDetails, PetVisit } from "../../types/Types";
+import { HashProps, PetDetails, PetVisit } from "../../../types/types";
 import { useEffect, useState } from "react";
-import { VisitCreateErrors, OwnerDetails } from "../../types/Types";
+import { VisitCreateErrors, OwnerDetails } from "../../../types/types";
 import { fetchOwnerById, fetchPetById, fetchPetVisitsById } from "../Api";
 import T from "../Translations";
 
