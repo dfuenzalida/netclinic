@@ -19,6 +19,10 @@ Start the backend API with: `dotnet run --environment Development` from the `Net
 
 To run the front-end, go to the `frontend/react-frontend` folder and install the dependencies with `npm install`, then start the front-end server with `npm run dev`. The Next.js server will run in port 8000, but in order for the API and front-end to be accessible from the same port, open the web app on `http://localhost:3000/`.
 
+## Testing
+
+To test locally, run the multi-container version with: `docker-compose up`.
+
 ## Deployment
 
 To create a release of the front-end, run `npm run export` from the `frontend/react-frontend` folder, which will create the static content in the `out` folder.

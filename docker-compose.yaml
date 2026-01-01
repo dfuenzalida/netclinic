@@ -1,0 +1,49 @@
+services:
+  frontend:
+    build: frontend/react-frontend
+    container_name: "frontend"
+    restart: always
+    ports:
+      - 8080:8080
+    healthcheck:
+      test: ["CMD", "wget", "-O", "/dev/null", "-q", "http://frontend:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - backend_services
+    depends_on:
+      - api-service
+  api-service:
+    build: NetClinic.Api
+    container_name: "api-service"
+    restart: always
+    ports:
+      - 5299:5299
+    healthcheck:
+      test: ["CMD", "wget", "-O", "/dev/null", "-q", "http://api-service:5299/api/vets"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - backend_services
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__AZURE_POSTGRESQL_CONNECTIONSTRING=Host=db;Database=postgres;Username=postgres;Password=example
+    depends_on:
+      - db
+  db:
+    image: postgres
+    restart: always
+    volumes:
+      - ./postgresql:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_PASSWORD: example
+    ports:
+      - 5432:5432
+    networks:
+      - backend_services
+
+networks:
+  backend_services:
+    driver: bridge
