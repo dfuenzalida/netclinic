@@ -17,6 +17,14 @@ RUN dotnet publish "NetClinic.Api.csproj" -c Release -o /app/publish --no-restor
 
 # Stage 3: runtime
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt update && \
+	apt install -y wget curl && \
+	apt clean && \
+	rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 ENV ASPNETCORE_URLS=http://+:5299
 EXPOSE 5299

@@ -6,7 +6,7 @@ services:
     ports:
       - 8080:8080
     healthcheck:
-      test: ["CMD", "wget", "-O", "/dev/null", "-q", "http://frontend:80/health"]
+      test: ["CMD", "wget", "-O", "/dev/null", "-q", "http://frontend:8080/health"]
       interval: 30s
       timeout: 10s
       retries: 5

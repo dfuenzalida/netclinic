@@ -18,6 +18,8 @@ RUN npm run build
 # Run the app on nginx
 FROM nginx:stable-alpine-slim AS runner
 
+RUN apk add --no-cache wget
+
 # Copy the build output to replace the default nginx contents
 COPY --from=builder /app/out /usr/share/nginx/html
 
