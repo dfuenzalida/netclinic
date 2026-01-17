@@ -24,6 +24,7 @@ public class VetService(NetClinicDbContext context, ILogger<VetService> logger) 
         try
         {
             var veterinarians = await _context.Veterinarians.Include(v => v.Specialties)
+                                        .OrderBy(v => v.Id)
                                         .Skip((page - 1) * pageSize)
                                         .Take(pageSize)
                                         .ToListAsync();
