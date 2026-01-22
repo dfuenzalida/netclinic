@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { OwnerDetails, HashProps } from '../../../types/types';
 import Pagination from '../Pagination';
-import { fetchPetsForOwner } from '../Api';
+import { fetchOwnersByLastNameAndPage, fetchPetsForOwner } from '../Api';
 import { replaceHash } from '../Hash';
 import T from '../Translations';
 
@@ -21,16 +21,11 @@ export default function OwnerSearchResults({ hash, setHash } : HashProps) {
 
   useEffect(() => {
 
-    const fetchOwnersByLastName = async (lastName: string, page: number) => {
+    const searchOwnersByLastNameAndPage = async (lastName: string, page: number) => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/owners?lastName=${lastName}&page=${page}`);
+        const data = await fetchOwnersByLastNameAndPage(lastName, page);
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
         // If no owners found, set an error message
         if (data.ownerList.length === 0) {
           console.log('No owners found with the given last name.');
@@ -87,7 +82,7 @@ export default function OwnerSearchResults({ hash, setHash } : HashProps) {
       setCurrentPage(pageToUse);
     }
     
-    fetchOwnersByLastName(lastName, pageToUse);
+    searchOwnersByLastNameAndPage(lastName, pageToUse);
   }, [hash, setHash, currentPage, lastName]);
 
   if (loading) {

@@ -1,30 +1,32 @@
 import { useEffect, useState } from "react";
 import T from "./Translations";
 import { HashProps } from "../../types/types";
+import { fetchOops } from "./Api";
 
 export default function Oops({ hash, setHash } : HashProps) {
 
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchOops = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(`/api/oops`);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-    } catch (err) {
-      setError(err instanceof Error ? err.message : T("somethingHappened"));
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchOops();
+
+    const initOops = async () => {
+      try {
+        setLoading(true);
+        const response = await fetchOops();
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+      } catch (err) {
+        setError(err instanceof Error ? err.message : T("somethingHappened"));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initOops();
   }, []);
 
   if (loading) {
@@ -44,7 +46,6 @@ export default function Oops({ hash, setHash } : HashProps) {
       </div>
     );
   }
-
 
   return (
     <div>

@@ -1,4 +1,20 @@
-import { OwnerDetails, PetDetails, PetType, PetVisit, VisitDetails } from "../../types/types";
+import { OwnerDetails, OwnerListResponse, PetDetails, PetType, PetVisit, Vet, VetListResponse, VisitDetails } from "../../types/types";
+
+export const fetchOwnersByLastNameAndPage = async (lastName: string, pageNumber: number): Promise<OwnerListResponse> => {
+    try {
+        const response = await fetch(`/api/owners?lastName=${lastName}&page=${pageNumber}`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (err) {
+        console.error(`Error fetching owners with last name ${lastName} on page ${pageNumber}:`, err);
+        throw err;
+    }
+}
 
 // Fetch an owner by ID
 export const fetchOwnerById = async (ownerId: number): Promise<OwnerDetails> => {
@@ -97,4 +113,25 @@ export const fetchPetVisitsById = async (ownerId: number, petId: number): Promis
         console.error(`Error fetching pet visits for pet ${petId} of owner ${ownerId}:`, err);
         throw err;
     }
+}
+
+export const fetchVetsByPage = async (pageNumber: number): Promise<VetListResponse> => {
+    try {
+        const response = await fetch(`/api/vets?page=${pageNumber}`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const vets = await response.json();
+        return vets;
+    } catch (err) {
+        console.error(`Error fetching vets for page ${pageNumber}:`, err);
+        throw err;
+    }
+}
+
+export const fetchOops = async (): Promise<Response> => {
+    const response = await fetch(`/api/oops`);
+    return response;
 }

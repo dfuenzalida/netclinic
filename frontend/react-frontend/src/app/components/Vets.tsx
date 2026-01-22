@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Pagination from './Pagination';
 import { Vet, Specialty, HashProps } from '../../types/types';
 import T from './Translations';
+import { fetchVetsByPage } from './Api';
 
 export default function Vets({ hash, setHash }: HashProps) {
   const [vets, setVets] = useState<Vet[]>([]);
@@ -33,13 +34,7 @@ export default function Vets({ hash, setHash }: HashProps) {
     const fetchVets = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/vets?page=${currentPage}`);
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
+        const data = await fetchVetsByPage(currentPage);
         setVets(data.vetList);
         setTotalPages(data.totalPages);
       } catch (err) {

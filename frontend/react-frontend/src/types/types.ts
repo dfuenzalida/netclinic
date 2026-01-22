@@ -24,6 +24,11 @@ export interface OwnerDetails {
   pets: PetDetails[];
 }
 
+export interface OwnerListResponse {
+  ownerList: OwnerDetails[];
+  totalPages: number;
+}
+
 // Vets
 
 export interface Vet {
@@ -36,6 +41,11 @@ export interface Vet {
 export interface Specialty {
   id: number;
   name: string;
+}
+
+export interface VetListResponse {
+  vetList: Vet[];
+  totalPages: number;
 }
 
 export interface PetType {

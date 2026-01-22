@@ -5,7 +5,8 @@ import OwnerSearchResults from '../components/Owners/OwnerSearchResults'
 
 // Mock the API module
 jest.mock('../components/Api', () => ({
-  fetchPetsForOwner: jest.fn()
+  fetchPetsForOwner: jest.fn(),
+  fetchOwnersByLastNameAndPage: jest.fn()
 }))
 
 // Mock the Hash module
@@ -57,12 +58,9 @@ jest.mock('../components/Pagination', () => {
   }
 })
 
-// Mock fetch
-global.fetch = jest.fn()
-
 describe('OwnerSearchResults', () => {
   const mockSetHash = jest.fn()
-  const { fetchPetsForOwner } = require('../components/Api')
+  const { fetchPetsForOwner, fetchOwnersByLastNameAndPage } = require('../components/Api')
   const { replaceHash } = require('../components/Hash')
   
   const defaultProps = {
@@ -102,8 +100,8 @@ describe('OwnerSearchResults', () => {
   beforeEach(() => {
     mockSetHash.mockClear()
     fetchPetsForOwner.mockClear()
+    fetchOwnersByLastNameAndPage.mockClear()
     replaceHash.mockClear()
-    ;(global.fetch as jest.Mock).mockClear()
     
     // Suppress console logs by default to reduce test noise
     consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
@@ -114,10 +112,7 @@ describe('OwnerSearchResults', () => {
   })
 
   test('displays search results after loading', async () => {
-    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve(mockApiResponse)
-    })
+    fetchOwnersByLastNameAndPage.mockResolvedValueOnce(mockApiResponse)
     fetchPetsForOwner.mockResolvedValue([])
     
     await act(async () => {
@@ -131,10 +126,7 @@ describe('OwnerSearchResults', () => {
   })
 
   test('displays search results correctly', async () => {
-    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve(mockApiResponse)
-    })
+    fetchOwnersByLastNameAndPage.mockResolvedValueOnce(mockApiResponse)
     fetchPetsForOwner.mockResolvedValue([])
     
     await act(async () => {
@@ -150,16 +142,16 @@ describe('OwnerSearchResults', () => {
   })
 
   test('extracts lastName from hash correctly', async () => {
-    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve(mockApiResponse)
-    })
+    fetchOwnersByLastNameAndPage.mockResolvedValueOnce(mockApiResponse)
+    fetchPetsForOwner.mockResolvedValue([])
     
     await act(async () => {
       render(<OwnerSearchResults {...defaultProps} />)
     })
     
-    expect(global.fetch).toHaveBeenCalledWith('/api/owners?lastName=Smith&page=1')
+    await waitFor(() => {
+      expect(fetchOwnersByLastNameAndPage).toHaveBeenCalledWith('Smith', 1)
+    })
   })
 
   test('handles hash with query parameters', async () => {
@@ -168,16 +160,16 @@ describe('OwnerSearchResults', () => {
       setHash: mockSetHash
     }
     
-    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve(mockApiResponse)
-    })
+    fetchOwnersByLastNameAndPage.mockResolvedValueOnce(mockApiResponse)
+    fetchPetsForOwner.mockResolvedValue([])
     
     await act(async () => {
       render(<OwnerSearchResults {...propsWithQuery} />)
     })
     
-    expect(global.fetch).toHaveBeenCalledWith('/api/owners?lastName=Johnson&page=1')
+    await waitFor(() => {
+      expect(fetchOwnersByLastNameAndPage).toHaveBeenCalledWith('Johnson', 1)
+    })
   })
 
   test('redirects to owner details when single result', async () => {
@@ -187,10 +179,7 @@ describe('OwnerSearchResults', () => {
       currentPage: 1
     }
     
-    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve(singleOwnerResponse)
-    })
+    fetchOwnersByLastNameAndPage.mockResolvedValueOnce(singleOwnerResponse)
     
     await act(async () => {
       render(<OwnerSearchResults {...defaultProps} />)
@@ -208,10 +197,7 @@ describe('OwnerSearchResults', () => {
       currentPage: 1
     }
     
-    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve(noResultsResponse)
-    })
+    fetchOwnersByLastNameAndPage.mockResolvedValueOnce(noResultsResponse)
     
     await act(async () => {
       render(<OwnerSearchResults {...defaultProps} />)
@@ -224,10 +210,7 @@ describe('OwnerSearchResults', () => {
 
   test('handles owner click navigation', async () => {
     const user = userEvent.setup()
-    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve(mockApiResponse)
-    })
+    fetchOwnersByLastNameAndPage.mockResolvedValueOnce(mockApiResponse)
     fetchPetsForOwner.mockResolvedValue([])
     
     await act(async () => {
@@ -250,10 +233,7 @@ describe('OwnerSearchResults', () => {
       { id: 1, name: 'Fluffy', type: 'Cat', birthDate: '2020-01-01', visits: [] }
     ]
     
-    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve(mockApiResponse)
-    })
+    fetchOwnersByLastNameAndPage.mockResolvedValueOnce(mockApiResponse)
     fetchPetsForOwner.mockResolvedValue(mockPets)
     
     await act(async () => {
@@ -271,7 +251,7 @@ describe('OwnerSearchResults', () => {
   })
 
   test('handles API error gracefully', async () => {
-    ;(global.fetch as jest.Mock).mockRejectedValueOnce(new Error('API Error'))
+    fetchOwnersByLastNameAndPage.mockRejectedValueOnce(new Error('API Error'))
     
     await act(async () => {
       render(<OwnerSearchResults {...defaultProps} />)
@@ -289,10 +269,7 @@ describe('OwnerSearchResults', () => {
       currentPage: 1
     }
     
-    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve(multiPageResponse)
-    })
+    fetchOwnersByLastNameAndPage.mockResolvedValueOnce(multiPageResponse)
     fetchPetsForOwner.mockResolvedValue([])
     
     await act(async () => {
@@ -304,17 +281,16 @@ describe('OwnerSearchResults', () => {
     })
     
     // Verify initial fetch was made
-    expect(global.fetch).toHaveBeenCalledWith('/api/owners?lastName=Smith&page=1')
+    await waitFor(() => {
+      expect(fetchOwnersByLastNameAndPage).toHaveBeenCalledWith('Smith', 1)
+    })
     
     // Test that pagination component is rendered with correct props
     expect(screen.getByText('1 of 3')).toBeDefined()
   })
 
   test('handles HTTP error response', async () => {
-    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
-      ok: false,
-      status: 500
-    })
+    fetchOwnersByLastNameAndPage.mockRejectedValueOnce(new Error('HTTP error! status: 500'))
     
     await act(async () => {
       render(<OwnerSearchResults {...defaultProps} />)
