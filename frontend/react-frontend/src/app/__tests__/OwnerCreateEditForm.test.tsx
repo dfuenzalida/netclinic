@@ -33,6 +33,7 @@ global.fetch = jest.fn()
 
 describe('OwnerCreateEditForm', () => {
   const mockSetHash = jest.fn()
+  /* eslint-disable @typescript-eslint/no-require-imports */
   const { fetchOwnerById } = require('../components/Api')
   
   let consoleWarnSpy: jest.SpyInstance
@@ -125,16 +126,6 @@ describe('OwnerCreateEditForm', () => {
           body: expect.stringContaining('"firstName":"John"')
         })
       )
-    })
-
-    test('cancels form and navigates back', async () => {
-      const user = userEvent.setup()
-      await act(async () => {
-        render(<OwnerCreateEditForm {...createModeProps} />)
-      })
-      
-      // Cancel functionality is not implemented - removing this test
-      expect(true).toBe(true)
     })
   })
 

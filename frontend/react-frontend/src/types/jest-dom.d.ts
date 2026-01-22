@@ -1,6 +1,7 @@
 /// <reference types="jest" />
 /// <reference types="@testing-library/jest-dom" />
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
 declare namespace jest {
   interface Matchers<R> {
     toBeInTheDocument(): R;

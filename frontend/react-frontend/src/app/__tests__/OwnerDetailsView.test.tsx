@@ -40,6 +40,7 @@ jest.mock('../components/Translations', () => {
 
 describe('OwnerDetailsView', () => {
   const mockSetHash = jest.fn()
+  /* eslint-disable @typescript-eslint/no-require-imports */
   const { fetchOwnerById, fetchPetsForOwner, fetchVisitsForPet } = require('../components/Api')
   
   const defaultProps = {

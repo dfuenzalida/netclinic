@@ -38,6 +38,7 @@ global.fetch = jest.fn()
 
 describe('PetCreateEditForm', () => {
   const mockSetHash = jest.fn()
+  /* eslint-disable @typescript-eslint/no-require-imports */
   const { fetchOwnerById, fetchPetById, fetchPetTypes } = require('../components/Api')
   
   const mockOwner = {

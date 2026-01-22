@@ -74,7 +74,7 @@ export default function PetCreateEditForm({ hash, setHash }: HashProps) {
         fetchOwnerDetails();
         fetchPetTypeDetails();
         fetchPetDetails();
-    }, [ownerId, petId]);
+    }, [type, ownerId, petId]);
 
       function upsertPet(e: React.FormEvent) {
         e.preventDefault();
@@ -95,7 +95,7 @@ export default function PetCreateEditForm({ hash, setHash }: HashProps) {
         })
         .then(async (response) => {
           if (response.ok) {
-            const data = await response.json();
+            await response.json();
             setHash(`#owners/${ownerId}?flash=${encodeURIComponent(flashMessage)}`);
           } else if (response.status === 400) {
             const errorResponse = await response.json();

@@ -37,6 +37,7 @@ jest.mock('../components/Translations', () => {
 
 // Mock Pagination component
 jest.mock('../components/Pagination', () => {
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   return function Pagination({ currentPage, totalPages, setCurrentPage }: any) {
     return (
       <div data-testid="pagination">
@@ -60,6 +61,7 @@ jest.mock('../components/Pagination', () => {
 
 describe('OwnerSearchResults', () => {
   const mockSetHash = jest.fn()
+  /* eslint-disable @typescript-eslint/no-require-imports */
   const { fetchPetsForOwner, fetchOwnersByLastNameAndPage } = require('../components/Api')
   const { replaceHash } = require('../components/Hash')
   

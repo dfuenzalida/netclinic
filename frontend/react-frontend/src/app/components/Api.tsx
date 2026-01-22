@@ -1,4 +1,4 @@
-import { OwnerDetails, OwnerListResponse, PetDetails, PetType, PetVisit, Vet, VetListResponse, VisitDetails } from "../../types/types";
+import { OwnerDetails, OwnerListResponse, PetDetails, PetType, PetVisit, VetListResponse, VisitDetails } from "../../types/types";
 
 export const fetchOwnersByLastNameAndPage = async (lastName: string, pageNumber: number): Promise<OwnerListResponse> => {
     try {
