@@ -20,11 +20,4 @@ public class Specialty
     public Specialty()
     {
     }
-
-    // Constructor with parameters for convenience
-    public Specialty(int id, string name)
-    {
-        Id = id;
-        Name = name;
-    }
 }

@@ -24,12 +24,4 @@ public class Veterinarian
     public Veterinarian()
     {
     }
-
-    // Constructor with parameters for convenience
-    public Veterinarian(int id, string firstName, string lastName)
-    {
-        Id = id;
-        FirstName = firstName;
-        LastName = lastName;
-    }
 }
