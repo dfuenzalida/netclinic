@@ -30,6 +30,8 @@ public class Program
         
         // Add memory caching
         builder.Services.AddMemoryCache();
+
+        builder.Services.AddResponseCompression();
         
         // Register custom services
         builder.Services.AddScoped<IOwnerService, OwnerService>();
@@ -60,6 +62,8 @@ public class Program
 
         // Won't use HTTPS directly
         // app.UseHttpsRedirection();
+
+        app.UseResponseCompression();
 
         app.MapControllers();
 
