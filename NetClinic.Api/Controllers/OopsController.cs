@@ -4,6 +4,7 @@ namespace NetClinic.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[ApiExplorerSettings(IgnoreApi = true)]
 public class OopsController : ControllerBase
 {
     [HttpGet]
