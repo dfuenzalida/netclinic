@@ -58,6 +58,10 @@ public class Program
         //if (app.Environment.IsDevelopment())
         //{
             app.MapOpenApi();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/api/openapi/v1.json", "v1");
+            });
         //}
 
         // Won't use HTTPS directly
@@ -70,4 +74,5 @@ public class Program
         app.Run();
     }
 }
+
 
