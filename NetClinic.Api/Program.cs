@@ -55,10 +55,10 @@ public class Program
         app.UseMiddleware<RequestLoggingMiddleware>();
 
         // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
+        //if (app.Environment.IsDevelopment())
+        //{
             app.MapOpenApi();
-        }
+        //}
 
         // Won't use HTTPS directly
         // app.UseHttpsRedirection();
@@ -70,3 +70,4 @@ public class Program
         app.Run();
     }
 }
+
