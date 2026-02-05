@@ -18,8 +18,18 @@ public class Program
 
         // Add services to the container.
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-        builder.Services.AddOpenApi();
+        builder.Services.AddOpenApi(options =>
+        {
+            options.AddOperationTransformer((operation, context, cancellationToken) =>
+            {
+                operation.OperationId = context.Description.ActionDescriptor.RouteValues["action"];
+                return Task.CompletedTask;
+            });
+        });
         builder.Services.AddControllers();
+        
+        // Use lowercase URLs in routes
+        builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
         
         // Configure PostgreSQL - prioritize Azure connection string if available
         var connectionString = builder.Configuration.GetConnectionString("AZURE_POSTGRESQL_CONNECTIONSTRING") 
@@ -70,6 +80,3 @@ public class Program
         app.Run();
     }
 }
-
-
-
