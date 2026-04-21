@@ -73,6 +73,7 @@ export interface PaginationProps {
   setCurrentPage: (page: number) => void;
   totalPages: number;
   linkBase: string;
+  setHash: (hash: string) => void;
 }
 
 // Owners

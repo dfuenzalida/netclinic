@@ -1,7 +1,7 @@
 import { PaginationProps } from "../../types/types";
 import T from './Translations';
 
-export default function Pagination({ currentPage, setCurrentPage, totalPages, linkBase }: PaginationProps) {
+export default function Pagination({ currentPage, setCurrentPage, totalPages, linkBase, setHash }: PaginationProps) {
 
     const pageRange = [];
     for (let i = 1; i <= totalPages; i++) {
@@ -23,7 +23,7 @@ export default function Pagination({ currentPage, setCurrentPage, totalPages, li
             {pageRange.map((page) => (
                 <span key={page}>
                     {(currentPage !== page) ? (
-                        <a href={`${linkBase}?page=${page}`} onClick={(e) => { e.preventDefault(); setCurrentPage(page); }}>{page}</a>
+                        <a href={`${linkBase}?page=${page}`} onClick={(e) => { e.preventDefault(); setHash(`${linkBase}?page=${page}`); }}>{page}</a>
                     ) : (
                         <span>{page}</span>
                     )}
@@ -44,7 +44,7 @@ export default function Pagination({ currentPage, setCurrentPage, totalPages, li
                 ) : (
                     <a href={`${linkBase}?page=1`} title={T("first")}
                         className="fa fa-fast-backward"
-                        onClick={(e) => { e.preventDefault(); setCurrentPage(1); }}></a>
+                        onClick={(e) => { e.preventDefault(); setHash(`${linkBase}?page=1`); }}></a>
                 )
             }
         </span>
@@ -56,7 +56,7 @@ export default function Pagination({ currentPage, setCurrentPage, totalPages, li
                 ) : (
                     <a href={`${linkBase}?page=${currentPage - 1}`} title={T("previous")}
                         className="fa fa-step-backward"
-                        onClick={(e) => { e.preventDefault(); setCurrentPage(currentPage - 1); }}></a>
+                        onClick={(e) => { e.preventDefault(); setHash(`${linkBase}?page=${currentPage - 1}`); }}></a>
                 )
             }
         </span>
@@ -69,7 +69,7 @@ export default function Pagination({ currentPage, setCurrentPage, totalPages, li
                 ) : (
                     <a href={`${linkBase}?page=${currentPage + 1}`} title={T("next")}
                         className="fa fa-step-forward"
-                        onClick={(e) => { e.preventDefault(); setCurrentPage(currentPage + 1); }}></a>
+                        onClick={(e) => { e.preventDefault(); setHash(`${linkBase}?page=${currentPage + 1}`); }}></a>
                 )
             }
         </span>
@@ -82,7 +82,7 @@ export default function Pagination({ currentPage, setCurrentPage, totalPages, li
                 ) : (
                     <a href={`${linkBase}?page=${totalPages}`} title={T("last")}
                         className="fa fa-fast-forward"
-                        onClick={(e) => { e.preventDefault(); setCurrentPage(totalPages); }}></a>
+                        onClick={(e) => { e.preventDefault(); setHash(`${linkBase}?page=${totalPages}`); }}></a>
                 )
             }
         </span>

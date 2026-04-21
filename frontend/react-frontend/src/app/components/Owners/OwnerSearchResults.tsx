@@ -131,7 +131,7 @@ export default function OwnerSearchResults({ hash, setHash } : HashProps) {
           ))}
         </tbody>
       </table>
-      <Pagination linkBase={`#owners/lastName/${lastName}`} currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} />
+      <Pagination linkBase={`#owners/lastName/${lastName}`} currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} setHash={setHash} />
     </div>
   );
 }
