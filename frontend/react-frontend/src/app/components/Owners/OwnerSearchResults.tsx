@@ -83,7 +83,7 @@ export default function OwnerSearchResults({ hash, setHash } : HashProps) {
     }
     
     searchOwnersByLastNameAndPage(lastName, pageToUse);
-  }, [hash, setHash, currentPage, lastName]);
+  }, [hash, setHash]);
 
   if (loading) {
     return (

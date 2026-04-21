@@ -302,4 +302,52 @@ describe('OwnerSearchResults', () => {
       expect(screen.getByText(/Error loading owners.*HTTP error! status: 500/)).toBeDefined()
     })
   })
+
+  test('navigates to last page with single new owner without state issues', async () => {
+    // This test prevents regression of a bug where navigating to a new last page
+    // (e.g., 11th owner on page 3) would cause incorrect state due to circular
+    // dependency in useEffect
+    
+    const page3NewOwner = {
+      id: 11,
+      firstName: 'NewOwner',
+      lastName: 'Smith',
+      address: '999 New St',
+      city: 'Springfield',
+      telephone: '555-1111',
+      pets: []
+    }
+
+    const page3Response = {
+      ownerList: [page3NewOwner],
+      totalPages: 3,
+      currentPage: 3
+    }
+
+    fetchOwnersByLastNameAndPage.mockResolvedValueOnce(page3Response)
+    fetchPetsForOwner.mockResolvedValue([])
+
+    const propsWithPage3 = {
+      hash: '#owners/lastName/Smith?page=3',
+      setHash: mockSetHash
+    }
+
+    await act(async () => {
+      render(<OwnerSearchResults {...propsWithPage3} />)
+    })
+
+    // Verify the component displays the new owner
+    await waitFor(() => {
+      expect(screen.getByText(/NewOwner\s+Smith/)).toBeDefined()
+      expect(screen.getByText('999 New St')).toBeDefined()
+    })
+
+    // Critical assertion: fetchOwnersByLastNameAndPage should be called exactly once
+    // for page 3, not multiple times due to circular dependency
+    expect(fetchOwnersByLastNameAndPage).toHaveBeenCalledTimes(1)
+    expect(fetchOwnersByLastNameAndPage).toHaveBeenCalledWith('Smith', 3)
+    
+    // Verify pagination shows correct page
+    expect(screen.getByText('3 of 3')).toBeDefined()
+  })
 })
