@@ -14,64 +14,62 @@ public interface IVetService
 
 public class VetService(NetClinicDbContext context, ILogger<VetService> logger) : IVetService
 {
-    private readonly NetClinicDbContext _context = context;
-    private readonly ILogger<VetService> _logger = logger;
 
     public async Task<IEnumerable<VetDto>> GetAllVeterinariansAsync(int page = 1, int pageSize = 5)
     {
-        _logger.LogDebug("Retrieving all veterinarians from database");
+        logger.LogDebug("Retrieving all veterinarians from database");
 
         try
         {
-            var veterinarians = await _context.Veterinarians.Include(v => v.Specialties)
+            var veterinarians = await context.Veterinarians.Include(v => v.Specialties)
                                         .OrderBy(v => v.Id)
                                         .Skip((page - 1) * pageSize)
                                         .Take(pageSize)
                                         .ToListAsync();
             var vetDtoList = veterinarians.Select(v => MapVeterinariansToDtos(v)).ToList();
-            _logger.LogInformation("Successfully retrieved {Count} veterinarians from database", veterinarians.Count);
+            logger.LogInformation("Successfully retrieved {Count} veterinarians from database", veterinarians.Count);
             return vetDtoList;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error occurred while retrieving veterinarians from database");
+            logger.LogError(ex, "Error occurred while retrieving veterinarians from database");
             throw;
         }
     }
 
     public async Task<int> GetVeterinariansCountAsync()
     {
-        _logger.LogDebug("Counting total number of veterinarians in database");
+        logger.LogDebug("Counting total number of veterinarians in database");
 
         try
         {
-            var count = await _context.Veterinarians.CountAsync();
-            _logger.LogInformation("Total number of veterinarians: {Count}", count);
+            var count = await context.Veterinarians.CountAsync();
+            logger.LogInformation("Total number of veterinarians: {Count}", count);
             return count;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error occurred while counting veterinarians in database");
+            logger.LogError(ex, "Error occurred while counting veterinarians in database");
             throw;
         }
     }
 
     public async Task<VetDto?> GetVeterinarianByIdAsync(int id)
     {
-        _logger.LogDebug("Retrieving veterinarian with ID: {Id} from database", id);
+        logger.LogDebug("Retrieving veterinarian with ID: {Id} from database", id);
 
         try
         {
-            var vet = await _context.Veterinarians.FindAsync(id);
+            var vet = await context.Veterinarians.FindAsync(id);
 
             if (vet == null)
             {
-                _logger.LogWarning("Veterinarian with ID {Id} not found in database", id);
+                logger.LogWarning("Veterinarian with ID {Id} not found in database", id);
                 return null;
             }
             else
             {
-                _logger.LogInformation("Successfully retrieved veterinarian with ID: {Id} from database", id);
+                logger.LogInformation("Successfully retrieved veterinarian with ID: {Id} from database", id);
                 var specialties = vet.Specialties;
 
                 return new VetDto
@@ -89,7 +87,7 @@ public class VetService(NetClinicDbContext context, ILogger<VetService> logger) 
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error occurred while retrieving veterinarian with ID: {Id} from database", id);
+            logger.LogError(ex, "Error occurred while retrieving veterinarian with ID: {Id} from database", id);
             throw;
         }
     }

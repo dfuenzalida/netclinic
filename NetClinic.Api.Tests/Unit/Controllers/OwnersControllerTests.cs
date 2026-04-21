@@ -6,6 +6,7 @@ using NetClinic.Api.Dto;
 using NetClinic.Api.Services;
 using Xunit;
 using FluentAssertions;
+using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ public class OwnersControllerTests
     {
         _loggerMock = new Mock<ILogger<OwnersController>>();
         _ownerServiceMock = new Mock<IOwnerService>();
-        _controller = new OwnersController(_loggerMock.Object, _ownerServiceMock.Object);
+        _controller = new OwnersController(_loggerMock.Object, _ownerServiceMock.Object, TimeProvider.System);
     }
 
     [Fact]

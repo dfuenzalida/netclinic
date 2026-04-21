@@ -23,7 +23,7 @@ public class PetsControllerTests
     {
         _loggerMock = new Mock<ILogger<PetsController>>();
         _petServiceMock = new Mock<IPetService>();
-        _controller = new PetsController(_loggerMock.Object, _petServiceMock.Object);
+        _controller = new PetsController(_loggerMock.Object, _petServiceMock.Object, TimeProvider.System);
     }
 
     [Fact]

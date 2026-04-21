@@ -41,6 +41,9 @@ public class Program
         // Add memory caching
         builder.Services.AddMemoryCache();
 
+        // Add TimeProvider for better testability
+        builder.Services.AddSingleton(TimeProvider.System);
+
         builder.Services.AddResponseCompression();
         
         // Register custom services

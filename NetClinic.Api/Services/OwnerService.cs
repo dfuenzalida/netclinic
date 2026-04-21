@@ -20,14 +20,12 @@ public interface IOwnerService
 
 public class OwnerService(NetClinicDbContext context, ILogger<OwnerService> logger) : IOwnerService
 {
-    private readonly NetClinicDbContext _context = context;
-    private readonly ILogger<OwnerService> _logger = logger;
 
     public async Task<IEnumerable<OwnerDto>> GetOwnersByLastNameAsync(string? lastName = null, int page = 1, int pageSize = 5)
     {
-        _logger.LogInformation("Fetching owners from the database with lastName filter: {LastNameFilter}", lastName ?? "none");
+        logger.LogInformation("Fetching owners from the database with lastName filter: {LastNameFilter}", lastName ?? "none");
 
-        var query = _context.Owners.AsQueryable();
+        var query = context.Owners.AsQueryable();
 
         if (!string.IsNullOrEmpty(lastName))
         {
@@ -41,16 +39,16 @@ public class OwnerService(NetClinicDbContext context, ILogger<OwnerService> logg
                             .ToListAsync();
         var ownerDtos = owners.Select(owner => MapOwnerToOwnerDto(owner)).ToList();
 
-        _logger.LogInformation("Successfully fetched {Count} owners", ownerDtos.Count);
+        logger.LogInformation("Successfully fetched {Count} owners", ownerDtos.Count);
 
         return ownerDtos;
     }
 
     public async Task<int> GetOwnersByLastNameCountAsync(string? lastName = null)
     {
-        _logger.LogInformation("Fetching owners from the database with lastName filter: {LastNameFilter}", lastName ?? "none");
+        logger.LogInformation("Fetching owners from the database with lastName filter: {LastNameFilter}", lastName ?? "none");
 
-        var query = _context.Owners.AsQueryable();
+        var query = context.Owners.AsQueryable();
 
         if (!string.IsNullOrEmpty(lastName))
         {
@@ -59,37 +57,37 @@ public class OwnerService(NetClinicDbContext context, ILogger<OwnerService> logg
 
         int ownerCount = await query.CountAsync();
 
-        _logger.LogInformation("Successfully found {Count} owners", ownerCount);
+        logger.LogInformation("Successfully found {Count} owners", ownerCount);
 
         return ownerCount;
     }
 
     public async Task<OwnerDto?> GetOwnerDetailsByIdAsync(int ownerId)
     {
-        _logger.LogInformation("Fetching owner details for OwnerId: {OwnerId}", ownerId);
+        logger.LogInformation("Fetching owner details for OwnerId: {OwnerId}", ownerId);
 
-        var query = _context.Owners.AsQueryable();
+        var query = context.Owners.AsQueryable();
 
-        var owner = await _context.Owners
+        var owner = await context.Owners
             .Where(o => o.Id == ownerId)
             .FirstOrDefaultAsync();
 
         if (owner == null)
         {
-            _logger.LogWarning("Owner with Id {OwnerId} not found", ownerId);
+            logger.LogWarning("Owner with Id {OwnerId} not found", ownerId);
             return null;
         }
 
         var ownerDetailsDto = MapOwnerToOwnerDto(owner);
 
-        _logger.LogInformation("Successfully fetched details for OwnerId: {OwnerId}", ownerId);
+        logger.LogInformation("Successfully fetched details for OwnerId: {OwnerId}", ownerId);
 
         return ownerDetailsDto;
     }
 
     public async Task<OwnerDto> CreateOwnerAsync(OwnerDto ownerDto)
     {
-        _logger.LogInformation("Creating new owner: {FirstName} {LastName}", ownerDto.FirstName, ownerDto.LastName);
+        logger.LogInformation("Creating new owner: {FirstName} {LastName}", ownerDto.FirstName, ownerDto.LastName);
 
         var owner = new Owner
         {
@@ -100,10 +98,10 @@ public class OwnerService(NetClinicDbContext context, ILogger<OwnerService> logg
             Telephone = ownerDto.Telephone
         };
 
-        _context.Owners.Add(owner);
-        await _context.SaveChangesAsync();
+        context.Owners.Add(owner);
+        await context.SaveChangesAsync();
 
-        _logger.LogInformation("Successfully created owner with Id: {OwnerId}", owner.Id);
+        logger.LogInformation("Successfully created owner with Id: {OwnerId}", owner.Id);
 
         // Return the created owner as DTO with the generated ID
         return MapOwnerToOwnerDto(owner);
@@ -111,12 +109,12 @@ public class OwnerService(NetClinicDbContext context, ILogger<OwnerService> logg
 
     public async Task<OwnerDto?> UpdateOwnerAsync(OwnerDto ownerDto)
     {
-        _logger.LogInformation("Updating owner with Id: {OwnerId}", ownerDto.Id);
+        logger.LogInformation("Updating owner with Id: {OwnerId}", ownerDto.Id);
 
-        var owner = await _context.Owners.FindAsync(ownerDto.Id);
+        var owner = await context.Owners.FindAsync(ownerDto.Id);
         if (owner == null)
         {
-            _logger.LogWarning("Owner with Id {OwnerId} not found for update", ownerDto.Id);
+            logger.LogWarning("Owner with Id {OwnerId} not found for update", ownerDto.Id);
             return null;
         }
 
@@ -126,10 +124,10 @@ public class OwnerService(NetClinicDbContext context, ILogger<OwnerService> logg
         owner.City = ownerDto.City;
         owner.Telephone = ownerDto.Telephone;
 
-        _context.Owners.Update(owner);
-        await _context.SaveChangesAsync();
+        context.Owners.Update(owner);
+        await context.SaveChangesAsync();
 
-        _logger.LogInformation("Successfully updated owner with Id: {OwnerId}", owner.Id);
+        logger.LogInformation("Successfully updated owner with Id: {OwnerId}", owner.Id);
 
         return MapOwnerToOwnerDto(owner);
     }

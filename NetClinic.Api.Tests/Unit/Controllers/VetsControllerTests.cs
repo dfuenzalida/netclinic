@@ -6,6 +6,7 @@ using NetClinic.Api.Dto;
 using NetClinic.Api.Services;
 using Xunit;
 using FluentAssertions;
+using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ public class VetsControllerTests
     {
         _loggerMock = new Mock<ILogger<VetsController>>();
         _vetServiceMock = new Mock<IVetService>();
-        _controller = new VetsController(_loggerMock.Object, _vetServiceMock.Object);
+        _controller = new VetsController(_loggerMock.Object, _vetServiceMock.Object, TimeProvider.System);
     }
 
     [Fact]

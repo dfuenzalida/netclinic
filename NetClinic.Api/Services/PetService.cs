@@ -1,3 +1,4 @@
+using System.Collections.Frozen;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using NetClinic.Api.Data;
@@ -19,9 +20,6 @@ public interface IPetService
 
 public class PetService(NetClinicDbContext context, ILogger<PetService> logger, IMemoryCache memoryCache) : IPetService
 {
-    private readonly NetClinicDbContext _context = context;
-    private readonly ILogger<PetService> _logger = logger;
-    private readonly IMemoryCache _cache = memoryCache;
     private const string PetTypesCacheKey = "pet_types";
     private static readonly TimeSpan CacheDuration = TimeSpan.FromHours(24); // Cache for 24 hours
 
@@ -33,9 +31,9 @@ public class PetService(NetClinicDbContext context, ILogger<PetService> logger, 
 
     public async Task<IEnumerable<PetDto>?> GetPetsByOwnerIdAsync(int ownerId)
     {
-        _logger.LogInformation("Fetching pets from the database for Owner ID: {OwnerId}", ownerId);
+        logger.LogInformation("Fetching pets from the database for Owner ID: {OwnerId}", ownerId);
 
-        var pets = await _context.Pets
+        var pets = await context.Pets
                                  .Include(p => p.PetType)
                                  .Where(p => p.OwnerId == ownerId)
                                  .OrderBy(p => p.Name)
@@ -43,7 +41,7 @@ public class PetService(NetClinicDbContext context, ILogger<PetService> logger, 
 
         if (pets == null || pets.Count == 0)
         {
-            _logger.LogWarning("No pets found for Owner ID: {OwnerId}", ownerId);
+            logger.LogWarning("No pets found for Owner ID: {OwnerId}", ownerId);
             return null;
         }
 
@@ -55,16 +53,16 @@ public class PetService(NetClinicDbContext context, ILogger<PetService> logger, 
             BirthDate = pet.BirthDate.ToString("yyyy-MM-dd")
         }).ToList();
 
-        _logger.LogInformation("Successfully fetched {Count} pets for Owner ID: {OwnerId}", petDtos.Count, ownerId);
+        logger.LogInformation("Successfully fetched {Count} pets for Owner ID: {OwnerId}", petDtos.Count, ownerId);
 
         return petDtos;
     }
 
     public async Task<PetDto?> GetPetByIdAsync(int petId)
     {
-        _logger.LogInformation("Fetching pet from the database for Pet ID: {PetId}", petId);
+        logger.LogInformation("Fetching pet from the database for Pet ID: {PetId}", petId);
 
-        var pet =  await _context.Pets
+        var pet =  await context.Pets
                            .Where(p => p.Id == petId)
                            .Select(pet => new PetDto
                            {
@@ -77,22 +75,22 @@ public class PetService(NetClinicDbContext context, ILogger<PetService> logger, 
 
         if (pet == null)
         {
-            _logger.LogWarning("No pet found for Pet ID: {PetId}", petId);
+            logger.LogWarning("No pet found for Pet ID: {PetId}", petId);
             return null;
         }
 
-        _logger.LogInformation("Successfully fetched pet for Pet ID: {PetId}", petId);
+        logger.LogInformation("Successfully fetched pet for Pet ID: {PetId}", petId);
 
         return pet;
     }
 
     public async Task<IEnumerable<VisitDto>?> GetVisitsByPetIdAsync(int ownerId, int petId)
     {
-        _logger.LogInformation("Fetching visits from the database for Pet ID: {PetId}", petId);
+        logger.LogInformation("Fetching visits from the database for Pet ID: {PetId}", petId);
 
         List<VisitDto> results = [];
 
-        var visits = await _context.Pets
+        var visits = await context.Pets
                                    .Where(p => p.OwnerId == ownerId)
                                    .Where(p => p.Id == petId)
                                    .SelectMany(p => p.Visits)
@@ -107,10 +105,10 @@ public class PetService(NetClinicDbContext context, ILogger<PetService> logger, 
 
         if (visits == null || visits.Count == 0)
         {
-            _logger.LogWarning("No visits found for Pet ID: {PetId}", petId);
+            logger.LogWarning("No visits found for Pet ID: {PetId}", petId);
         } else
         {
-            _logger.LogInformation("Successfully fetched {Count} visits for Pet ID: {PetId}", visits.Count, petId);
+            logger.LogInformation("Successfully fetched {Count} visits for Pet ID: {PetId}", visits.Count, petId);
             results.AddRange(visits);
         }
 
@@ -120,24 +118,24 @@ public class PetService(NetClinicDbContext context, ILogger<PetService> logger, 
     public async Task<IEnumerable<PetTypeDto>> GetAllPetTypesAsync()
     {
         // Check cache first
-        if (_cache.TryGetValue(PetTypesCacheKey, out IEnumerable<PetTypeDto>? cachedPetTypes))
+        if (memoryCache.TryGetValue(PetTypesCacheKey, out FrozenSet<PetTypeDto>? cachedPetTypes))
         {
-            _logger.LogInformation("Retrieved {Count} pet types from cache", cachedPetTypes!.Count());
+            logger.LogInformation("Retrieved {Count} pet types from cache", cachedPetTypes!.Count);
             return cachedPetTypes!;
         }
 
-        _logger.LogInformation("Cache miss - fetching all pet types from the database");
+        logger.LogInformation("Cache miss - fetching all pet types from the database");
 
-        var petTypes = await _context.PetTypes
+        var petTypes = await context.PetTypes
                                      .OrderBy(pt => pt.Name)
                                      .ToListAsync();
 
-        var petTypeDtos = petTypes.Select(pt => MapPetTypeToPetTypeDto(pt)).ToList();
+        var petTypeDtos = petTypes.Select(pt => MapPetTypeToPetTypeDto(pt)).ToFrozenSet();
 
         // Store in cache with expiration
-        _cache.Set(PetTypesCacheKey, petTypeDtos, CacheDuration);
+        memoryCache.Set(PetTypesCacheKey, petTypeDtos, CacheDuration);
 
-        _logger.LogInformation("Successfully fetched and cached {Count} pet types", petTypeDtos.Count);
+        logger.LogInformation("Successfully fetched and cached {Count} pet types", petTypeDtos.Count);
 
         return petTypeDtos;
     }
@@ -149,47 +147,47 @@ public class PetService(NetClinicDbContext context, ILogger<PetService> logger, 
         {
             Name = petDto.Name,
             BirthDate = DateTime.SpecifyKind(DateTime.Parse(petDto.BirthDate), DateTimeKind.Utc),
-            PetType = await _context.PetTypes
+            PetType = await context.PetTypes
                                   .Where(pt => pt.Name == petDto.Type)
                                   .FirstOrDefaultAsync() ?? UnknownPetType,
             OwnerId = ownerId
         };
 
-        _context.Pets.Add(pet);
-        await _context.SaveChangesAsync();
-        _logger.LogInformation("Successfully created a new pet with ID: {PetId}", pet.Id);
+        context.Pets.Add(pet);
+        await context.SaveChangesAsync();
+        logger.LogInformation("Successfully created a new pet with ID: {PetId}", pet.Id);
 
         return MapPetToPetDto(pet);
     }
 
     public async Task<PetDto?> UpdatePetAsync(PetDto petDto)
     {
-        var pet = await _context.Pets.FindAsync(petDto.Id);
+        var pet = await context.Pets.FindAsync(petDto.Id);
         if (pet == null)
         {
-            _logger.LogWarning("No pet found for ID: {PetId}", petDto.Id);
+            logger.LogWarning("No pet found for ID: {PetId}", petDto.Id);
             return null;
         }
 
         pet.Name = petDto.Name;
         pet.BirthDate = DateTime.SpecifyKind(DateTime.Parse(petDto.BirthDate), DateTimeKind.Utc);
-        pet.PetType = await _context.PetTypes
+        pet.PetType = await context.PetTypes
                                     .Where(pt => pt.Name == petDto.Type)
                                     .FirstOrDefaultAsync() ?? UnknownPetType;
 
-        _context.Pets.Update(pet);
-        await _context.SaveChangesAsync();
-        _logger.LogInformation("Successfully updated pet with ID: {PetId}", pet.Id);
+        context.Pets.Update(pet);
+        await context.SaveChangesAsync();
+        logger.LogInformation("Successfully updated pet with ID: {PetId}", pet.Id);
 
         return MapPetToPetDto(pet);
     }
 
     public async Task<VisitDto> CreateVisitAsync(int petId, VisitDto newVisitDto)
     {
-        var pet = await _context.Pets.FindAsync(petId);
+        var pet = await context.Pets.FindAsync(petId);
         if (pet == null)
         {
-            _logger.LogWarning("No pet found for ID: {PetId}", petId);
+            logger.LogWarning("No pet found for ID: {PetId}", petId);
             throw new ArgumentException($"No pet found for ID: {petId}");
         }
 
@@ -200,9 +198,9 @@ public class PetService(NetClinicDbContext context, ILogger<PetService> logger, 
             Description = newVisitDto.Description
         };
 
-        _context.Visits.Add(visit);
-        await _context.SaveChangesAsync();
-        _logger.LogInformation("Successfully created a new visit with ID: {VisitId} for Pet ID: {PetId}", visit.Id, petId);
+        context.Visits.Add(visit);
+        await context.SaveChangesAsync();
+        logger.LogInformation("Successfully created a new visit with ID: {VisitId} for Pet ID: {PetId}", visit.Id, petId);
 
         return new VisitDto
         {

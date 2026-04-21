@@ -6,33 +6,31 @@ namespace NetClinic.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class OwnersController(ILogger<OwnersController> logger, IOwnerService ownerService) : ControllerBase
+public class OwnersController(ILogger<OwnersController> logger, IOwnerService ownerService, TimeProvider timeProvider) : ControllerBase
 {
-    private readonly ILogger<OwnersController> _logger = logger;
-    private readonly IOwnerService _ownerService = ownerService;
 
     [HttpGet]
     public async Task<OwnerListDto> Get([FromQuery] string? lastName = null, [FromQuery] int page = 1, [FromQuery] int pageSize = 5)
     {
-        _logger.LogInformation("Owners GET request received at {Timestamp} for page {Page}", DateTime.UtcNow, page);
+        logger.LogInformation("Owners GET request received at {Timestamp} for page {Page}", timeProvider.GetUtcNow(), page);
 
         try
         {
-            var totalOwners = await _ownerService.GetOwnersByLastNameCountAsync(lastName);
-            var totalPages = (int) Math.Floor(totalOwners / (double)pageSize) + (totalOwners % pageSize == 0 ? 0 : 1);
+            var totalOwners = await ownerService.GetOwnersByLastNameCountAsync(lastName);
+            var totalPages = (int)Math.Ceiling(totalOwners / (double)pageSize);
 
-            var owners = await _ownerService.GetOwnersByLastNameAsync(lastName, page, pageSize);
+            var owners = await ownerService.GetOwnersByLastNameAsync(lastName, page, pageSize);
             var ownerList = new OwnerListDto
             {
                 OwnerList = owners.ToList(),
                 TotalPages = totalPages
             };
-            _logger.LogInformation("Successfully retrieved {Count} owners", owners.Count());
+            logger.LogInformation("Successfully retrieved {Count} owners", owners.Count());
             return ownerList;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error occurred while retrieving owners");
+            logger.LogError(ex, "Error occurred while retrieving owners");
             throw;
         }
     }
@@ -40,23 +38,23 @@ public class OwnersController(ILogger<OwnersController> logger, IOwnerService ow
     [HttpGet("{ownerId}")]
     public async Task<ActionResult<OwnerDto>> GetOwnerDetailsById([FromRoute] int ownerId)
     {
-        _logger.LogInformation("Owner GET by ID request received at {Timestamp} for Owner ID {OwnerId}", DateTime.UtcNow, ownerId);
+        logger.LogInformation("Owner GET by ID request received at {Timestamp} for Owner ID {OwnerId}", timeProvider.GetUtcNow(), ownerId);
 
         try
         {
-            var owner = await _ownerService.GetOwnerDetailsByIdAsync(ownerId);
+            var owner = await ownerService.GetOwnerDetailsByIdAsync(ownerId);
             if (owner == null)
             {
-                _logger.LogWarning("Owner with ID {OwnerId} not found", ownerId);
+                logger.LogWarning("Owner with ID {OwnerId} not found", ownerId);
                 return NotFound();
             }
             
-            _logger.LogInformation("Successfully retrieved owner with ID {OwnerId}", ownerId);
+            logger.LogInformation("Successfully retrieved owner with ID {OwnerId}", ownerId);
             return owner;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error occurred while retrieving owner with ID {OwnerId}", ownerId);
+            logger.LogError(ex, "Error occurred while retrieving owner with ID {OwnerId}", ownerId);
             throw;
         }
     }
@@ -64,7 +62,7 @@ public class OwnersController(ILogger<OwnersController> logger, IOwnerService ow
     [HttpPost]
     public async Task<ActionResult<OwnerDto>> CreateOwner([FromBody] OwnerDto newOwnerDto)
     {
-        _logger.LogInformation("Owner POST request received at {Timestamp}", DateTime.UtcNow);
+        logger.LogInformation("Owner POST request received at {Timestamp}", timeProvider.GetUtcNow());
 
         var errors = ValidateOwnerDto(newOwnerDto);
 
@@ -75,13 +73,13 @@ public class OwnersController(ILogger<OwnersController> logger, IOwnerService ow
 
         try
         {
-            var createdOwner = await _ownerService.CreateOwnerAsync(newOwnerDto);
-            _logger.LogInformation("Successfully created owner with ID {OwnerId}", createdOwner.Id);
+            var createdOwner = await ownerService.CreateOwnerAsync(newOwnerDto);
+            logger.LogInformation("Successfully created owner with ID {OwnerId}", createdOwner.Id);
             return CreatedAtAction(nameof(CreateOwner), new { ownerId = createdOwner.Id }, createdOwner);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error occurred while creating a new Owner");
+            logger.LogError(ex, "Error occurred while creating a new Owner");
             throw;
         }
     }
@@ -89,7 +87,7 @@ public class OwnersController(ILogger<OwnersController> logger, IOwnerService ow
     [HttpPut("{ownerId}")]
     public async Task<ActionResult<OwnerDto>> UpdateOwner([FromRoute] int ownerId, [FromBody] OwnerDto ownerDto)
     {
-        _logger.LogInformation("Owner PUT request received at {Timestamp} for Owner ID {OwnerId}", DateTime.UtcNow, ownerDto.Id);
+        logger.LogInformation("Owner PUT request received at {Timestamp} for Owner ID {OwnerId}", timeProvider.GetUtcNow(), ownerDto.Id);
 
         ownerDto.Id = ownerId; // Ensure the ID from the route is used
         var errors = ValidateOwnerDto(ownerDto);
@@ -101,19 +99,19 @@ public class OwnersController(ILogger<OwnersController> logger, IOwnerService ow
 
         try
         {
-            var updatedOwner = await _ownerService.UpdateOwnerAsync(ownerDto);
+            var updatedOwner = await ownerService.UpdateOwnerAsync(ownerDto);
             if (updatedOwner == null)
             {
-                _logger.LogWarning("Owner with ID {OwnerId} not found for update", ownerDto.Id);
+                logger.LogWarning("Owner with ID {OwnerId} not found for update", ownerDto.Id);
                 return NotFound();
             }
 
-            _logger.LogInformation("Successfully updated owner with ID {OwnerId}", ownerDto.Id);
+            logger.LogInformation("Successfully updated owner with ID {OwnerId}", ownerDto.Id);
             return updatedOwner;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error occurred while updating Owner with ID {OwnerId}", ownerDto.Id);
+            logger.LogError(ex, "Error occurred while updating Owner with ID {OwnerId}", ownerDto.Id);
             throw;
         }
     }

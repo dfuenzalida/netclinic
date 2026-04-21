@@ -6,34 +6,32 @@ namespace NetClinic.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class VetsController(ILogger<VetsController> logger, IVetService vetService) : ControllerBase
+public class VetsController(ILogger<VetsController> logger, IVetService vetService, TimeProvider timeProvider) : ControllerBase
 {
-    private readonly ILogger<VetsController> _logger = logger;
-    private readonly IVetService _vetService = vetService;
-   private const int PageSize = 5;
+    private const int PageSize = 5;
 
     [HttpGet]
     public async Task<VetListDto> Get([FromQuery] int page = 1)
     {
-        _logger.LogInformation("Vets GET request received at {Timestamp}", DateTime.UtcNow);
+        logger.LogInformation("Vets GET request received at {Timestamp}", timeProvider.GetUtcNow());
         
         try
         {
-            var totalVets = await _vetService.GetVeterinariansCountAsync();
-            var totalPages = (int) Math.Floor(totalVets / (double)PageSize) + (totalVets % PageSize == 0 ? 0 : 1);
+            var totalVets = await vetService.GetVeterinariansCountAsync();
+            var totalPages = (int)Math.Ceiling(totalVets / (double)PageSize);
 
-            var veterinarians = await _vetService.GetAllVeterinariansAsync(page);
+            var veterinarians = await vetService.GetAllVeterinariansAsync(page);
             var vetList = new VetListDto
             {
                 VetList = veterinarians.ToList(),
                 TotalPages = totalPages
             };
-            _logger.LogInformation("Successfully retrieved {Count} veterinarians", veterinarians.Count());
+            logger.LogInformation("Successfully retrieved {Count} veterinarians", veterinarians.Count());
             return vetList;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error occurred while retrieving veterinarians");
+            logger.LogError(ex, "Error occurred while retrieving veterinarians");
             throw;
         }
     }
@@ -41,24 +39,24 @@ public class VetsController(ILogger<VetsController> logger, IVetService vetServi
     [HttpGet("{id}")]
     public async Task<ActionResult<VetDto>> GetById(int id)
     {
-        _logger.LogInformation("Vets GET by ID request received for ID: {Id} at {Timestamp}", id, DateTime.UtcNow);
+        logger.LogInformation("Vets GET by ID request received for ID: {Id} at {Timestamp}", id, timeProvider.GetUtcNow());
         
         try
         {
-            var veterinarian = await _vetService.GetVeterinarianByIdAsync(id);
+            var veterinarian = await vetService.GetVeterinarianByIdAsync(id);
             
             if (veterinarian == null)
             {
-                _logger.LogWarning("Veterinarian with ID {Id} not found", id);
+                logger.LogWarning("Veterinarian with ID {Id} not found", id);
                 return NotFound();
             }
 
-            _logger.LogInformation("Successfully retrieved veterinarian with ID: {Id}", id);
+            logger.LogInformation("Successfully retrieved veterinarian with ID: {Id}", id);
             return veterinarian;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error occurred while retrieving veterinarian with ID: {Id}", id);
+            logger.LogError(ex, "Error occurred while retrieving veterinarian with ID: {Id}", id);
             throw;
         }
     }
