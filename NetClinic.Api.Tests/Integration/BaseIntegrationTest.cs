@@ -17,8 +17,7 @@ namespace NetClinic.Api.Tests.Integration;
 
 public abstract class BaseIntegrationTest : IAsyncLifetime
 {
-    private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder()
-        .WithImage("postgres:15-alpine")
+    private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder("postgres:15-alpine")
         .WithDatabase("netclinic_test")
         .WithUsername("test_user")
         .WithPassword("test_password")
