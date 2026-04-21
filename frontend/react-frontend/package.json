@@ -15,14 +15,14 @@
   "dependencies": {
     "bootstrap": "^5.3.8",
     "font-awesome": "^4.7.0",
-    "next": "^16.0.10",
-    "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "next": "^16.2.4",
+    "react": "19.2.5",
+    "react-dom": "19.2.5"
   },
   "devDependencies": {
-    "@azure/static-web-apps-cli": "^2.0.7",
+    "@azure/static-web-apps-cli": "^2.0.8",
     "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.1",
+    "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
     "@types/bootstrap": "^5.2.10",
     "@types/jest": "^30.0.0",
@@ -30,9 +30,9 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.0.3",
-    "jest": "^30.2.0",
-    "jest-environment-jsdom": "^30.2.0",
+    "eslint-config-next": "16.2.4",
+    "jest": "^30.3.0",
+    "jest-environment-jsdom": "^30.3.0",
     "typescript": "^5"
   }
 }
