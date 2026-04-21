@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
 
 env:
-  DOTNET_VERSION: '9.0.x'
+  DOTNET_VERSION: '10.0.x'
   AZURE_WEBAPP_NAME: 'netclinic'
   AZURE_WEBAPP_PACKAGE_PATH: './NetClinic.Api'
   PUBLISH_PATH: './NetClinic.Api/publish'
