@@ -96,7 +96,7 @@ export default function Vets({ hash, setHash }: HashProps) {
           ))}
         </tbody>
       </table>
-      <Pagination linkBase='#vets' currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} />
+      <Pagination linkBase='#vets' currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} setHash={setHash} />
       {vets.length === 0 && (
         <p>No veterinarians found.</p>
       )}
